@@ -1,0 +1,20 @@
+using System.Collections;
+using System.Collections.Generic;
+using Unity.Collections;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace KlayLand
+{
+    public class GameEntryPoint : MonoBehaviour
+    {
+        /// <summary>
+        /// Game Entry Point!!!
+        /// </summary>
+        private void Start()
+        {
+            GameEntryManager.Instance.Init();
+            GameEntryManager.Instance.EnterKlayLand();
+        }
+    }
+}
