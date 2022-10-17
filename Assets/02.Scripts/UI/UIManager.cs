@@ -36,9 +36,9 @@ namespace ClientTemplate
 
         public override void Init()
         {
-            _normalUiCanvas = GameObject.FindWithTag("NormalUiCanvas").GetComponent<Canvas>();
-            _loadingUiCanvas = GameObject.FindWithTag("LoadingUiCanvas").GetComponent<Canvas>();
-            _alertUiCanvas = GameObject.FindWithTag("AlertUiCanvas").GetComponent<Canvas>();
+            _normalUiCanvas = GameObject.FindWithTag("NormalUICanvas").GetComponent<Canvas>();
+            _loadingUiCanvas = GameObject.FindWithTag("LoadingUICanvas").GetComponent<Canvas>();
+            _alertUiCanvas = GameObject.FindWithTag("AlertUICanvas").GetComponent<Canvas>();
             _uiCamera = GameObject.FindWithTag("UICamera").GetComponent<Camera>();
             _uiWaitingWindow = GameObject.FindWithTag("WaitingWindow");
             _uiWaitingWindow.SetActive(false);
@@ -107,6 +107,8 @@ namespace ClientTemplate
                     {
                         T windowScript = windowGameObject.GetComponent<T>();
                         windowScript.SetWindowType(windowType);
+                        bool isModal = _iuiWindowAssetTypeContainer.GetModalType(windowType);
+                        windowScript.SetIsModal(isModal);
                         _iuiWindowContainer.Add(windowScript);
                         LogManager.Log(LogManager.LogType.DEFAULT, $"{windowType} init!");
                         windowScript.Init(data);
@@ -165,18 +167,21 @@ namespace ClientTemplate
         private void ExecuteOnTop()
         {
             IUIWindows windowsOnTop = _iuiWindowContainer.AtLast();
-            if (windowsOnTop.IsModalessContainer() == true)
+            if (windowsOnTop != null)
             {
-                ModalessUIWindowContainer container = windowsOnTop as ModalessUIWindowContainer;
-                foreach (UIWindow window in container.ModalessWindowsList)
+                if (windowsOnTop.IsModalessContainer() == true)
                 {
-                    window.OnTop();
+                    ModalessUIWindowContainer container = windowsOnTop as ModalessUIWindowContainer;
+                    foreach (UIWindow window in container.ModalessWindowsList)
+                    {
+                        window.OnTop();
+                    }
                 }
-            }
-            else
-            {
-                UIWindow windowOnTop = windowsOnTop as UIWindow;
-                windowOnTop.OnTop();
+                else
+                {
+                    UIWindow windowOnTop = windowsOnTop as UIWindow;
+                    windowOnTop.OnTop();
+                }
             }
         }
         

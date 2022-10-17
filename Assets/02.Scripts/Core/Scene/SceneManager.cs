@@ -30,8 +30,8 @@ namespace ClientTemplate
             LogManager.Log(LogManager.LogType.CONTROLLER_INIT, "Scene Manager");
             CurrentScene = new Scene("EntryScene", SceneAssetType.EntryScene);
             SceneLoadCallback = null;
-            SceneContainer.Add(SceneType.Entry, "EntryScene", SceneAssetType.EntryScene);
-            SceneContainer.Add(SceneType.Test, "TestScene", SceneAssetType.TestScene);
+            SceneContainer.Add(SceneType.EntryScene, "EntryScene", SceneAssetType.EntryScene);
+            SceneContainer.Add(SceneType.TestScene, "TestScene", SceneAssetType.TestScene);
         }
 
         public void Release()

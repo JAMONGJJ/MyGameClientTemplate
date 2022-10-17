@@ -17,7 +17,7 @@ MonoBehaviour:
     serializedVersion: 2
     Hash: 00000000000000000000000000000000
   m_OptimizeCatalogSize: 0
-  m_BuildRemoteCatalog: 0
+  m_BuildRemoteCatalog: 1
   m_BundleLocalCatalog: 0
   m_CatalogRequestsTimeout: 0
   m_DisableCatalogUpdateOnStart: 0
@@ -34,15 +34,17 @@ MonoBehaviour:
   m_MonoScriptBundleNaming: 0
   m_MonoScriptBundleCustomNaming: 
   m_RemoteCatalogBuildPath:
-    m_Id: 
+    m_Id: eb519a48724731641a5f47453c88e2d3
   m_RemoteCatalogLoadPath:
-    m_Id: 
+    m_Id: a6ca84252fc63c549a1ebf3c572d57c7
   m_ContentStateBuildPath: 
   m_BuildAddressablesWithPlayerBuild: 0
   m_overridePlayerVersion: 
   m_GroupAssets:
   - {fileID: 11400000, guid: 64a61a66adedb3a4e99c3647ecc2679f, type: 2}
   - {fileID: 11400000, guid: 38822fc1290e50540b1cf6b85c519c4a, type: 2}
+  - {fileID: 11400000, guid: 9197206b16914ca41b3e7eb293b3b1e9, type: 2}
+  - {fileID: 11400000, guid: fc4f43edcf9b5524d9ded4767db13460, type: 2}
   m_BuildSettings:
     m_CompileScriptsInVirtualMode: 0
     m_CleanupStreamingAssetsAfterBuilds: 1
@@ -53,6 +55,20 @@ MonoBehaviour:
     - m_InheritedParent: 
       m_Id: 7a9543512c3689941b16ab1178084b02
       m_ProfileName: Default
+      m_Values:
+      - m_Id: 67e26a8c737dba141a9efd5d97c2541f
+        m_Value: '[UnityEditor.EditorUserBuildSettings.activeBuildTarget]'
+      - m_Id: eb519a48724731641a5f47453c88e2d3
+        m_Value: '[UnityEngine.AddressableAssets.Addressables.BuildPath]/[BuildTarget]'
+      - m_Id: a6ca84252fc63c549a1ebf3c572d57c7
+        m_Value: '{UnityEngine.AddressableAssets.Addressables.RuntimePath}/[BuildTarget]'
+      - m_Id: 3c69bc3ee1b56e8438e9e5a7495b98d0
+        m_Value: ServerData/[BuildTarget]
+      - m_Id: d2fd65644cd69f64fbd6d0f4934730ef
+        m_Value: http://[PrivateIpAddress]:[HostingServicePort]
+    - m_InheritedParent: 
+      m_Id: 732a3b708863d00479cbfac72e3ff546
+      m_ProfileName: Dev
       m_Values:
       - m_Id: 67e26a8c737dba141a9efd5d97c2541f
         m_Value: '[UnityEditor.EditorUserBuildSettings.activeBuildTarget]'
@@ -83,7 +99,10 @@ MonoBehaviour:
     m_ProfileVersion: 1
   m_LabelTable:
     m_LabelNames:
-    - default
+    - Preload
+    - Dependencies
+    - AddressMaps
+    - DataTables
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: dca51b8f85e559c45bd29d970a84b873, type: 2}
@@ -97,7 +116,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 88da9d3625b55ef4889781592c9bf2f7, type: 2}
   - {fileID: 11400000, guid: afce0a68f75d1a2489b1c647df5a2057, type: 2}
   - {fileID: 11400000, guid: dc19989fedf744844856298cc8d82920, type: 2}
-  m_ActiveProfileId: 7a9543512c3689941b16ab1178084b02
+  m_ActiveProfileId: 732a3b708863d00479cbfac72e3ff546
   m_HostingServicesManager:
     m_HostingServiceInfos: []
     m_Settings: {fileID: 11400000}

@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5834b5087d578d24c926ce20cd31e6d6, type: 3}
-  m_Name: Default Local Group_ContentUpdateGroupSchema
+  m_Name: DataTables_ContentUpdateGroupSchema
   m_EditorClassIdentifier: 
-  m_Group: {fileID: 11400000, guid: 38822fc1290e50540b1cf6b85c519c4a, type: 2}
+  m_Group: {fileID: 11400000, guid: fc4f43edcf9b5524d9ded4767db13460, type: 2}
   m_StaticContent: 0

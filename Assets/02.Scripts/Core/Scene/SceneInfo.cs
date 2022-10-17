@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using ClientTemplate.ResourceInfo;
+using System.Xml.Serialization;
 using ClientTemplate.UIInfo;
 using UnityEngine;
 
@@ -11,9 +12,34 @@ namespace ClientTemplate
         public enum SceneType
         {
             None,
-            Entry,
-            Test,
+            EntryScene,
+            TestScene,
             
+        }
+
+        public enum SceneAssetType
+        {
+            None,
+            EntryScene,
+            TestScene,
+            
+        }
+
+        [XmlRoot("Scene")]
+        public class SceneAssetAddress
+        {
+            [XmlElement("Type")]
+            public SceneAssetType type;
+            
+            [XmlElement("Address")]
+            public string address;
+        }
+
+        [XmlRoot("AssetAddressMap")]
+        public class SceneAssetAddressContainer
+        {
+            [XmlArray("Assets"), XmlArrayItem("Scene")]
+            public List<SceneAssetAddress> AddressList;
         }
 
         public class Scene

@@ -2,71 +2,24 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Serialization;
+using ClientTemplate.SceneInfo;
+using ClientTemplate.UIInfo;
 using UnityEngine;
 
 namespace ClientTemplate
 {
     namespace ResourceInfo
     {
-        public enum UIWindowAssetType
-        {
-            None,
-            MainHud,
-            NoticeWindow,
-            
-        }
-
-        public enum SceneAssetType
-        {
-            None,
-            EntryScene,
-            TestScene,
-            
-        }
-
         public enum PrefabAssetType
         {
             None,
-            CameraObject,
+            TestCube,
+            ThreeDCameraObject,
             
             
         }
 
-        [XmlRoot("Asset")]
-        public class UIWindowAssetAddress
-        {
-            [XmlElement("Type")]
-            public UIWindowAssetType type;
-            
-            [XmlElement("Address")]
-            public string address;
-        }
-
-        [XmlRoot("AssetAddressMap")]
-        public class UIWindowAssetAddressContainer
-        {
-            [XmlArray("Assets"), XmlArrayItem("Asset")]
-            public List<UIWindowAssetAddress> AddressList;
-        }
-
-        [XmlRoot("Asset")]
-        public class SceneAssetAddress
-        {
-            [XmlElement("Type")]
-            public SceneAssetType type;
-            
-            [XmlElement("Address")]
-            public string address;
-        }
-
-        [XmlRoot("AssetAddressMap")]
-        public class SceneAssetAddressContainer
-        {
-            [XmlArray("Assets"), XmlArrayItem("Asset")]
-            public List<SceneAssetAddress> AddressList;
-        }
-
-        [XmlRoot("Asset")]
+        [XmlRoot("Prefab")]
         public class PrefabAssetAddress
         {
             [XmlElement("Type")]
@@ -79,7 +32,7 @@ namespace ClientTemplate
         [XmlRoot("AssetAddressMap")]
         public class PrefabAssetAddressContainer
         {
-            [XmlArray("Assets"), XmlArrayItem("Asset")]
+            [XmlArray("Assets"), XmlArrayItem("Prefab")]
             public List<PrefabAssetAddress> AddressList;
         }
 

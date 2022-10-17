@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: AddressMaps
+  m_EditorClassIdentifier: 
+  m_GroupName: AddressMaps
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 85c58ed9152f09544a82273dfdd8fd54
+  m_SerializeEntries:
+  - m_GUID: aa88c9deffa31e14e8a3434efb67472b
+    m_Address: PrefabAddressMap
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 5a01a45c02cf60247a440f42f609222d
+    m_Address: UIWindowAddressMap
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 240562149eec39848991bac336fd2c42
+    m_Address: SceneAddressMap
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 9c9c1549ba1db754fae56ceba9b0d96a, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 30f355112e401e74aa23bfbd9dd337e0, type: 2}
+    - {fileID: 11400000, guid: 27c99bbfc5b0e5f45846ee3dce63523a, type: 2}

@@ -30,7 +30,7 @@ namespace ClientTemplate
 
         public void OnBegin()
         {
-            // Core.System.Scene.LoadScene(SceneType.Test, AfterFieldSceneLoad);
+            Core.System.Scene.LoadScene(SceneType.TestScene, AfterFieldSceneLoad);
         }
 
         private void AfterFieldSceneLoad()
@@ -39,7 +39,7 @@ namespace ClientTemplate
             // GamePlayManager.Instance.SetMyPlayer();
             // GamePlayManager.Instance.SetMyCamera();
             // UIManager.Instance.CreateMainHud();
-            // UIManager.Instance.SetOverlayCamera();
+            UIManager.Instance.SetOverlayCamera();
         }
 
         public void OnEnd()

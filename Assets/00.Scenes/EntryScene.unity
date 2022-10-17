@@ -157,7 +157,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -389,7 +389,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &129013314
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -867,7 +867,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1254,7 +1254,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 517492585}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 517492583}
+        m_TargetAssemblyTypeName: ClientTemplate.TestBtnScript, Assembly-CSharp
+        m_MethodName: OnClick_Btn
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &517492585
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2338,7 +2350,7 @@ GameObject:
   - component: {fileID: 1269482093}
   m_Layer: 5
   m_Name: NormalUiCanvas
-  m_TagString: Untagged
+  m_TagString: NormalUICanvas
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2455,8 +2467,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1269482096}
-  - {fileID: 1464225806}
   - {fileID: 1780228774}
+  - {fileID: 1464225806}
   - {fileID: 1597194471}
   m_Father: {fileID: 0}
   m_RootOrder: 2
@@ -2690,7 +2702,7 @@ GameObject:
   - component: {fileID: 1464225807}
   m_Layer: 5
   m_Name: AlertUiCanvas
-  m_TagString: Untagged
+  m_TagString: AlertUICanvas
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2708,7 +2720,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1323839801}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -3055,7 +3067,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1739324514
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3290,7 +3302,7 @@ GameObject:
   - component: {fileID: 1780228775}
   m_Layer: 5
   m_Name: LoadingUiCanvas
-  m_TagString: Untagged
+  m_TagString: LoadingUICanvas
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3310,7 +3322,7 @@ RectTransform:
   - {fileID: 382823727}
   - {fileID: 1739324514}
   m_Father: {fileID: 1323839801}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -3700,7 +3712,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!111 &1820808279
 Animation:
   m_ObjectHideFlags: 0
@@ -3710,9 +3722,10 @@ Animation:
   m_GameObject: {fileID: 1820808278}
   m_Enabled: 1
   serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: fcc1ccd0f0ba3f9489424553182ec8d6, type: 2}
+  m_Animation: {fileID: 7400000, guid: 1530fc560b023cb4aa732d2ff3dcd3ea, type: 2}
   m_Animations:
   - {fileID: 7400000, guid: fcc1ccd0f0ba3f9489424553182ec8d6, type: 2}
+  - {fileID: 7400000, guid: 1530fc560b023cb4aa732d2ff3dcd3ea, type: 2}
   m_WrapMode: 0
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0

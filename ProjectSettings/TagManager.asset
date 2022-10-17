@@ -7,6 +7,9 @@ TagManager:
   - UICamera
   - LoadingWindow
   - WaitingWindow
+  - NormalUICanvas
+  - LoadingUICanvas
+  - AlertUICanvas
   layers:
   - Default
   - TransparentFX

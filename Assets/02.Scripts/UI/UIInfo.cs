@@ -1,9 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using ClientTemplate.ResourceInfo;
+using System.Xml.Serialization;
 using UnityEngine;
-using UniRx;
 using UniRx;
 
 namespace ClientTemplate
@@ -26,6 +25,31 @@ namespace ClientTemplate
             Alert,
             Loading,
             
+        }
+        
+        public enum UIWindowAssetType
+        {
+            None,
+            MainHud,
+            NoticeWindow,
+            
+        }
+
+        [XmlRoot("UIWindow")]
+        public class UIWindowAssetAddress
+        {
+            [XmlElement("Type")]
+            public UIWindowAssetType type;
+            
+            [XmlElement("Address")]
+            public string address;
+        }
+
+        [XmlRoot("AssetAddressMap")]
+        public class UIWindowAssetAddressContainer
+        {
+            [XmlArray("Assets"), XmlArrayItem("UIWindow")]
+            public List<UIWindowAssetAddress> AddressList;
         }
 
         public class UIData
@@ -195,6 +219,11 @@ namespace ClientTemplate
 
         public class UIWindowContainerWithStack : IUIWindowContainer
         {
+            public int Count
+            {
+                get { return _windowsList.Count; }
+            }
+            
             private Stack<IUIWindows> _windowsList;
 
             public UIWindowContainerWithStack()
@@ -210,40 +239,58 @@ namespace ClientTemplate
                 }
                 else
                 {
-                    if (_windowsList.Peek().IsModalessContainer() == true)
-                    {
-                        ModalessUIWindowContainer container = _windowsList.Peek() as ModalessUIWindowContainer;
-                        container.Add(window);
-                    }
-                    else
+                    if (_windowsList.Count == 0)
                     {
                         ModalessUIWindowContainer container = new ModalessUIWindowContainer();
                         container.Add(window);
                         _windowsList.Push(container);
+                    }
+                    else
+                    {
+                        IUIWindows atLast = _windowsList.Peek();
+                        if (atLast.IsModalessContainer() == true)
+                        {
+                            ModalessUIWindowContainer container = atLast as ModalessUIWindowContainer;
+                            container.Add(window);
+                        }
+                        else
+                        {
+                            ModalessUIWindowContainer container = new ModalessUIWindowContainer();
+                            container.Add(window);
+                            _windowsList.Push(container);
+                        }
                     }
                 }
             }
 
             public IUIWindows AtLast()
             {
-                return _windowsList.Peek();
+                if (_windowsList.Count != 0)
+                {
+                    return _windowsList.Peek();
+                }
+
+                return null;
             }
 
             public UIWindow RemoveAtLast(UIWindowType type)
             {
-                IUIWindows windowsAtLast = _windowsList.Peek();
-                if (windowsAtLast.IsModalessContainer() == true)
+                if (_windowsList.Count != 0)
                 {
-                    ModalessUIWindowContainer container = windowsAtLast as ModalessUIWindowContainer;
-                    return container.Remove(type);
-                }
-                else
-                {
-                    UIWindow window = windowsAtLast as UIWindow;
-                    if (window.WindowType == type)
+                    IUIWindows windowsAtLast = _windowsList.Peek();
+                    if (windowsAtLast.IsModalessContainer() == true)
                     {
-                        UIWindow result =  _windowsList.Pop() as UIWindow;
-                        return result;
+                        ModalessUIWindowContainer container = windowsAtLast as ModalessUIWindowContainer;
+                        return container.Remove(type);
+                    }
+                    else
+                    {
+                        UIWindow window = windowsAtLast as UIWindow;
+                        if (window.WindowType == type)
+                        {
+                            UIWindow result =  _windowsList.Pop() as UIWindow;
+                            return result;
+                        }
                     }
                 }
 
