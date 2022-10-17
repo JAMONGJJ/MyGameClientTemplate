@@ -26,7 +26,7 @@ namespace KlayLand
         {
         }
 
-        public void EnterKlayLand()
+        public void EnterGame()
         {
             StateMachine.NextState(new IntroState());
         }

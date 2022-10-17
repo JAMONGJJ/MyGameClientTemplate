@@ -6,15 +6,22 @@ using UnityEngine;
 
 namespace KlayLand
 {
-    public class PlayerController : MonoBehaviour
+    public class MyPlayerController : MonoBehaviour
     {
         public Animator playerAnimator;
         private float _maxSpeed = 50.0f;
         private float _elapsedTime = 0.0f;
+        private Camera _mainCamera;
+
+        private void Start()
+        {
+            gameObject.tag = "MyPlayer";
+            _mainCamera = Camera.main;
+        }
 
         public void SetPlayerTransform(Vector3 characterTransform, double radius)
         {
-            Vector3 cameraDirection = Camera.main.transform.forward;
+            Vector3 cameraDirection = _mainCamera.transform.forward;
             cameraDirection.y = 0;
             float cameraAngle = (float)(Math.Atan2(cameraDirection.z, cameraDirection.x) * Mathf.Rad2Deg);
             

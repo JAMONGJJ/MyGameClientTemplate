@@ -14,7 +14,7 @@ namespace KlayLand
         private void Start()
         {
             GameEntryManager.Instance.Init();
-            GameEntryManager.Instance.EnterKlayLand();
+            GameEntryManager.Instance.EnterGame();
         }
     }
 }

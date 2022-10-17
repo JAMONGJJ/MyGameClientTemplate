@@ -10,7 +10,7 @@ namespace KlayLand
     public partial class GamePlayManager : MonoManager<GamePlayManager>
     {
         public GameObject CharacterInitPosition { get; private set; }
-        public PlayerController MyPlayerController { get; private set; }
+        public MyPlayerController MyPlayerController { get; private set; }
         public CameraController MyCameraController { get; private set; }
 
         public override void Init()
@@ -53,7 +53,7 @@ namespace KlayLand
                 }
                 UIManager.Instance.CloseWaitingWindow();
                 GameObject myCharacter = Instantiate(handle.Result, CharacterInitPosition.transform.position, Quaternion.identity);
-                MyPlayerController = myCharacter.GetComponent<PlayerController>();
+                MyPlayerController = myCharacter.GetComponent<MyPlayerController>();
             }
             else
             {
