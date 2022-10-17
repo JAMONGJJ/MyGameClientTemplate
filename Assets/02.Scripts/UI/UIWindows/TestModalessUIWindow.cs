@@ -13,11 +13,6 @@ namespace ClientTemplate
         public class WindowData : UIData
         {
             public string testText;
-
-            public void Refresh(string text)
-            {
-                testText = text;
-            }
         }
 
         public Button ExitButton;

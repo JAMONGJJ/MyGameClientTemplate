@@ -60,12 +60,21 @@ namespace ClientTemplate
         
         public override void Release()
         {
-
+            _uiWindowContainer = null;
+            _uiWindowAssetTypeContainer = null;
+            _uiDataInfoContainer = null;
+            _normalUiCanvas = null;
+            _loadingUiCanvas = null;
+            _alertUiCanvas = null;
+            _uiCamera = null;
+            _uiWaitingWindow = null;
+            _uiLoadingWindow = null;
         }
         
         public override void ReSet()
         {
-
+            Release();
+            Init();
         }
 
         public void SetOverlayCamera()
