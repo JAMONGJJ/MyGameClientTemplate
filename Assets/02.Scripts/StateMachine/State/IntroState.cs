@@ -25,7 +25,7 @@ namespace ClientTemplate
         {
             switch (nextStateType)
             {
-                case StateType.InitialDataLoad:
+                case StateType.UserAgreement:
                 {
                     return true;
                 }
@@ -43,7 +43,7 @@ namespace ClientTemplate
             SetGamePlayManager();
             SetContentManager();
             
-            StateMachine.NextState(new InitialDataLoadState());
+            StateMachine.NextState(new UserAgreementState());
         }
 
         public void OnEnd()

@@ -9,23 +9,23 @@ namespace ClientTemplate
         void Authenticate();
     }
 
-    public class AuthenticationManager : IAuthenticationManager
+    public class AndroidAuthenticationManager : IAuthenticationManager
     {
         public void Init()
         {
-            LogManager.Log(LogManager.LogType.CONTROLLER_INIT, "Authentication Manager");
+            LogManager.Log(LogManager.LogType.CONTROLLER_INIT, "Android Authentication Manager");
             
         }
 
         public void Release()
         {
-            LogManager.Log(LogManager.LogType.CONTROLLER_RELEASE, "Authentication Manager");
+            LogManager.Log(LogManager.LogType.CONTROLLER_RELEASE, "Android Authentication Manager");
             
         }
 
         public void ReSet()
         {
-            LogManager.Log(LogManager.LogType.CONTROLLER_RESET, "Authentication Manager");
+            LogManager.Log(LogManager.LogType.CONTROLLER_RESET, "Android Authentication Manager");
             Release();
             Init();
         }
@@ -34,5 +34,33 @@ namespace ClientTemplate
         {
             
         }
+    }
+
+    public class IOSAuthenticationManager : IAuthenticationManager
+    {
+        public void Init()
+        {
+            LogManager.Log(LogManager.LogType.CONTROLLER_INIT, "IOS Authentication Manager");
+            
+        }
+
+        public void Release()
+        {
+            LogManager.Log(LogManager.LogType.CONTROLLER_RELEASE, "IOS Authentication Manager");
+            
+        }
+
+        public void ReSet()
+        {
+            LogManager.Log(LogManager.LogType.CONTROLLER_RESET, "IOS Authentication Manager");
+            Release();
+            Init();
+        }
+
+        public void Authenticate()
+        {
+            
+        }
+
     }
 }

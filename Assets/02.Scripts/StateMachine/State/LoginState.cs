@@ -47,7 +47,15 @@ namespace ClientTemplate
 
         private void Login()
         {
-            Core.System.SetAuthenticationManager(new AuthenticationManager());
+            #if UNITY_EDITOR
+            GameEntryManager.Instance.DestroySelf();
+            StateMachine.NextState(new FieldState());
+            return;
+            #elif UNITY_ANDROID
+            Core.System.SetAuthenticationManager(new AndroidAuthenticationManager());
+            #elif UNITY_IOS
+            Core.System.SetAuthenticationManager(new IOSAuthenticationManager());
+            #endif
             Core.System.Authentication.Init();
             Core.System.Authentication.Authenticate();
             

@@ -11,8 +11,9 @@ namespace ClientTemplate
         {
             None,
             Intro,
-            ServerConnect,
+            UserAgreement,
             InitialDataLoad,
+            ServerConnect,
             Login,
             Field,
         
