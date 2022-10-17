@@ -213,10 +213,11 @@ namespace ClientTemplate
                             throw new Exception("ModalessUIWindowContainer is null");
                         }
                         
-                        foreach (UIWindow window in container.ModalessWindowsList)
+                        foreach (UIWindow windowOnTop in container.ModalessWindowsList)
                         {
-                            UIData data = _uiDataInfoContainer.GetUIData(window.WindowType);
-                            window.OnTop(data);
+                            UIData data = _uiDataInfoContainer.GetUIData(windowOnTop.WindowType);
+                            LogManager.Log(LogManager.LogType.DEFAULT, $"{windowOnTop.WindowType} on top!");
+                            windowOnTop.OnTop(data);
                         }
                     }
                     else
@@ -228,6 +229,7 @@ namespace ClientTemplate
                         }
                         
                         UIData data = _uiDataInfoContainer.GetUIData(windowOnTop.WindowType);
+                        LogManager.Log(LogManager.LogType.DEFAULT, $"{windowOnTop.WindowType} on top!");
                         windowOnTop.OnTop(data);
                     }
                 }
