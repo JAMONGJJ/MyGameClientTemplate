@@ -53,6 +53,7 @@ namespace ClientTemplate
             _uiLoadingWindow.SetActive(false);
 
             _uiWindowAssetTypeContainer.Add(UIWindowType.TestModalessUIWindow, UICanvasType.Normal, UIWindowAssetType.TestModalessUIWindow, false);
+            _uiWindowAssetTypeContainer.Add(UIWindowType.TestModalessUIWindow2, UICanvasType.Normal, UIWindowAssetType.TestModalessUIWindow2, false);
             _uiWindowAssetTypeContainer.Add(UIWindowType.MainHud, UICanvasType.Normal, UIWindowAssetType.MainHud, true);
             _uiWindowAssetTypeContainer.Add(UIWindowType.NoticeWindow, UICanvasType.Normal, UIWindowAssetType.NoticeWindow, true);
         }
@@ -175,7 +176,15 @@ namespace ClientTemplate
                 ExecuteOnTop();
             }
         }
-        
+
+        public void RefreshUIData(UIWindowType type, UIData data)
+        {
+            if (_uiDataInfoContainer.Refresh(type, data) == false)
+            {
+                LogManager.LogError(LogManager.LogType.DEFAULT, "Entered ui window type does not exist in the container!");
+            }
+        }
+
         /// <summary>
         /// UI window마다 자신이 맨 위에 노출되었을때 수행해야하는 작업이 있다면,
         /// 해당 작업을 수행하게끔 하는 메소드.

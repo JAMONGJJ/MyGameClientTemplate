@@ -13,6 +13,7 @@ namespace ClientTemplate
         {
             None,
             TestModalessUIWindow,
+            TestModalessUIWindow2,
             MainHud,
             NoticeWindow,
             
@@ -32,6 +33,7 @@ namespace ClientTemplate
         {
             None,
             TestModalessUIWindow,
+            TestModalessUIWindow2,
             MainHud,
             NoticeWindow,
             
@@ -290,6 +292,7 @@ namespace ClientTemplate
         {
             void Add(UIWindowType type, UIData data);
             bool Contains(UIWindowType type);
+            bool Refresh(UIWindowType type, UIData data);
             UIData GetUIData(UIWindowType type);
             void Remove(UIWindowType type);
         }
@@ -315,6 +318,17 @@ namespace ClientTemplate
             {
                 if (_uiDataMap.ContainsKey(type) == true)
                 {
+                    return true;
+                }
+
+                return false;
+            }
+
+            public bool Refresh(UIWindowType type, UIData data)
+            {
+                if (_uiDataMap.ContainsKey(type) == true)
+                {
+                    _uiDataMap[type] = data;
                     return true;
                 }
 
