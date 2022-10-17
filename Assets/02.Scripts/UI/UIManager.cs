@@ -190,9 +190,16 @@ namespace ClientTemplate
 
         public void RefreshUIData(UIWindowType type, UIData data)
         {
-            if (_uiDataInfoContainer.Refresh(type, data) == false)
+            try
             {
-                LogManager.LogError(LogManager.LogType.DEFAULT, "Entered ui window type does not exist in the container!");
+                if (_uiDataInfoContainer.Refresh(type, data) == false)
+                {
+                    throw new Exception( "Entered ui window type does not exist in the container!");
+                }
+            }
+            catch (Exception e)
+            {
+                LogManager.LogError(LogManager.LogType.EXCEPTION, e.ToString());
             }
         }
 
