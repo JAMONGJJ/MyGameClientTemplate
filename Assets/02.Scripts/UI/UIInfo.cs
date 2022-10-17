@@ -12,6 +12,7 @@ namespace ClientTemplate
         public enum UIWindowType
         {
             None,
+            TestModalessUIWindow,
             MainHud,
             NoticeWindow,
             
@@ -30,6 +31,7 @@ namespace ClientTemplate
         public enum UIWindowAssetType
         {
             None,
+            TestModalessUIWindow,
             MainHud,
             NoticeWindow,
             
@@ -129,7 +131,6 @@ namespace ClientTemplate
         {
             public UIWindowType WindowType { get; private set; }
             public bool IsModal { get; private set; }
-            protected Subject<UIData> WindowOnTopSubject { get; set; }
 
             public void SetWindowType(UIWindowType type)
             {
@@ -185,19 +186,6 @@ namespace ClientTemplate
                         UIWindow result = window;
                         ModalessWindowsList.Remove(window);
                         return result;
-                    }
-                }
-
-                return null;
-            }
-
-            public UIWindow Find(UIWindowType type)
-            {
-                foreach (UIWindow window in ModalessWindowsList)
-                {
-                    if (window.WindowType == type)
-                    {
-                        return window;
                     }
                 }
 
@@ -295,6 +283,57 @@ namespace ClientTemplate
                 }
 
                 return null;
+            }
+        }
+
+        public interface IUIDataInfoContainer
+        {
+            void Add(UIWindowType type, UIData data);
+            bool Contains(UIWindowType type);
+            UIData GetUIData(UIWindowType type);
+            void Remove(UIWindowType type);
+        }
+
+        public class UIDataInfoContainer : IUIDataInfoContainer
+        {
+            private Dictionary<UIWindowType, UIData> _uiDataMap;
+
+            public UIDataInfoContainer()
+            {
+                _uiDataMap = new Dictionary<UIWindowType, UIData>();
+            }
+
+            public void Add(UIWindowType type, UIData data)
+            {
+                if (_uiDataMap.ContainsKey(type) == false)
+                {
+                    _uiDataMap.Add(type, data);
+                }
+            }
+
+            public bool Contains(UIWindowType type)
+            {
+                if (_uiDataMap.ContainsKey(type) == true)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+
+            public UIData GetUIData(UIWindowType type)
+            {
+                if (_uiDataMap.ContainsKey(type) == true)
+                {
+                    return _uiDataMap[type];
+                }
+
+                return null;
+            }
+
+            public void Remove(UIWindowType type)
+            {
+                _uiDataMap.Remove(type);
             }
         }
     }

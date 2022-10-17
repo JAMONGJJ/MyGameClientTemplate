@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -13,8 +14,9 @@ namespace ClientTemplate
 
     public class UIManager : MonoManager<UIManager>
     {
-        private IUIWindowContainer _iuiWindowContainer;
-        private IUIWindowAssetTypeContainer _iuiWindowAssetTypeContainer;
+        private IUIWindowContainer _uiWindowContainer;
+        private IUIWindowAssetTypeContainer _uiWindowAssetTypeContainer;
+        private IUIDataInfoContainer _uiDataInfoContainer;
         private Canvas _normalUiCanvas;
         private Canvas _loadingUiCanvas;
         private Canvas _alertUiCanvas;
@@ -26,12 +28,17 @@ namespace ClientTemplate
 
         public void SetUIWindowContainer(IUIWindowContainer container)
         {
-            _iuiWindowContainer = container;
+            _uiWindowContainer = container;
         }
         
         public void SetUIWindowAssetTypeContainer(IUIWindowAssetTypeContainer container)
         {
-            _iuiWindowAssetTypeContainer = container;
+            _uiWindowAssetTypeContainer = container;
+        }
+        
+        public void SetUIDataInfoContainer(IUIDataInfoContainer container)
+        {
+            _uiDataInfoContainer = container;
         }
 
         public override void Init()
@@ -45,8 +52,9 @@ namespace ClientTemplate
             _uiLoadingWindow = GameObject.FindWithTag("LoadingWindow");
             _uiLoadingWindow.SetActive(false);
 
-            _iuiWindowAssetTypeContainer.Add(UIWindowType.MainHud, UICanvasType.Normal, UIWindowAssetType.MainHud, true);
-            _iuiWindowAssetTypeContainer.Add(UIWindowType.NoticeWindow, UICanvasType.Normal, UIWindowAssetType.NoticeWindow, true);
+            _uiWindowAssetTypeContainer.Add(UIWindowType.TestModalessUIWindow, UICanvasType.Normal, UIWindowAssetType.TestModalessUIWindow, false);
+            _uiWindowAssetTypeContainer.Add(UIWindowType.MainHud, UICanvasType.Normal, UIWindowAssetType.MainHud, true);
+            _uiWindowAssetTypeContainer.Add(UIWindowType.NoticeWindow, UICanvasType.Normal, UIWindowAssetType.NoticeWindow, true);
         }
         
         public override void Release()
@@ -73,7 +81,13 @@ namespace ClientTemplate
         /// <typeparam name="T"></typeparam>
         public async void OpenWindow<T>(UIWindowType windowType, UIData data = null) where T : UIWindow
         {
-            UIWindowAssetType assetType = _iuiWindowAssetTypeContainer.GetAssetType(windowType);
+            if (_uiDataInfoContainer.Contains(windowType) == true)
+            {
+                LogManager.LogError(LogManager.LogType.DEFAULT, "Entered ui window is already instantiated!");
+                return;
+            }
+
+            UIWindowAssetType assetType = _uiWindowAssetTypeContainer.GetAssetType(windowType);
             if(assetType == UIWindowAssetType.None)
             {
                 LogManager.LogError(LogManager.LogType.DEFAULT, "Entered ui window type does not exist!");
@@ -81,7 +95,7 @@ namespace ClientTemplate
             }
             else
             {
-                UICanvasType canvasType = _iuiWindowAssetTypeContainer.GetCanvasType(windowType);
+                UICanvasType canvasType = _uiWindowAssetTypeContainer.GetCanvasType(windowType);
                 string assetAddress = Core.System.Resource.GetAddressByType(assetType);
                 if (string.IsNullOrEmpty(assetAddress) == true)
                 {
@@ -107,9 +121,10 @@ namespace ClientTemplate
                     {
                         T windowScript = windowGameObject.GetComponent<T>();
                         windowScript.SetWindowType(windowType);
-                        bool isModal = _iuiWindowAssetTypeContainer.GetModalType(windowType);
+                        bool isModal = _uiWindowAssetTypeContainer.GetModalType(windowType);
                         windowScript.SetIsModal(isModal);
-                        _iuiWindowContainer.Add(windowScript);
+                        _uiWindowContainer.Add(windowScript);
+                        _uiDataInfoContainer.Add(windowType, data);
                         LogManager.Log(LogManager.LogType.DEFAULT, $"{windowType} init!");
                         windowScript.Init(data);
                     }
@@ -145,7 +160,8 @@ namespace ClientTemplate
         /// </summary>
         public void CloseWindow(UIWindowType type)
         {
-            UIWindow lastWindow = _iuiWindowContainer.RemoveAtLast(type);
+            UIWindow lastWindow = _uiWindowContainer.RemoveAtLast(type);
+            _uiDataInfoContainer.Remove(type);
             if (lastWindow == null)
             {
                 LogManager.LogError(LogManager.LogType.DEFAULT, "Entered ui window does not exist in the container!");
@@ -166,22 +182,41 @@ namespace ClientTemplate
         /// </summary>
         private void ExecuteOnTop()
         {
-            IUIWindows windowsOnTop = _iuiWindowContainer.AtLast();
-            if (windowsOnTop != null)
+            try
             {
-                if (windowsOnTop.IsModalessContainer() == true)
+                IUIWindows windowsOnTop = _uiWindowContainer.AtLast();
+                if (windowsOnTop != null)
                 {
-                    ModalessUIWindowContainer container = windowsOnTop as ModalessUIWindowContainer;
-                    foreach (UIWindow window in container.ModalessWindowsList)
+                    if (windowsOnTop.IsModalessContainer() == true)
                     {
-                        window.OnTop();
+                        ModalessUIWindowContainer container = windowsOnTop as ModalessUIWindowContainer;
+                        if (container == null)
+                        {
+                            throw new Exception("ModalessUIWindowContainer is null");
+                        }
+                        
+                        foreach (UIWindow window in container.ModalessWindowsList)
+                        {
+                            UIData data = _uiDataInfoContainer.GetUIData(window.WindowType);
+                            window.OnTop(data);
+                        }
+                    }
+                    else
+                    {
+                        UIWindow windowOnTop = windowsOnTop as UIWindow;
+                        if (windowOnTop == null)
+                        {
+                            throw new Exception("UIWindow is null");
+                        }
+                        
+                        UIData data = _uiDataInfoContainer.GetUIData(windowOnTop.WindowType);
+                        windowOnTop.OnTop(data);
                     }
                 }
-                else
-                {
-                    UIWindow windowOnTop = windowsOnTop as UIWindow;
-                    windowOnTop.OnTop();
-                }
+            }
+            catch (Exception e)
+            {
+                LogManager.LogError(LogManager.LogType.EXCEPTION, e.ToString());
             }
         }
         
@@ -190,7 +225,7 @@ namespace ClientTemplate
         /// </summary>
         public async void CreateMainHud()
         {
-            UIWindowAssetType assetType = _iuiWindowAssetTypeContainer.GetAssetType(UIWindowType.MainHud);
+            UIWindowAssetType assetType = _uiWindowAssetTypeContainer.GetAssetType(UIWindowType.MainHud);
             if(assetType == UIWindowAssetType.None)
             {
                 LogManager.LogError(LogManager.LogType.DEFAULT, "MainHud window type does not exist!");

@@ -100,6 +100,7 @@ namespace ClientTemplate
         {
             UIManager.Instance.SetUIWindowContainer(new UIWindowContainerWithStack());
             UIManager.Instance.SetUIWindowAssetTypeContainer(new UIWindowAssetTypeContainer());
+            UIManager.Instance.SetUIDataInfoContainer(new UIDataInfoContainer());
             UIManager.Instance.Init();
         }
         #endregion

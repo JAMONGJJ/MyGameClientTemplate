@@ -11,5 +11,9 @@ namespace ClientTemplate
         {
             UIManager.Instance.OpenWindow<UINoticeWindow>(UIWindowType.NoticeWindow);
         }
+        public void OnClick_Btn2()
+        {
+            UIManager.Instance.OpenWindow<TestModalessUIWindow>(UIWindowType.TestModalessUIWindow);
+        }
     }
 }

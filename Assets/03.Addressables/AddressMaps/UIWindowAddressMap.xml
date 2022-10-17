@@ -1,5 +1,6 @@
 <AssetAddressMap>
 	<Assets>
+		<UIWindow><Type>TestModalessUIWindow</Type><Address>Preload/Prefabs/TestModalessUIWindow.prefab</Address></UIWindow>
 		<UIWindow><Type>MainHud</Type><Address>Preload/Prefabs/MainHud.prefab</Address></UIWindow>
 		<UIWindow><Type>NoticeWindow</Type><Address>Preload/Prefabs/UINoticeWindow.prefab</Address></UIWindow>
 	</Assets>
