@@ -300,10 +300,12 @@ namespace ClientTemplate
         public class UIDataInfoContainer : IUIDataInfoContainer
         {
             private Dictionary<UIWindowType, UIData> _uiDataMap;
+            private Dictionary<UIWindowType, bool> _uiDataModifiedMap;
 
             public UIDataInfoContainer()
             {
                 _uiDataMap = new Dictionary<UIWindowType, UIData>();
+                _uiDataModifiedMap = new Dictionary<UIWindowType, bool>();
             }
 
             public void Add(UIWindowType type, UIData data)
@@ -311,6 +313,7 @@ namespace ClientTemplate
                 if (_uiDataMap.ContainsKey(type) == false)
                 {
                     _uiDataMap.Add(type, data);
+                    _uiDataModifiedMap.Add(type, false);
                 }
             }
 
@@ -329,6 +332,7 @@ namespace ClientTemplate
                 if (_uiDataMap.ContainsKey(type) == true)
                 {
                     _uiDataMap[type] = data;
+                    _uiDataModifiedMap[type] = true;
                     return true;
                 }
 
@@ -337,17 +341,21 @@ namespace ClientTemplate
 
             public UIData GetUIData(UIWindowType type)
             {
-                if (_uiDataMap.ContainsKey(type) == true)
+                if (_uiDataModifiedMap.ContainsKey(type) == true)
                 {
-                    return _uiDataMap[type];
+                    if (_uiDataModifiedMap[type] == true)
+                    {
+                        return _uiDataMap[type];
+                    }
                 }
-
+                
                 return null;
             }
 
             public void Remove(UIWindowType type)
             {
                 _uiDataMap.Remove(type);
+                _uiDataModifiedMap.Remove(type);
             }
         }
     }
