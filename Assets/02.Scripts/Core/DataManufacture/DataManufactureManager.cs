@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using ClientTemplate.DataManufactureInfo;
 using UnityEngine;
-using KlayLand.DataManufactureInfo;
 
-namespace KlayLand
+namespace ClientTemplate
 {
     public interface IDataManufactureManager : IManager
     {

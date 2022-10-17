@@ -1,13 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
-using KlayLand.UIInfo;
-using KlayLand.StringInfo;
+using ClientTemplate.UIInfo;
+using ClientTemplate.StringInfo;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UniRx;
 
-namespace KlayLand
+namespace ClientTemplate
 {
     public class UIDataLoadWindow : MonoBehaviour
     {

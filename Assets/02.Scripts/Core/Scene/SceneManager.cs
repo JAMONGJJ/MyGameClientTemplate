@@ -1,11 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using KlayLand.ResourceInfo;
+using ClientTemplate.ResourceInfo;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
-namespace KlayLand
+namespace ClientTemplate
 {
     using SceneInfo;
 
@@ -32,7 +32,6 @@ namespace KlayLand
             SceneLoadCallback = null;
             SceneContainer.Add(SceneType.Entry, "EntryScene", SceneAssetType.EntryScene);
             SceneContainer.Add(SceneType.Test, "TestScene", SceneAssetType.TestScene);
-            SceneContainer.Add(SceneType.StayUp, "StayUpScene", SceneAssetType.StayUpScene);
         }
 
         public void Release()

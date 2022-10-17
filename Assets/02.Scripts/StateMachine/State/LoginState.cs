@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 
-namespace KlayLand
+namespace ClientTemplate
 {
     using UIInfo;
     using StateInfo;

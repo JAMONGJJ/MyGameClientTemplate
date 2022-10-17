@@ -6,7 +6,7 @@ using UniRx;
 using Unity.Mathematics;
 using System.Linq;
 
-namespace KlayLand
+namespace ClientTemplate
 {
     public class CameraController : MonoBehaviour
     {
@@ -28,7 +28,7 @@ namespace KlayLand
         private void Start()
         {
             _mainCamera = Camera.main;
-            _playerObject = GameObject.FindWithTag("Player");
+            _playerObject = GameObject.FindWithTag("MyPlayer");
             _characterHeightPivot = new Vector3(0.0f, 7.0f, 0.0f);
             transform.rotation = Quaternion.Euler(new Vector3(30.0f, 0.0f, 0.0f));
             _distanceBetweenCameraAndCollder =

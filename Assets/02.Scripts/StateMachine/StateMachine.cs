@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace KlayLand
+namespace ClientTemplate
 {
     using StateInfo;
     public static class StateMachine

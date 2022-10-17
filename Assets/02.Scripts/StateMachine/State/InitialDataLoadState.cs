@@ -1,10 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
-using KlayLand.StateInfo;
+using ClientTemplate.StateInfo;
 using UnityEngine;
 using UniRx;
 
-namespace KlayLand
+namespace ClientTemplate
 {
     public class InitialDataLoadState : IState
     {

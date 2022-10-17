@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
-using KlayLand.DataManufactureInfo;
+using ClientTemplate.DataManufactureInfo;
 using UnityEngine;
 
-namespace KlayLand
+namespace ClientTemplate
 {
     namespace PlayerInfo
     {

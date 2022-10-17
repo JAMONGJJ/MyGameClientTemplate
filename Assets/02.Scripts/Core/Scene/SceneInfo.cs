@@ -1,10 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
-using KlayLand.UIInfo;
+using ClientTemplate.ResourceInfo;
+using ClientTemplate.UIInfo;
 using UnityEngine;
-using KlayLand.ResourceInfo;
 
-namespace KlayLand
+namespace ClientTemplate
 {
     namespace SceneInfo
     {
@@ -13,7 +13,6 @@ namespace KlayLand
             None,
             Entry,
             Test,
-            StayUp,
             
         }
 
@@ -29,7 +28,7 @@ namespace KlayLand
             }
         }
 
-        public interface ISceneContainer : IDataContainer
+        public interface ISceneContainer
         {
             void Add(SceneType sceneType, string name, SceneAssetType assetType);
             Scene GetValue(SceneType sceneType);

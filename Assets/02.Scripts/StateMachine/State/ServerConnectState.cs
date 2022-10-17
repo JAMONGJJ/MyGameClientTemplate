@@ -1,11 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
-using KlayLand.DataManufactureInfo;
-using KlayLand.PlayerInfo;
-using KlayLand.StateInfo;
+using ClientTemplate.StateInfo;
+using ClientTemplate.DataManufactureInfo;
+using ClientTemplate.PlayerInfo;
 using UnityEngine;
 
-namespace KlayLand
+namespace ClientTemplate
 {
     public class ServerConnectState : IState
     {

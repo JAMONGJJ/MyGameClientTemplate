@@ -1,14 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using KlayLand.SceneInfo;
-using KlayLand.UIInfo;
+using ClientTemplate.SceneInfo;
+using ClientTemplate.UIInfo;
 using UnityEngine;
 using UnityEngine.UI;
 using UniRx;
 using TMPro;
 
-namespace KlayLand
+namespace ClientTemplate
 {
     public class UIGameEntryWindow : MonoBehaviour
     {

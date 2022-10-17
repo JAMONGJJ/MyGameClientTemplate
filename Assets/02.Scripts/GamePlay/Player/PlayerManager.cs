@@ -1,11 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
-using KlayLand.DataManufactureInfo;
+using ClientTemplate.DataManufactureInfo;
+using ClientTemplate.PlayerInfo;
 using UnityEngine;
-using KlayLand.PlayerInfo;
 
 
-namespace KlayLand
+namespace ClientTemplate
 {
     public partial class DataManufactureManager
     {

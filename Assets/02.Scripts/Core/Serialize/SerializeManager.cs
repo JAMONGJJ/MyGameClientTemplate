@@ -6,7 +6,7 @@ using System.IO;
 using System.Security.Cryptography;
 
 
-namespace KlayLand
+namespace ClientTemplate
 {
     public interface ISerializeManager : IManager
     {

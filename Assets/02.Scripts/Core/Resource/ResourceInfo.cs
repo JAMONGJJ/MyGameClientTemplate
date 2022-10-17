@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Xml.Serialization;
 using UnityEngine;
 
-namespace KlayLand
+namespace ClientTemplate
 {
     namespace ResourceInfo
     {
@@ -12,10 +12,7 @@ namespace KlayLand
         {
             None,
             MainHud,
-            CustomizeWindow,
-            MyPet,
             NoticeWindow,
-            MyProfile,
             
         }
 
@@ -24,7 +21,6 @@ namespace KlayLand
             None,
             EntryScene,
             TestScene,
-            StayUpScene,
             
         }
 
@@ -32,7 +28,6 @@ namespace KlayLand
         {
             None,
             CameraObject,
-            TestCharacterRig,
             
             
         }
@@ -47,10 +42,10 @@ namespace KlayLand
             public string address;
         }
 
-        [XmlRoot("Assets")]
+        [XmlRoot("AssetAddressMap")]
         public class UIWindowAssetAddressContainer
         {
-            [XmlArray("Group"), XmlArrayItem("Asset")]
+            [XmlArray("Assets"), XmlArrayItem("Asset")]
             public List<UIWindowAssetAddress> AddressList;
         }
 
@@ -64,10 +59,10 @@ namespace KlayLand
             public string address;
         }
 
-        [XmlRoot("Assets")]
+        [XmlRoot("AssetAddressMap")]
         public class SceneAssetAddressContainer
         {
-            [XmlArray("Group"), XmlArrayItem("Asset")]
+            [XmlArray("Assets"), XmlArrayItem("Asset")]
             public List<SceneAssetAddress> AddressList;
         }
 
@@ -81,21 +76,18 @@ namespace KlayLand
             public string address;
         }
 
-        [XmlRoot("Assets")]
+        [XmlRoot("AssetAddressMap")]
         public class PrefabAssetAddressContainer
         {
-            [XmlArray("Group"), XmlArrayItem("Asset")]
+            [XmlArray("Assets"), XmlArrayItem("Asset")]
             public List<PrefabAssetAddress> AddressList;
         }
 
         public interface IAssetAddressContainer
         {
-            void Add(UIWindowAssetType type, string address);
-            void AddRange(UIWindowAssetAddressContainer container);
-            void Add(SceneAssetType type, string address);
-            void AddRange(SceneAssetAddressContainer container);
-            void Add(PrefabAssetType type, string address);
-            void AddRange(PrefabAssetAddressContainer container);
+            void Add(UIWindowAssetAddressContainer container);
+            void Add(SceneAssetAddressContainer container);
+            void Add(PrefabAssetAddressContainer container);
             string GetAddress(UIWindowAssetType type);
             string GetAddress(SceneAssetType type);
             string GetAddress(PrefabAssetType type);
@@ -114,15 +106,7 @@ namespace KlayLand
                 PrefabAssetAddressMap = new Dictionary<PrefabAssetType, string>();
             }
 
-            public void Add(UIWindowAssetType type, string address)
-            {
-                if (WindowAssetAddressMap.ContainsKey(type) == false)
-                {
-                    WindowAssetAddressMap.Add(type, address);
-                }
-            }
-
-            public void AddRange(UIWindowAssetAddressContainer container)
+            public void Add(UIWindowAssetAddressContainer container)
             {
                 foreach (UIWindowAssetAddress add in container.AddressList)
                 {
@@ -133,15 +117,7 @@ namespace KlayLand
                 }
             }
 
-            public void Add(SceneAssetType type, string address)
-            {
-                if (SceneAssetAddressMap.ContainsKey(type) == false)
-                {
-                    SceneAssetAddressMap.Add(type, address);
-                }
-            }
-
-            public void AddRange(SceneAssetAddressContainer container)
+            public void Add(SceneAssetAddressContainer container)
             {
                 foreach (SceneAssetAddress add in container.AddressList)
                 {
@@ -152,15 +128,7 @@ namespace KlayLand
                 }
             }
 
-            public void Add(PrefabAssetType type, string address)
-            {
-                if (PrefabAssetAddressMap.ContainsKey(type) == false)
-                {
-                    PrefabAssetAddressMap.Add(type, address);
-                }
-            }
-
-            public void AddRange(PrefabAssetAddressContainer container)
+            public void Add(PrefabAssetAddressContainer container)
             {
                 foreach (PrefabAssetAddress add in container.AddressList)
                 {

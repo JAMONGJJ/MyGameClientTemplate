@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
-using KlayLand.UIInfo;
+using ClientTemplate.UIInfo;
 using UnityEngine;
 
-namespace KlayLand
+namespace ClientTemplate
 {
     public class GameEntryManager : MonoManager<GameEntryManager>
     {

@@ -5,7 +5,7 @@ using System.Diagnostics;
 using UnityEngine;
 using System.IO;
 
-namespace KlayLand
+namespace ClientTemplate
 {
     using System.Diagnostics;
     public static class LogManager

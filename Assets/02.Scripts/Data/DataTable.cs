@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
-using KlayLand.StringInfo;
+using ClientTemplate.StringInfo;
 using UnityEngine;
 
-namespace KlayLand
+namespace ClientTemplate
 {
     public static class Data
     {

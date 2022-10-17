@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 
-namespace KlayLand
+namespace ClientTemplate
 {
     public class MyPlayerController : MonoBehaviour
     {

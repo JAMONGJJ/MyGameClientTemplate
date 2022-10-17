@@ -1,10 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
-using KlayLand.DataManufactureInfo;
+using ClientTemplate.DataManufactureInfo;
 using Unity.VisualScripting;
 using UnityEngine;
 
-namespace KlayLand
+namespace ClientTemplate
 {
     using UIInfo;
     using StateInfo;
@@ -98,7 +98,7 @@ namespace KlayLand
         #region UIManager
         private void SetUIManager()
         {
-            UIManager.Instance.SetUIWindowContainer(new UIWindowContainer());
+            UIManager.Instance.SetUIWindowContainer(new UIWindowContainerWithStack());
             UIManager.Instance.SetUIWindowAssetTypeContainer(new UIWindowAssetTypeContainer());
             UIManager.Instance.Init();
         }

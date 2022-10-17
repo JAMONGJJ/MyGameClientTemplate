@@ -1,13 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using KlayLand.ResourceInfo;
+using ClientTemplate.ResourceInfo;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
-namespace KlayLand
+namespace ClientTemplate
 {
     using UIInfo;
 
@@ -45,11 +45,8 @@ namespace KlayLand
             _uiLoadingWindow = GameObject.FindWithTag("LoadingWindow");
             _uiLoadingWindow.SetActive(false);
 
-            _iuiWindowAssetTypeContainer.Add(UIWindowType.MainHud, UICanvasType.Normal, UIWindowAssetType.MainHud);
-            _iuiWindowAssetTypeContainer.Add(UIWindowType.CustomizeWindow, UICanvasType.Normal, UIWindowAssetType.CustomizeWindow);
-            _iuiWindowAssetTypeContainer.Add(UIWindowType.MyPet, UICanvasType.Normal, UIWindowAssetType.MyPet);
-            _iuiWindowAssetTypeContainer.Add(UIWindowType.NoticeWindow, UICanvasType.Normal, UIWindowAssetType.NoticeWindow);
-            _iuiWindowAssetTypeContainer.Add(UIWindowType.MyProfile, UICanvasType.Normal, UIWindowAssetType.MyProfile);
+            _iuiWindowAssetTypeContainer.Add(UIWindowType.MainHud, UICanvasType.Normal, UIWindowAssetType.MainHud, true);
+            _iuiWindowAssetTypeContainer.Add(UIWindowType.NoticeWindow, UICanvasType.Normal, UIWindowAssetType.NoticeWindow, true);
         }
         
         public override void Release()
@@ -64,8 +61,7 @@ namespace KlayLand
 
         public void SetOverlayCamera()
         {
-            var cameraData = Camera.main.GetUniversalAdditionalCameraData();
-            cameraData.cameraStack.Add(_uiCamera);
+            Camera.main.GetUniversalAdditionalCameraData().cameraStack.Add(_uiCamera);
         }
         
         /// <summary>
@@ -113,14 +109,7 @@ namespace KlayLand
                         windowScript.SetWindowType(windowType);
                         _iuiWindowContainer.Add(windowScript);
                         LogManager.Log(LogManager.LogType.DEFAULT, $"{windowType} init!");
-                        if (data == null)
-                        {
-                            windowScript.Init();
-                        }
-                        else
-                        {
-                            windowScript.Init(data);
-                        }
+                        windowScript.Init(data);
                     }
 
                     Addressables.Release(handle);
@@ -152,9 +141,9 @@ namespace KlayLand
         /// <summary>
         /// 맨 위에 노출되어 있는 UI window를 닫는 메소드.
         /// </summary>
-        public void CloseWindow()
+        public void CloseWindow(UIWindowType type)
         {
-            UIWindow lastWindow = _iuiWindowContainer.RemoveAtLast();
+            UIWindow lastWindow = _iuiWindowContainer.RemoveAtLast(type);
             if (lastWindow == null)
             {
                 LogManager.LogError(LogManager.LogType.DEFAULT, "Entered ui window does not exist in the container!");
@@ -165,43 +154,8 @@ namespace KlayLand
                 LogManager.Log(LogManager.LogType.DEFAULT, $"{lastWindow.WindowType} release!");
                 lastWindow.Release();
                 Destroy(lastWindow.gameObject);
+                ExecuteOnTop();
             }
-
-            ExecuteOnTop();
-        }
-
-        /// <summary>
-        /// window template T를 이용해 맨 위가 아닌 특정 UI window를 닫는 메소드.
-        /// GetComponent를 사용하도록 구현돼있어서 performance를 많이 잡아먹습니다.
-        /// 최대한 사용을 덜하는 방향으로 작업해야 할 듯합니다.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        public void CloseWindow<T>() where T : UIWindow
-        {
-            UIWindow window = _iuiWindowContainer.Remove<T>();
-            if (window == null)
-            {
-                Debug.LogError("Entered ui window does not exist in the container!");
-                return;
-            }
-            else
-            {
-                LogManager.Log(LogManager.LogType.DEFAULT, $"{window.WindowType} release!");
-                window.Release();
-                Destroy(window.gameObject);
-            }
-        }
-
-        /// <summary>
-        /// window template T를 이용해 특정 UI window를 찾는 메소드.
-        /// 찾는 window가 없으면 null 리턴합니다.
-        /// GetComponent를 사용하도록 구현돼있어서 performance를 많이 잡아먹습니다.
-        /// 최대한 사용을 덜하는 방향으로 작업해야 할 듯합니다.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        public UIWindow GetWindow<T>() where T : UIWindow
-        {
-            return _iuiWindowContainer.Find<T>();
         }
         
         /// <summary>
@@ -210,15 +164,24 @@ namespace KlayLand
         /// </summary>
         private void ExecuteOnTop()
         {
-            UIWindow windowOnTop = _iuiWindowContainer.AtLast();
-            if (windowOnTop != null)
+            IUIWindows windowsOnTop = _iuiWindowContainer.AtLast();
+            if (windowsOnTop.IsModalessContainer() == true)
             {
+                ModalessUIWindowContainer container = windowsOnTop as ModalessUIWindowContainer;
+                foreach (UIWindow window in container.ModalessWindowsList)
+                {
+                    window.OnTop();
+                }
+            }
+            else
+            {
+                UIWindow windowOnTop = windowsOnTop as UIWindow;
                 windowOnTop.OnTop();
             }
         }
         
         /// <summary>
-        /// MainHud prefab 생성
+        /// MainHud 오브젝트 생성
         /// </summary>
         public async void CreateMainHud()
         {
@@ -279,7 +242,7 @@ namespace KlayLand
         }
 
         /// <summary>
-        /// 대기 화면 생성
+        /// 대기 화면 표시
         /// </summary>
         public void OpenWaitingWindow()
         {
@@ -295,7 +258,7 @@ namespace KlayLand
         }
 
         /// <summary>
-        /// 로딩 화면 생성
+        /// 로딩 화면 표시
         /// </summary>
         public void OpenLoadingWindow()
         {

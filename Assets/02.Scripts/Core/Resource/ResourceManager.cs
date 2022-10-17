@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
-using KlayLand.StringInfo;
+using ClientTemplate.StringInfo;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -12,7 +12,7 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceProviders;
 using Task = System.Threading.Tasks.Task;
 
-namespace KlayLand
+namespace ClientTemplate
 {
     using ResourceInfo;
 
@@ -189,7 +189,7 @@ namespace KlayLand
                 {
                     UIWindowAssetAddressContainer uiWindowAssetAddressContainer =
                         serializer.Deserialize(reader) as UIWindowAssetAddressContainer;
-                    _assetAddressContainer.AddRange(uiWindowAssetAddressContainer);
+                    _assetAddressContainer.Add(uiWindowAssetAddressContainer);
                 }
                 catch (Exception e)
                 {
@@ -220,7 +220,7 @@ namespace KlayLand
                 {
                     SceneAssetAddressContainer sceneAssetAddressContainer =
                         serializer.Deserialize(reader) as SceneAssetAddressContainer;
-                    _assetAddressContainer.AddRange(sceneAssetAddressContainer);
+                    _assetAddressContainer.Add(sceneAssetAddressContainer);
                 }
                 catch (Exception e)
                 {
@@ -251,7 +251,7 @@ namespace KlayLand
                 {
                     PrefabAssetAddressContainer prefabAssetAddressContainer =
                         serializer.Deserialize(reader) as PrefabAssetAddressContainer;
-                    _assetAddressContainer.AddRange(prefabAssetAddressContainer);
+                    _assetAddressContainer.Add(prefabAssetAddressContainer);
                 }
                 catch (Exception e)
                 {

@@ -1,10 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using KlayLand.UIInfo;
+using ClientTemplate.UIInfo;
+using UniRx;
 using UnityEngine;
+using UnityEngine.UI;
 
-namespace KlayLand
+namespace ClientTemplate
 {
     public class UINoticeWindow : UIWindow
     {
@@ -23,16 +25,11 @@ namespace KlayLand
         }
 
         private WindowData _myWindowData;
-
+        public Button ExitButton;
         
-        public override void Init()
+        public override void Init(UIData data = null)
         {
-            throw new NotImplementedException();
-        }
-        
-        public override void Init(UIData data)
-        {
-
+            SetButtons();
         }
 
         public override void Release()
@@ -40,9 +37,23 @@ namespace KlayLand
 
         }
 
-        public override void OnTop()
+        public override void OnTop(UIData data = null)
         {
+            
+        }
 
+        private void SetOnTopSubject()
+        {
+            
+        }
+
+        private void SetButtons()
+        {
+            ExitButton.OnClickAsObservable()
+                .Subscribe(_ =>
+                {
+                    UIManager.Instance.CloseWindow(UIWindowType.NoticeWindow);
+                });
         }
     }
 }

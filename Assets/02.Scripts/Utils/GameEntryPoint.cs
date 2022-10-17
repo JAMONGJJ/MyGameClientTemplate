@@ -4,7 +4,7 @@ using Unity.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace KlayLand
+namespace ClientTemplate
 {
     public class GameEntryPoint : MonoBehaviour
     {
@@ -13,8 +13,10 @@ namespace KlayLand
         /// </summary>
         private void Start()
         {
-            GameEntryManager.Instance.Init();
-            GameEntryManager.Instance.EnterGame();
+            // GameEntryManager.Instance.Init();
+            // GameEntryManager.Instance.EnterGame();
+            
+            
         }
     }
 }

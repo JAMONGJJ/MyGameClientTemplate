@@ -1,26 +1,20 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using KlayLand.ResourceInfo;
+using ClientTemplate.ResourceInfo;
 using UnityEngine;
 using UniRx;
+using UniRx;
 
-namespace KlayLand
+namespace ClientTemplate
 {
     namespace UIInfo
     {
-        public interface IDataContainer
-        {
-        }
-
         public enum UIWindowType
         {
             None,
             MainHud,
-            CustomizeWindow,
-            MyPet,
             NoticeWindow,
-            MyProfile,
             
 
         }
@@ -34,38 +28,53 @@ namespace KlayLand
             
         }
 
-        public interface IUIWindowAssetTypeContainer : IDataContainer
+        public class UIData
         {
-            void Add(UIWindowType windowType, UICanvasType canvasType, UIWindowAssetType assetType);
+
+        }
+
+        public interface IUIWindows
+        {
+            bool IsModalessContainer();
+        }
+
+        public interface IUIWindowAssetTypeContainer
+        {
+            void Add(UIWindowType windowType, UICanvasType canvasType, UIWindowAssetType assetType, bool isModal);
             UICanvasType GetCanvasType(UIWindowType type);
             UIWindowAssetType GetAssetType(UIWindowType type);
+            bool GetModalType(UIWindowType type);
         }
 
         public class UIWindowAssetTypeContainer : IUIWindowAssetTypeContainer
         {
-            private Dictionary<UIWindowType, UICanvasType> CanvasTypeMap { get; set; }
-            private Dictionary<UIWindowType, UIWindowAssetType> AssetTypeMap { get; set; }
+            private Dictionary<UIWindowType, UICanvasType> _canvasTypeMap;
+            private Dictionary<UIWindowType, UIWindowAssetType> _assetTypeMap;
+            private Dictionary<UIWindowType, bool> _isModalMap;
 
             public UIWindowAssetTypeContainer()
             {
-                AssetTypeMap = new Dictionary<UIWindowType, UIWindowAssetType>();
-                CanvasTypeMap = new Dictionary<UIWindowType, UICanvasType>();
+                _assetTypeMap = new Dictionary<UIWindowType, UIWindowAssetType>();
+                _canvasTypeMap = new Dictionary<UIWindowType, UICanvasType>();
+                _isModalMap = new Dictionary<UIWindowType, bool>();
             }
 
-            public void Add(UIWindowType windowType, UICanvasType canvasType, UIWindowAssetType assetType)
+            public void Add(UIWindowType windowType, UICanvasType canvasType, UIWindowAssetType assetType, bool isModal)
             {
-                if (AssetTypeMap.ContainsKey(windowType) == false && CanvasTypeMap.ContainsKey(windowType) == false)
+                if (_assetTypeMap.ContainsKey(windowType) == false && _canvasTypeMap.ContainsKey(windowType) == false &&
+                    _isModalMap.ContainsKey(windowType) == false)
                 {
-                    CanvasTypeMap.Add(windowType, canvasType);
-                    AssetTypeMap.Add(windowType, assetType);
+                    _canvasTypeMap.Add(windowType, canvasType);
+                    _assetTypeMap.Add(windowType, assetType);
+                    _isModalMap.Add(windowType, isModal);
                 }
             }
 
             public UICanvasType GetCanvasType(UIWindowType type)
             {
-                if (AssetTypeMap.ContainsKey(type) == true)
+                if (_assetTypeMap.ContainsKey(type) == true)
                 {
-                    return CanvasTypeMap[type];
+                    return _canvasTypeMap[type];
                 }
                 
                 return UICanvasType.None;
@@ -73,35 +82,42 @@ namespace KlayLand
 
             public UIWindowAssetType GetAssetType(UIWindowType type)
             {
-                if (AssetTypeMap.ContainsKey(type) == true)
+                if (_assetTypeMap.ContainsKey(type) == true)
                 {
-                    return AssetTypeMap[type];
+                    return _assetTypeMap[type];
                 }
                 
                 return UIWindowAssetType.None;
             }
+
+            public bool GetModalType(UIWindowType type)
+            {
+                if (_isModalMap.ContainsKey(type) == true)
+                {
+                    return _isModalMap[type];
+                }
+
+                return false;
+            }
         }
 
-        public class UIData
+        public class UIWindow : MonoBehaviour, IUIWindows
         {
-
-        }
-
-        public class UIWindow : MonoBehaviour
-        {
-            public UIWindowType WindowType { get; protected set; }
+            public UIWindowType WindowType { get; private set; }
+            public bool IsModal { get; private set; }
+            protected Subject<UIData> WindowOnTopSubject { get; set; }
 
             public void SetWindowType(UIWindowType type)
             {
                 WindowType = type;
             }
 
-            public virtual void Init()
+            public void SetIsModal(bool modal)
             {
-
+                IsModal = modal;
             }
 
-            public virtual void Init(UIData data)
+            public virtual void Init(UIData data = null)
             {
 
             }
@@ -111,80 +127,52 @@ namespace KlayLand
 
             }
 
-            public virtual void OnTop()
+            public virtual void OnTop(UIData data = null)
             {
+                
+            }
 
+            public bool IsModalessContainer()
+            {
+                return false;
             }
         }
 
-        public interface IUIWindowContainer : IDataContainer
+        public class ModalessUIWindowContainer : IUIWindows
         {
-            void Add(UIWindow window);
-            UIWindow At(int index);
-            UIWindow AtLast();
-            UIWindow RemoveAtLast();
-            UIWindow Remove<T>();
-            UIWindow Find<T>();
-        }
+            public List<UIWindow> ModalessWindowsList { get; private set; }
 
-        public class UIWindowContainer : IUIWindowContainer
-        {
-            public int Count
+            public ModalessUIWindowContainer()
             {
-                get { return WindowList.Count; }
-            }
-
-            private List<UIWindow> WindowList { get; set; }
-
-            public UIWindowContainer()
-            {
-                WindowList = new List<UIWindow>();
+                ModalessWindowsList = new List<UIWindow>();
             }
 
             public void Add(UIWindow window)
             {
-                WindowList.Add(window);
+                ModalessWindowsList.Add(window);
             }
 
-            public UIWindow At(int index)
+            public UIWindow Remove(UIWindowType type)
             {
-                if (index >= 0 && Count > index)
+                foreach (UIWindow window in ModalessWindowsList)
                 {
-                    return WindowList[index];
-                }
-
-                return null;
-            }
-
-            public UIWindow AtLast()
-            {
-                if (Count > 0)
-                {
-                    return WindowList[Count - 1];
-                }
-
-                return null;
-            }
-
-            public UIWindow RemoveAtLast()
-            {
-                if (Count > 0)
-                {
-                    UIWindow window = WindowList[Count - 1];
-                    WindowList.Remove(window);
-                    return window;
-                }
-
-                return null;
-            }
-
-            public UIWindow Remove<T>()
-            {
-                foreach (var window in WindowList)
-                {
-                    if (window.GetComponent<T>() != null)
+                    if (window.WindowType == type)
                     {
-                        WindowList.Remove(window);
+                        UIWindow result = window;
+                        ModalessWindowsList.Remove(window);
+                        return result;
+                    }
+                }
+
+                return null;
+            }
+
+            public UIWindow Find(UIWindowType type)
+            {
+                foreach (UIWindow window in ModalessWindowsList)
+                {
+                    if (window.WindowType == type)
+                    {
                         return window;
                     }
                 }
@@ -192,13 +180,70 @@ namespace KlayLand
                 return null;
             }
 
-            public UIWindow Find<T>()
+            public bool IsModalessContainer()
             {
-                foreach (var window in WindowList)
+                return true;
+            }
+        }
+
+        public interface IUIWindowContainer
+        {
+            void Add(UIWindow window);
+            IUIWindows AtLast();
+            UIWindow RemoveAtLast(UIWindowType type);
+        }
+
+        public class UIWindowContainerWithStack : IUIWindowContainer
+        {
+            private Stack<IUIWindows> _windowsList;
+
+            public UIWindowContainerWithStack()
+            {
+                _windowsList = new Stack<IUIWindows>();
+            }
+
+            public void Add(UIWindow window)
+            {
+                if (window.IsModal == true)
                 {
-                    if (window.GetComponent<T>() != null)
+                    _windowsList.Push(window);
+                }
+                else
+                {
+                    if (_windowsList.Peek().IsModalessContainer() == true)
                     {
-                        return window;
+                        ModalessUIWindowContainer container = _windowsList.Peek() as ModalessUIWindowContainer;
+                        container.Add(window);
+                    }
+                    else
+                    {
+                        ModalessUIWindowContainer container = new ModalessUIWindowContainer();
+                        container.Add(window);
+                        _windowsList.Push(container);
+                    }
+                }
+            }
+
+            public IUIWindows AtLast()
+            {
+                return _windowsList.Peek();
+            }
+
+            public UIWindow RemoveAtLast(UIWindowType type)
+            {
+                IUIWindows windowsAtLast = _windowsList.Peek();
+                if (windowsAtLast.IsModalessContainer() == true)
+                {
+                    ModalessUIWindowContainer container = windowsAtLast as ModalessUIWindowContainer;
+                    return container.Remove(type);
+                }
+                else
+                {
+                    UIWindow window = windowsAtLast as UIWindow;
+                    if (window.WindowType == type)
+                    {
+                        UIWindow result =  _windowsList.Pop() as UIWindow;
+                        return result;
                     }
                 }
 

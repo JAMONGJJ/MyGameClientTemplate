@@ -1,10 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
-using KlayLand.SceneInfo;
-using KlayLand.StateInfo;
+using ClientTemplate.StateInfo;
+using ClientTemplate.SceneInfo;
 using UnityEngine;
 
-namespace KlayLand
+namespace ClientTemplate
 {
     public class FieldState : IState
     {
@@ -30,15 +30,16 @@ namespace KlayLand
 
         public void OnBegin()
         {
-            Core.System.Scene.LoadScene(SceneType.StayUp, AfterFieldSceneLoad);
+            // Core.System.Scene.LoadScene(SceneType.Test, AfterFieldSceneLoad);
         }
 
         private void AfterFieldSceneLoad()
         {
-            UIManager.Instance.CreateMainHud();
-            GamePlayManager.Instance.SetCharacterInitPosition();
-            GamePlayManager.Instance.SetMyPlayer();
-            GamePlayManager.Instance.SetMyCamera();
+            // GamePlayManager.Instance.SetCharacterInitPosition();
+            // GamePlayManager.Instance.SetMyPlayer();
+            // GamePlayManager.Instance.SetMyCamera();
+            // UIManager.Instance.CreateMainHud();
+            // UIManager.Instance.SetOverlayCamera();
         }
 
         public void OnEnd()

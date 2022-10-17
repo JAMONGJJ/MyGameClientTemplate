@@ -4,7 +4,7 @@ using Unity.Mathematics;
 using UnityEngine;
 
 
-namespace KlayLand
+namespace ClientTemplate
 {
     /// <summary>
     /// Dependency Injection으로 작업됨.
