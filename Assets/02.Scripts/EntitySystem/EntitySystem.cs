@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Core;
+using Unity.Entities;
 using UnityEngine;
 
 namespace ClientTemplate
