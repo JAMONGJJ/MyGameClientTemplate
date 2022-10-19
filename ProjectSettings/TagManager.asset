@@ -47,3 +47,12 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: AlertUICanvas
+    uniqueID: 347218213
+    locked: 0
+  - name: LoadingUICanvas
+    uniqueID: 668262549
+    locked: 0
+  - name: NormalUICanvas
+    uniqueID: 2203631563
+    locked: 0
