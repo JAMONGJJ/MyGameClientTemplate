@@ -1,45 +1,44 @@
 using System.Collections;
 using System.Collections.Generic;
-using ClientTemplate.StateInfo;
 using UnityEngine;
-using UniRx;
+using ClientTemplate.StateInfo;
 
 namespace ClientTemplate
 {
-    public class InitialDataLoadState : IState
+    public class DataSettingState : IState
     {
         public string name { get; set; }
         public StateType id { get; set; }
 
-        public InitialDataLoadState()
+        public DataSettingState()
         {
-            name = "Initial Data Load State";
-            id = StateType.InitialDataLoad;
+            name = "Data Setting State";
+            id = StateType.DataSetting;
         }
 
         public bool CanTransitState(StateType nextStateType)
         {
             switch (nextStateType)
             {
-                case StateType.DataSetting:
-                {
-                    return true;
-                }
+                case StateType.ServerConnect:
+                    {
+                        return true;
+                    }
                 default:
-                {
-                    return false;
-                }
+                    {
+                        return false;
+                    }
             }
         }
 
         public void OnBegin()
         {
-            GameEntryManager.Instance.CheckForAssetsToDownload();
+            StateMachine.NextState(new ServerConnectState());
         }
 
         public void OnEnd()
         {
-            
+
         }
     }
 }
