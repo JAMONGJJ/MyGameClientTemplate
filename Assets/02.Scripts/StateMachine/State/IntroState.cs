@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using ClientTemplate.DataManufactureInfo;
+using ClientTemplate.UtilityFunctions;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -42,7 +43,8 @@ namespace ClientTemplate
             SetUIManager();
             SetGamePlayManager();
             SetContentManager();
-            
+            SetUtilityFunctions();
+
             StateMachine.NextState(new UserAgreementState());
         }
 
@@ -116,6 +118,26 @@ namespace ClientTemplate
         private void SetContentManager()
         {
             
+        }
+        #endregion
+
+        #region UtilityFunctions
+        private void SetUtilityFunctions()
+        {
+            SetAsyncOperationHandler();
+            SetExceptionHandler();
+        }
+
+        private void SetAsyncOperationHandler()
+        {
+            Utility.Functions.SetAsyncOperationHandler(new AsyncOperationHandler());
+            Utility.Functions.Async.Init();
+        }
+
+        private void SetExceptionHandler()
+        {
+            Utility.Functions.SetExceptionHandler(new ExceptionHandler());
+            Utility.Functions.Exception.Init();
         }
         #endregion
     }

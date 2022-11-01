@@ -47,7 +47,7 @@ namespace ClientTemplate
 
         private void LoadFinishCallback()
         {
-            StateMachine.NextState(new ServerConnectState());
+            StateMachine.NextState(new DataSettingState());
         }
     }
 }

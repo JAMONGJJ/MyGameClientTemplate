@@ -35,14 +35,19 @@ namespace ClientTemplate
 
         public void OnBegin()
         {
-            Core.System.SetNetworkManager(new NetworkManager());
-            Core.System.Network.Init();
+            SetNetworkManager();
             StateMachine.NextState(new LoginState());
         }
 
         public void OnEnd()
         {
             
+        }
+
+        private void SetNetworkManager()
+        {
+            Core.System.SetNetworkManager(new NetworkManager());
+            Core.System.Network.Init();
         }
     }
 }

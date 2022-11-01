@@ -13,6 +13,7 @@ namespace ClientTemplate
             Intro,
             UserAgreement,
             InitialDataLoad,
+            DataSetting,
             ServerConnect,
             Login,
             Field,
