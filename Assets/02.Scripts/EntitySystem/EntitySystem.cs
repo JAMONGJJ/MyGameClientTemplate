@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.Core;
 using Unity.Entities;
 using UnityEngine;
+using Unity.Entities;
 
 namespace ClientTemplate
 {
