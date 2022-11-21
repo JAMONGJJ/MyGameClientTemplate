@@ -55,12 +55,6 @@ namespace ClientTemplate
             UIWindowContainer = null;
             UIWindowAssetTypeContainer = null;
             UIDataInfoContainer = null;
-            NormalUICanvas = null;
-            LoadingUICanvas = null;
-            AlertUICanvas = null;
-            UICamera = null;
-            UIWaitingWindow = null;
-            UILoadingWindow = null;
         }
         
         public override void ReSet()
@@ -101,7 +95,6 @@ namespace ClientTemplate
                     Utility.Functions.Async.SetIsProcessing(false);
                     LogManager.Log(LogManager.LogType.DEFAULT, "UISystem load completed!");
                 };
-                
             });
         }
 
