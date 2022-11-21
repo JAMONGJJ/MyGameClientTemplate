@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace ClientTemplate
 {
@@ -28,7 +29,29 @@ namespace ClientTemplate
 
             mainCamera.rect = rect;
         }
+        
+//         void OnEnable()
+//         {
+// #if !UNITY_EDITOR
+//             RenderPipelineManager.beginCameraRendering += RenderPipelineManager_endCameraRendering;
+// #endif
+//         }
+//
+//         void OnDisable()
+//         {
+// #if !UNITY_EDITOR
+//             RenderPipelineManager.beginCameraRendering -= RenderPipelineManager_endCameraRendering;
+// #endif
+//         }
+//         
+//         private void RenderPipelineManager_endCameraRendering(ScriptableRenderContext context, Camera camera)
+//         {
+//             GL.Clear(true, true, Color.black);
+//         }
 
-        private void OnPreCull() => GL.Clear(true, true, Color.black);
+        private void OnPreCull()
+        {
+            GL.Clear(true, true, Color.black);
+        }
     }
 }
