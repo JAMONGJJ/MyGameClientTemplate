@@ -26,11 +26,6 @@ namespace ClientTemplate
             
         }
 
-        public void SetStringsInfoContainer(ICommonStringsInfoContainer container)
-        {
-            CommonStringsInfoContainer = container;
-        }
-
         #region Current App Version
 
         public VersionsDataTable GetVersionInfo()
