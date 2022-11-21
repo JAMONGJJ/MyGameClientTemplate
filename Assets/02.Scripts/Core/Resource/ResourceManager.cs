@@ -14,7 +14,6 @@ using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceProviders;
 using Task = System.Threading.Tasks.Task;
-using Version = ClientTemplate.VersionInfo.Version;
 
 namespace ClientTemplate
 {
@@ -161,24 +160,24 @@ namespace ClientTemplate
         private void LoadAddressablesAssets()
         {
             _loadStateList = new List<bool>();
-            LoadAddressMaps();
+            LoadAssetAddressMaps();
             LoadDataTables();
             DownloadAssetBundles();
             
             CheckAllLoadIsCompleted();
         }
 
-        private void LoadAddressMaps()
-        {
-            LoadUIWindowAddressMap();
-            LoadSceneAddressMap();
-            LoadPrefabAddressMap();
-        }
+        // private void LoadAddressMaps()
+        // {
+        //     LoadUIWindowAddressMap();
+        //     LoadSceneAddressMap();
+        //     LoadPrefabAddressMap();
+        // }
 
-        private void LoadDataTables()
-        {
-            LoadStringsDataTable();
-        }
+        // private void LoadDataTables()
+        // {
+        //     LoadStringsDataTable();
+        // }
 
         private async void DownloadAssetBundles()
         {
@@ -209,6 +208,24 @@ namespace ClientTemplate
 
             AssetAddressMaps addressMaps = handle.Result as AssetAddressMaps;
             AssetAddressContainer.SetAddressMaps(addressMaps);
+
+            LogManager.Log(LogManager.LogType.DEFAULT, "UIWindowAddressMap download completed!");
+            Addressables.Release(handle);
+            _loadStateList[index] = true;
+        }
+
+        private async void LoadDataTables()
+        {
+            _loadStateList.Add(false);
+            int index = _loadStateList.Count - 1;
+            var handle = Addressables.LoadAssetAsync<ScriptableObject>("DataTables");
+            while (handle.IsDone == false)
+            {
+                await Task.Delay(10);
+            }
+
+            DataTables dataTables = handle.Result as DataTables;
+            Data.Table.SetDataTables(dataTables);
 
             LogManager.Log(LogManager.LogType.DEFAULT, "UIWindowAddressMap download completed!");
             Addressables.Release(handle);

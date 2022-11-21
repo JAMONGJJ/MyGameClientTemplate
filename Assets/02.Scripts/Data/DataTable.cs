@@ -21,6 +21,12 @@ namespace ClientTemplate
             Version = version;
         }
 
+        public void SetDataTables(DataTables dataTables)
+        {
+            CommonStringsInfoContainer = new CommonStringsInfoContainer(dataTables.CommonStrings);
+            
+        }
+
         public void SetStringsInfoContainer(ICommonStringsInfoContainer container)
         {
             CommonStringsInfoContainer = container;

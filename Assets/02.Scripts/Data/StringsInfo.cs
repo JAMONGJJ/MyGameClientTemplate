@@ -51,6 +51,19 @@ namespace ClientTemplate
                 }
             }
 
+            public CommonStringsInfoContainer(List<CommonStringData> strings)
+            {
+                _commonStringInfoContainer = new Dictionary<StringType, string>();
+
+                foreach (CommonStringData commonString in strings)
+                {
+                    if (_commonStringInfoContainer.ContainsKey(commonString.stringType) == false)
+                    {
+                        _commonStringInfoContainer.Add(commonString.stringType, commonString.description);
+                    }
+                }
+            }
+
             public string GetString(StringType type)
             {
                 return _commonStringInfoContainer[type];
