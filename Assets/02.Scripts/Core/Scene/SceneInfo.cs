@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using ClientTemplate.ResourceInfo;
-using System.Xml.Serialization;
 using ClientTemplate.UIInfo;
 using UnityEngine;
 
