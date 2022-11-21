@@ -1,53 +1,40 @@
 using System.Collections;
 using System.Collections.Generic;
 using ClientTemplate.UIInfo;
+using ClientTemplate.UtilityFunctions;
+using ClientTemplate.VersionInfo;
 using UnityEngine;
 
 namespace ClientTemplate
 {
     public class GameEntryManager : MonoManager<GameEntryManager>
     {
-        [HideInInspector] public UIGameEntryWindow GameEntryWindow;
-        [HideInInspector] public UIDataLoadWindow DataLoadWindow;
+        [HideInInspector]
+        public UIGameEntryWindow GameEntryWindow;
         
         public override void Init()
         {
-            GameEntryWindow = FindObjectOfType<UIGameEntryWindow>();
-            DataLoadWindow = FindObjectOfType<UIDataLoadWindow>();
-
-            DataLoadWindow.gameObject.SetActive(false);
         }
 
-        public override void Release()
+        public void GameEntry()
         {
+            GameEntryWindow = GameObject.FindWithTag("GameEntryWindow").GetComponent<UIGameEntryWindow>();
+            
+            Utility.Functions.Async.Process(CheckAvailableAppVersion,
+                Core.System.Resource.LoadVersionDataTable);
         }
 
-        public override void ReSet()
+        private void CheckAvailableAppVersion()
         {
-        }
-
-        public void EnterGame()
-        {
-            StateMachine.NextState(new IntroState());
-        }
-
-        public void CheckForAssetsToDownload()
-        {
-            Core.System.Resource.CheckAssetToDownload(SizeCheckCallback, LoadFinishCallback);
-        }
-
-        private void SizeCheckCallback(long size, System.Action callback)
-        {
-            DataLoadWindow.gameObject.SetActive(true);
-            DataLoadWindow.SetDescText(size);
-            DataLoadWindow.SetActiveDownloadButton(true);
-            DataLoadWindow.SetActiveDownloadSlider(false);
-            DataLoadWindow.SetDownloadButton(callback);
-        }
-
-        private void LoadFinishCallback()
-        {
-            StateMachine.NextState(new DataSettingState());
+            Version versionInfo = Data.Table.GetVersionInfo();
+            if(versionInfo.version != Application.version)
+            {
+                GameEntryWindow.SetActiveGoToStore(true);
+            }
+            else
+            {
+                StateMachine.NextState(new InitialDataLoadState());
+            }
         }
     }
 }

@@ -21,6 +21,10 @@ MonoBehaviour:
     m_Address: CommonStringsDataTable
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: 429558fbbd9f5ca49b1911cedb588515
+    m_Address: DataTables
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 9c9c1549ba1db754fae56ceba9b0d96a, type: 2}
   m_SchemaSet:

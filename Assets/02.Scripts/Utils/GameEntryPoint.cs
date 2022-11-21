@@ -13,8 +13,7 @@ namespace ClientTemplate
         /// </summary>
         private void Start()
         {
-            GameEntryManager.Instance.Init();
-            GameEntryManager.Instance.EnterGame();
+            StateMachine.NextState(new IntroState());
         }
     }
 }

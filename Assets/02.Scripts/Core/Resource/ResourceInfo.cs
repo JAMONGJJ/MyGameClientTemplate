@@ -38,6 +38,7 @@ namespace ClientTemplate
 
         public interface IAssetAddressContainer
         {
+            void SetAddressMaps(AssetAddressMaps maps);
             void Add(UIWindowAssetAddressContainer container);
             void Add(SceneAssetAddressContainer container);
             void Add(PrefabAssetAddressContainer container);
@@ -57,6 +58,33 @@ namespace ClientTemplate
                 WindowAssetAddressMap = new Dictionary<UIWindowAssetType, string>();
                 SceneAssetAddressMap = new Dictionary<SceneAssetType, string>();
                 PrefabAssetAddressMap = new Dictionary<PrefabAssetType, string>();
+            }
+
+            public void SetAddressMaps(AssetAddressMaps maps)
+            {
+                foreach (var address in maps.UIWindowAddressList)
+                {
+                    if (WindowAssetAddressMap.ContainsKey(address.assetType) == false)
+                    {
+                        WindowAssetAddressMap.Add(address.assetType, address.address);
+                    }
+                }
+                
+                foreach (var address in maps.SceneAddressList)
+                {
+                    if (SceneAssetAddressMap.ContainsKey(address.assetType) == false)
+                    {
+                        SceneAssetAddressMap.Add(address.assetType, address.address);
+                    }
+                }
+                
+                foreach (var address in maps.PrefabAddressList)
+                {
+                    if (PrefabAssetAddressMap.ContainsKey(address.assetType) == false)
+                    {
+                        PrefabAssetAddressMap.Add(address.assetType, address.address);
+                    }
+                }
             }
 
             public void Add(UIWindowAssetAddressContainer container)

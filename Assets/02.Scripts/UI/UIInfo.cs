@@ -32,6 +32,7 @@ namespace ClientTemplate
         public enum UIWindowAssetType
         {
             None,
+            UISystem,
             TestModalessUIWindow,
             TestModalessUIWindow2,
             MainHud,

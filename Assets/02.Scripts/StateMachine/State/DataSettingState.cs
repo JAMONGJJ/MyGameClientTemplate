@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using ClientTemplate.StateInfo;
+using ClientTemplate.UIInfo;
+using ClientTemplate.UtilityFunctions;
 
 namespace ClientTemplate
 {
@@ -33,12 +35,33 @@ namespace ClientTemplate
 
         public void OnBegin()
         {
-            StateMachine.NextState(new ServerConnectState());
+            // synchronized setting
+            InitUIManager();
+            
+            // asynchronized setting
+            Utility.Functions.Async.Process(DataSetAllFinishCallback,
+                UIManager.Instance.LoadUISystem,
+                UIManager.Instance.CreateMainHud,
+                UIManager.Instance.SetInActiveMainHud
+            );
         }
 
         public void OnEnd()
         {
+            
+        }
 
+        private void InitUIManager()
+        {
+            UIManager.Instance.SetUIWindowContainer(new UIWindowContainerWithStack());
+            UIManager.Instance.SetUIWindowAssetTypeContainer(new UIWindowAssetTypeContainer());
+            UIManager.Instance.SetUIDataInfoContainer(new UIDataInfoContainer());
+            UIManager.Instance.Init();
+        }
+
+        private void DataSetAllFinishCallback()
+        {
+            StateMachine.NextState(new ServerConnectState());
         }
     }
 }

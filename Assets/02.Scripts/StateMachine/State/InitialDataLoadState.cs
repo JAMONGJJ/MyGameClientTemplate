@@ -34,7 +34,12 @@ namespace ClientTemplate
 
         public void OnBegin()
         {
-            GameEntryManager.Instance.CheckForAssetsToDownload();
+            Core.System.Resource.CheckDownloadAssets(LoadFinishCallback);
+        }
+
+        private void LoadFinishCallback()
+        {
+            StateMachine.NextState(new DataSettingState());
         }
 
         public void OnEnd()

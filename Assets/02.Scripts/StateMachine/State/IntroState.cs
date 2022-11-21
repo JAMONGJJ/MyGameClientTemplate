@@ -26,7 +26,7 @@ namespace ClientTemplate
         {
             switch (nextStateType)
             {
-                case StateType.UserAgreement:
+                case StateType.InitialDataLoad:
                 {
                     return true;
                 }
@@ -40,17 +40,15 @@ namespace ClientTemplate
         public void OnBegin()
         {
             SetCoreSystem();
-            SetUIManager();
-            SetGamePlayManager();
-            SetContentManager();
+            SetContentsManager();
             SetUtilityFunctions();
-
-            StateMachine.NextState(new UserAgreementState());
+            Core.System.Settings.SetFrameRate(60);
+            GameEntryManager.Instance.GameEntry();
         }
 
         public void OnEnd()
         {
-            Core.System.Settings.SetFrameRate(60);
+            
         }
         
         #region CoreSystem
@@ -97,25 +95,8 @@ namespace ClientTemplate
         }
         #endregion
         
-        #region UIManager
-        private void SetUIManager()
-        {
-            UIManager.Instance.SetUIWindowContainer(new UIWindowContainerWithStack());
-            UIManager.Instance.SetUIWindowAssetTypeContainer(new UIWindowAssetTypeContainer());
-            UIManager.Instance.SetUIDataInfoContainer(new UIDataInfoContainer());
-            UIManager.Instance.Init();
-        }
-        #endregion
-
-        #region GamePlayManager
-        private void SetGamePlayManager()
-        {
-            GamePlayManager.Instance.Init();
-        }
-        #endregion
-        
-        #region ContentManager
-        private void SetContentManager()
+        #region Contents Manager
+        private void SetContentsManager()
         {
             
         }

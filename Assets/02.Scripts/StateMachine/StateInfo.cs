@@ -11,7 +11,6 @@ namespace ClientTemplate
         {
             None,
             Intro,
-            UserAgreement,
             InitialDataLoad,
             DataSetting,
             ServerConnect,

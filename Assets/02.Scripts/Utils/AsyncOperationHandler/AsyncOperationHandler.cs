@@ -8,15 +8,18 @@ namespace ClientTemplate
 {
     namespace UtilityFunctions
     {
-        public delegate bool AsyncOperation();
+        public delegate void AsyncOperation();
 
         public interface IAsyncOperationHandler : IManager
         {
+            void SetIsProcessing(bool processing);
             void Process(System.Action OperationFinishCallback, params AsyncOperation[] operations);
         }
 
         public class AsyncOperationHandler : IAsyncOperationHandler
         {
+            private bool isProcessing;
+            
             public void Init()
             {
             }
@@ -29,35 +32,36 @@ namespace ClientTemplate
             {
             }
 
+            public void SetIsProcessing(bool processing)
+            {
+                isProcessing = processing;
+            }
+
             public async void Process(System.Action OperationFinishCallback, params AsyncOperation[] operations)
             {
-                UIManager.Instance.OpenWaitingWindow();
                 try
                 {
-                    bool operationCompleted = false;
                     long elapsedTime = 0;
                     foreach (AsyncOperation operation in operations)
                     {
-                        operationCompleted = operation.Invoke();
-                        while (operationCompleted == false)
+                        operation.Invoke();
+                        while (isProcessing == true)
                         {
                             await Task.Delay(10);
                             elapsedTime += 10;
-                            if (elapsedTime >= 5000)
+                            if (elapsedTime >= 10000)
                             {
                                 throw new Exception("Async operation handling time out!");
                             }
                         }
-                        operationCompleted = false;
                         elapsedTime = 0;
                     }
+                    OperationFinishCallback.Invoke();
                 }
                 catch(Exception e)
                 {
                     LogManager.LogError(LogManager.LogType.EXCEPTION, e.ToString());
                 }
-                OperationFinishCallback.Invoke();
-                UIManager.Instance.CloseWaitingWindow();
             }
         }
     }

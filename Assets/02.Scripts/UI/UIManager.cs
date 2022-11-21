@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ClientTemplate.ResourceInfo;
+using ClientTemplate.UtilityFunctions;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Rendering.Universal;
@@ -14,61 +15,52 @@ namespace ClientTemplate
 
     public class UIManager : MonoManager<UIManager>
     {
-        private IUIWindowContainer _uiWindowContainer;
-        private IUIWindowAssetTypeContainer _uiWindowAssetTypeContainer;
-        private IUIDataInfoContainer _uiDataInfoContainer;
-        private Canvas _normalUiCanvas;
-        private Canvas _loadingUiCanvas;
-        private Canvas _alertUiCanvas;
-        private Camera _uiCamera;
-        private GameObject _uiWaitingWindow;
-        private GameObject _uiLoadingWindow;
+        private IUIWindowContainer UIWindowContainer;
+        private IUIWindowAssetTypeContainer UIWindowAssetTypeContainer;
+        private IUIDataInfoContainer UIDataInfoContainer;
+        private Canvas NormalUICanvas;
+        private Canvas LoadingUICanvas;
+        private Canvas AlertUICanvas;
+        private Camera UICamera;
+        private GameObject UIWaitingWindow;
+        private GameObject UILoadingWindow;
 
         public MainHud MyMainHud { get; private set; }
 
         public void SetUIWindowContainer(IUIWindowContainer container)
         {
-            _uiWindowContainer = container;
+            UIWindowContainer = container;
         }
         
         public void SetUIWindowAssetTypeContainer(IUIWindowAssetTypeContainer container)
         {
-            _uiWindowAssetTypeContainer = container;
+            UIWindowAssetTypeContainer = container;
         }
         
         public void SetUIDataInfoContainer(IUIDataInfoContainer container)
         {
-            _uiDataInfoContainer = container;
+            UIDataInfoContainer = container;
         }
 
         public override void Init()
         {
-            _normalUiCanvas = GameObject.FindWithTag("NormalUICanvas").GetComponent<Canvas>();
-            _loadingUiCanvas = GameObject.FindWithTag("LoadingUICanvas").GetComponent<Canvas>();
-            _alertUiCanvas = GameObject.FindWithTag("AlertUICanvas").GetComponent<Canvas>();
-            _uiCamera = GameObject.FindWithTag("UICamera").GetComponent<Camera>();
-            _uiWaitingWindow = GameObject.FindWithTag("WaitingWindow");
-            _uiWaitingWindow.SetActive(false);
-            _uiLoadingWindow = GameObject.FindWithTag("LoadingWindow");
-            _uiLoadingWindow.SetActive(false);
-
-            _uiWindowAssetTypeContainer.Add(UIWindowType.TestModalessUIWindow, UICanvasType.Normal, UIWindowAssetType.TestModalessUIWindow, false);
-            _uiWindowAssetTypeContainer.Add(UIWindowType.TestModalessUIWindow2, UICanvasType.Normal, UIWindowAssetType.TestModalessUIWindow2, false);
-            _uiWindowAssetTypeContainer.Add(UIWindowType.MainHud, UICanvasType.Normal, UIWindowAssetType.MainHud, true);
-            _uiWindowAssetTypeContainer.Add(UIWindowType.NoticeWindow, UICanvasType.Normal, UIWindowAssetType.NoticeWindow, true);
+            UIWindowAssetTypeContainer.Add(UIWindowType.TestModalessUIWindow, UICanvasType.Normal, UIWindowAssetType.TestModalessUIWindow, false);
+            UIWindowAssetTypeContainer.Add(UIWindowType.TestModalessUIWindow2, UICanvasType.Normal, UIWindowAssetType.TestModalessUIWindow2, false);
+            UIWindowAssetTypeContainer.Add(UIWindowType.MainHud, UICanvasType.Normal, UIWindowAssetType.MainHud, true);
+            UIWindowAssetTypeContainer.Add(UIWindowType.NoticeWindow, UICanvasType.Normal, UIWindowAssetType.NoticeWindow, true);
         }
         
         public override void Release()
         {
-            _uiWindowContainer = null;
-            _uiWindowAssetTypeContainer = null;
-            _uiDataInfoContainer = null;
-            _normalUiCanvas = null;
-            _loadingUiCanvas = null;
-            _alertUiCanvas = null;
-            _uiCamera = null;
-            _uiWaitingWindow = null;
-            _uiLoadingWindow = null;
+            UIWindowContainer = null;
+            UIWindowAssetTypeContainer = null;
+            UIDataInfoContainer = null;
+            NormalUICanvas = null;
+            LoadingUICanvas = null;
+            AlertUICanvas = null;
+            UICamera = null;
+            UIWaitingWindow = null;
+            UILoadingWindow = null;
         }
         
         public override void ReSet()
@@ -79,7 +71,50 @@ namespace ClientTemplate
 
         public void SetOverlayCamera()
         {
-            Camera.main.GetUniversalAdditionalCameraData().cameraStack.Add(_uiCamera);
+            Camera.main.GetUniversalAdditionalCameraData().cameraStack.Add(UICamera);
+        }
+
+        public void LoadUISystem()
+        {
+            Utility.Functions.Async.SetIsProcessing(true);
+            Utility.Functions.Exception.Process(() =>
+            {
+                LogManager.Log(LogManager.LogType.DEFAULT, "UISystem load start!");
+                string assetAddress = Core.System.Resource.GetAddressByType(UIWindowAssetType.UISystem);
+                if (string.IsNullOrEmpty(assetAddress) == true)
+                {
+                    throw new Exception("UISystem asset address is null!");
+                }
+
+                var handle = Core.System.Resource.LoadGameObject(assetAddress);
+                handle.Completed += _ =>
+                {
+                    if (handle.Status != AsyncOperationStatus.Succeeded)
+                    {
+                        throw new Exception($"UISystem{assetAddress} asset load has failed!");
+                    }
+
+                    Instantiate(handle.Result);
+                    FindUIObjects();
+
+                    Addressables.Release(handle);
+                    Utility.Functions.Async.SetIsProcessing(false);
+                    LogManager.Log(LogManager.LogType.DEFAULT, "UISystem load completed!");
+                };
+                
+            });
+        }
+
+        private void FindUIObjects()
+        {
+            NormalUICanvas = GameObject.FindWithTag("NormalUICanvas").GetComponent<Canvas>();
+            LoadingUICanvas = GameObject.FindWithTag("LoadingUICanvas").GetComponent<Canvas>();
+            AlertUICanvas = GameObject.FindWithTag("AlertUICanvas").GetComponent<Canvas>();
+            UICamera = GameObject.FindWithTag("UICamera").GetComponent<Camera>();
+            UIWaitingWindow = GameObject.FindWithTag("WaitingWindow");
+            UIWaitingWindow.SetActive(false);
+            UILoadingWindow = GameObject.FindWithTag("LoadingWindow");
+            UILoadingWindow.gameObject.SetActive(false);
         }
         
         /// <summary>
@@ -93,18 +128,18 @@ namespace ClientTemplate
         {
             try
             {
-                if (_uiDataInfoContainer.Contains(windowType) == true)
+                if (UIDataInfoContainer.Contains(windowType) == true)
                 {
                     throw new Exception("Entered ui window is already instantiated!");
                 }
                 
-                UIWindowAssetType assetType = _uiWindowAssetTypeContainer.GetAssetType(windowType);
+                UIWindowAssetType assetType = UIWindowAssetTypeContainer.GetAssetType(windowType);
                 if (assetType == UIWindowAssetType.None)
                 {
                     throw new Exception("Entered ui window type does not exist!");
                 }
                 
-                UICanvasType canvasType = _uiWindowAssetTypeContainer.GetCanvasType(windowType);
+                UICanvasType canvasType = UIWindowAssetTypeContainer.GetCanvasType(windowType);
                 string assetAddress = Core.System.Resource.GetAddressByType(assetType);
                 
                 if (string.IsNullOrEmpty(assetAddress) == true)
@@ -128,10 +163,10 @@ namespace ClientTemplate
                 
                 T windowScript = windowGameObject.GetComponent<T>();
                 windowScript.SetWindowType(windowType);
-                bool isModal = _uiWindowAssetTypeContainer.GetModalType(windowType);
+                bool isModal = UIWindowAssetTypeContainer.GetModalType(windowType);
                 windowScript.SetIsModal(isModal);
-                _uiWindowContainer.Add(windowScript);
-                _uiDataInfoContainer.Add(windowType, data);
+                UIWindowContainer.Add(windowScript);
+                UIDataInfoContainer.Add(windowType, data);
                 LogManager.Log(LogManager.LogType.DEFAULT, $"{windowType} init!");
                 windowScript.Init(data);
                 Addressables.Release(handle);
@@ -148,19 +183,19 @@ namespace ClientTemplate
             {
                 case UICanvasType.Normal:
                 {
-                    return _normalUiCanvas.transform;
+                    return NormalUICanvas.transform;
                 }
                 case UICanvasType.Alert:
                 {
-                    return _alertUiCanvas.transform;
+                    return AlertUICanvas.transform;
                 }
                 case UICanvasType.Loading:
                 {
-                    return _loadingUiCanvas.transform;
+                    return LoadingUICanvas.transform;
                 }
             }
 
-            return _normalUiCanvas.transform;
+            return NormalUICanvas.transform;
         }
 
         /// <summary>
@@ -170,8 +205,8 @@ namespace ClientTemplate
         {
             try
             {
-                UIWindow lastWindow = _uiWindowContainer.RemoveAtLast(type);
-                _uiDataInfoContainer.Remove(type);
+                UIWindow lastWindow = UIWindowContainer.RemoveAtLast(type);
+                UIDataInfoContainer.Remove(type);
                 if (lastWindow == null)
                 {
                     throw new Exception("Entered ui window does not exist in the container!");
@@ -192,7 +227,7 @@ namespace ClientTemplate
         {
             try
             {
-                if (_uiDataInfoContainer.Refresh(type, data) == false)
+                if (UIDataInfoContainer.Refresh(type, data) == false)
                 {
                     throw new Exception( "Entered ui window type does not exist in the container!");
                 }
@@ -211,7 +246,7 @@ namespace ClientTemplate
         {
             try
             {
-                IUIWindows windowsOnTop = _uiWindowContainer.AtLast();
+                IUIWindows windowsOnTop = UIWindowContainer.AtLast();
                 if (windowsOnTop == null)
                 {
                     throw new Exception("There is no UIWindow exists in the container!");
@@ -227,7 +262,7 @@ namespace ClientTemplate
                         
                     foreach (UIWindow windowOnTop in container.ModalessWindowsList)
                     {
-                        UIData data = _uiDataInfoContainer.GetUIData(windowOnTop.WindowType);
+                        UIData data = UIDataInfoContainer.GetUIData(windowOnTop.WindowType);
                         LogManager.Log(LogManager.LogType.DEFAULT, $"{windowOnTop.WindowType} on top!");
                         windowOnTop.OnTop(data);
                     }
@@ -240,7 +275,7 @@ namespace ClientTemplate
                         throw new Exception("UIWindow is null");
                     }
                         
-                    UIData data = _uiDataInfoContainer.GetUIData(windowOnTop.WindowType);
+                    UIData data = UIDataInfoContainer.GetUIData(windowOnTop.WindowType);
                     LogManager.Log(LogManager.LogType.DEFAULT, $"{windowOnTop.WindowType} on top!");
                     windowOnTop.OnTop(data);
                 }
@@ -254,11 +289,12 @@ namespace ClientTemplate
         /// <summary>
         /// MainHud 오브젝트 생성
         /// </summary>
-        public async void CreateMainHud()
+        public void CreateMainHud()
         {
-            try
+            Utility.Functions.Async.SetIsProcessing(true);
+            Utility.Functions.Exception.Process(() =>
             {
-                UIWindowAssetType assetType = _uiWindowAssetTypeContainer.GetAssetType(UIWindowType.MainHud);
+                UIWindowAssetType assetType = UIWindowAssetTypeContainer.GetAssetType(UIWindowType.MainHud);
                 if(assetType == UIWindowAssetType.None)
                 {
                     throw new Exception("MainHud window type does not exist!");
@@ -271,30 +307,24 @@ namespace ClientTemplate
                 }
                 
                 AsyncOperationHandle<GameObject> handle = Core.System.Resource.LoadGameObject(assetAddress);
-                OpenWaitingWindow();
-                while (handle.IsDone == false)
+                handle.Completed += _ =>
                 {
-                    await Task.Delay(10);
-                }
-                CloseWaitingWindow();
-                GameObject windowGameObject = Instantiate(handle.Result, GetUICanvas(UICanvasType.Normal));
-                if (windowGameObject == null)
-                {
-                    throw new Exception("MainHud window does not exist in the path!");
-                }
+                    GameObject windowGameObject = Instantiate(handle.Result, GetUICanvas(UICanvasType.Normal));
+                    if (windowGameObject == null)
+                    {
+                        throw new Exception("MainHud window does not exist in the path!");
+                    }
                 
-                MainHud windowScript = windowGameObject.GetComponent<MainHud>();
-                windowScript.SetWindowType(UIWindowType.MainHud);
-                windowScript.Init();
-                MyMainHud = windowScript;
-                LogManager.Log(LogManager.LogType.DEFAULT, $"{UIWindowType.MainHud} init!");
+                    MainHud windowScript = windowGameObject.GetComponent<MainHud>();
+                    windowScript.SetWindowType(UIWindowType.MainHud);
+                    windowScript.Init();
+                    MyMainHud = windowScript;
+                    LogManager.Log(LogManager.LogType.DEFAULT, $"{UIWindowType.MainHud} init!");
 
-                Addressables.Release(handle);
-            }
-            catch (Exception e)
-            {
-                LogManager.LogError(LogManager.LogType.EXCEPTION, e.ToString());
-            }
+                    Addressables.Release(handle);
+                    Utility.Functions.Async.SetIsProcessing(false);
+                };
+            });
         }
         
         /// <summary>
@@ -319,12 +349,22 @@ namespace ClientTemplate
             }
         }
 
+        public void SetActiveMainHud()
+        {
+            MyMainHud.gameObject.SetActive(true);
+        }
+
+        public void SetInActiveMainHud()
+        {
+            MyMainHud.gameObject.SetActive(false);
+        }
+
         /// <summary>
         /// 대기 화면 표시
         /// </summary>
         public void OpenWaitingWindow()
         {
-            _uiWaitingWindow.SetActive(true);
+            UIWaitingWindow.SetActive(true);
         }
 
         /// <summary>
@@ -332,7 +372,7 @@ namespace ClientTemplate
         /// </summary>
         public void CloseWaitingWindow()
         {
-            _uiWaitingWindow.SetActive(false);
+            UIWaitingWindow.SetActive(false);
         }
 
         /// <summary>
@@ -340,7 +380,7 @@ namespace ClientTemplate
         /// </summary>
         public void OpenLoadingWindow()
         {
-            _uiLoadingWindow.SetActive(true);
+            UILoadingWindow.SetActive(true);
         }
 
         /// <summary>
@@ -348,7 +388,7 @@ namespace ClientTemplate
         /// </summary>
         public void CloseLoadingWindow()
         {
-            _uiLoadingWindow.SetActive(false);
+            UILoadingWindow.SetActive(false);
         }
     }
 }

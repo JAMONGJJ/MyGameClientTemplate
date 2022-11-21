@@ -10,6 +10,7 @@ TagManager:
   - NormalUICanvas
   - LoadingUICanvas
   - AlertUICanvas
+  - GameEntryWindow
   layers:
   - Default
   - TransparentFX

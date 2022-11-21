@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using ClientTemplate.StringInfo;
+using ClientTemplate.VersionInfo;
 using UnityEngine;
 
 namespace ClientTemplate
@@ -12,16 +13,31 @@ namespace ClientTemplate
 
     public class DataTable
     {
-        private ICommonStringsInfoContainer _commonStringsInfoContainer;    // 클라이언트 스크립트에서 로그에 찍는 스트링은 포함 안 함.
+        private Version Version;
+        private ICommonStringsInfoContainer CommonStringsInfoContainer;
+
+        public void SetVersion(Version version)
+        {
+            Version = version;
+        }
 
         public void SetStringsInfoContainer(ICommonStringsInfoContainer container)
         {
-            _commonStringsInfoContainer = container;
+            CommonStringsInfoContainer = container;
         }
+
+        #region Current App Version
+
+        public Version GetVersionInfo()
+        {
+            return Version;
+        }
+
+        #endregion
         
         public string GetStringInfo(StringType type)
         {
-            return _commonStringsInfoContainer.GetString(type);
+            return CommonStringsInfoContainer.GetString(type);
         }
     }
 }
