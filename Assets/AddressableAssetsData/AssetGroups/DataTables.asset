@@ -17,10 +17,6 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: bf12667f70d06134a83fa1c7cc6e5e6b
   m_SerializeEntries:
-  - m_GUID: dbee9f5202a149246ba48adfbd3212bb
-    m_Address: CommonStringsDataTable
-    m_ReadOnly: 0
-    m_SerializedLabels: []
   - m_GUID: 429558fbbd9f5ca49b1911cedb588515
     m_Address: DataTables
     m_ReadOnly: 0

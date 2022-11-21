@@ -17,18 +17,6 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 85c58ed9152f09544a82273dfdd8fd54
   m_SerializeEntries:
-  - m_GUID: aa88c9deffa31e14e8a3434efb67472b
-    m_Address: PrefabAddressMap
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: 5a01a45c02cf60247a440f42f609222d
-    m_Address: UIWindowAddressMap
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: 240562149eec39848991bac336fd2c42
-    m_Address: SceneAddressMap
-    m_ReadOnly: 0
-    m_SerializedLabels: []
   - m_GUID: e46296d4698812a48970347e511bde6e
     m_Address: AssetAddressMaps
     m_ReadOnly: 0
