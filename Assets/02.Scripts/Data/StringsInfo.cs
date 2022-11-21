@@ -15,20 +15,6 @@ namespace ClientTemplate
             
         }
 
-        [XmlRoot("String")]
-        public class CommonString
-        {
-            [XmlElement("Type")] public StringType type;
-            [XmlElement("Description")] public string description;
-        }
-        
-        [XmlRoot("DataTable")]
-        public class CommonStrings
-        {
-            [XmlArray("CommonStrings"), XmlArrayItem("String")]
-            public List<CommonString> stringsList;
-        }
-
         public interface ICommonStringsInfoContainer
         {
             string GetString(StringType type);
@@ -37,19 +23,6 @@ namespace ClientTemplate
         public class CommonStringsInfoContainer : ICommonStringsInfoContainer
         {
             private Dictionary<StringType, string> _commonStringInfoContainer;
-
-            public CommonStringsInfoContainer(CommonStrings strings)
-            {
-                _commonStringInfoContainer = new Dictionary<StringType, string>();
-
-                foreach (CommonString commonString in strings.stringsList)
-                {
-                    if (_commonStringInfoContainer.ContainsKey(commonString.type) == false)
-                    {
-                        _commonStringInfoContainer.Add(commonString.type, commonString.description);
-                    }
-                }
-            }
 
             public CommonStringsInfoContainer(List<CommonStringData> strings)
             {

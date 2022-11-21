@@ -19,29 +19,9 @@ namespace ClientTemplate
             
         }
 
-        [XmlRoot("Prefab")]
-        public class PrefabAssetAddress
-        {
-            [XmlElement("Type")]
-            public PrefabAssetType type;
-            
-            [XmlElement("Address")]
-            public string address;
-        }
-
-        [XmlRoot("AssetAddressMap")]
-        public class PrefabAssetAddressContainer
-        {
-            [XmlArray("Assets"), XmlArrayItem("Prefab")]
-            public List<PrefabAssetAddress> AddressList;
-        }
-
         public interface IAssetAddressContainer
         {
             void SetAddressMaps(AssetAddressMaps maps);
-            void Add(UIWindowAssetAddressContainer container);
-            void Add(SceneAssetAddressContainer container);
-            void Add(PrefabAssetAddressContainer container);
             string GetAddress(UIWindowAssetType type);
             string GetAddress(SceneAssetType type);
             string GetAddress(PrefabAssetType type);
@@ -83,39 +63,6 @@ namespace ClientTemplate
                     if (PrefabAssetAddressMap.ContainsKey(address.assetType) == false)
                     {
                         PrefabAssetAddressMap.Add(address.assetType, address.address);
-                    }
-                }
-            }
-
-            public void Add(UIWindowAssetAddressContainer container)
-            {
-                foreach (UIWindowAssetAddress add in container.AddressList)
-                {
-                    if (WindowAssetAddressMap.ContainsKey(add.type) == false)
-                    {
-                        WindowAssetAddressMap.Add(add.type, add.address);
-                    }
-                }
-            }
-
-            public void Add(SceneAssetAddressContainer container)
-            {
-                foreach (SceneAssetAddress add in container.AddressList)
-                {
-                    if (SceneAssetAddressMap.ContainsKey(add.type) == false)
-                    {
-                        SceneAssetAddressMap.Add(add.type, add.address);
-                    }
-                }
-            }
-
-            public void Add(PrefabAssetAddressContainer container)
-            {
-                foreach (PrefabAssetAddress add in container.AddressList)
-                {
-                    if (PrefabAssetAddressMap.ContainsKey(add.type) == false)
-                    {
-                        PrefabAssetAddressMap.Add(add.type, add.address);
                     }
                 }
             }

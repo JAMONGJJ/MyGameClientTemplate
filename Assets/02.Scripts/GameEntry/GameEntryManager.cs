@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using ClientTemplate.UIInfo;
 using ClientTemplate.UtilityFunctions;
-using ClientTemplate.VersionInfo;
 using UnityEngine;
 
 namespace ClientTemplate

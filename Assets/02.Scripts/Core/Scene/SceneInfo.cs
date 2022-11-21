@@ -25,23 +25,6 @@ namespace ClientTemplate
             
         }
 
-        [XmlRoot("Scene")]
-        public class SceneAssetAddress
-        {
-            [XmlElement("Type")]
-            public SceneAssetType type;
-            
-            [XmlElement("Address")]
-            public string address;
-        }
-
-        [XmlRoot("AssetAddressMap")]
-        public class SceneAssetAddressContainer
-        {
-            [XmlArray("Assets"), XmlArrayItem("Scene")]
-            public List<SceneAssetAddress> AddressList;
-        }
-
         public class Scene
         {
             public string sceneName { get; private set; }

@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using ClientTemplate.StringInfo;
-using ClientTemplate.VersionInfo;
 using UnityEngine;
 
 namespace ClientTemplate

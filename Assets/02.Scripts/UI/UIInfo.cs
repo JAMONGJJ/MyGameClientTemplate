@@ -40,23 +40,6 @@ namespace ClientTemplate
             
         }
 
-        [XmlRoot("UIWindow")]
-        public class UIWindowAssetAddress
-        {
-            [XmlElement("Type")]
-            public UIWindowAssetType type;
-            
-            [XmlElement("Address")]
-            public string address;
-        }
-
-        [XmlRoot("AssetAddressMap")]
-        public class UIWindowAssetAddressContainer
-        {
-            [XmlArray("Assets"), XmlArrayItem("UIWindow")]
-            public List<UIWindowAssetAddress> AddressList;
-        }
-
         public class UIData
         {
 
