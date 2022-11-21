@@ -63,33 +63,22 @@ namespace ClientTemplate
             Init();
         }
 
-        public async void LoadVersionDataTable()
+        public void LoadVersionDataTable()
         {
             Utility.Functions.Async.SetIsProcessing(true);
-            try
+            Utility.Functions.Exception.Process(() =>
             {
-                var handle = Addressables.LoadAssetAsync<TextAsset>("VersionDataTable");
-                while (handle.IsDone == false)
+                var handle = Addressables.LoadAssetAsync<ScriptableObject>("VersionDataTable");
+                handle.Completed += _ =>
                 {
-                    await Task.Delay(10);
-                }
-                XmlDocument xmlDoc = new XmlDocument();
-                xmlDoc.LoadXml(handle.Result.text);
-                XmlSerializer versionSerializer = new XmlSerializer(typeof(Version));
-                using (StringReader reader = new StringReader(handle.Result.text))
-                {
-                    Version version = versionSerializer.Deserialize(reader) as Version;
+                    VersionsDataTable version = handle.Result as VersionsDataTable;
                     Data.Table.SetVersion(version);
-                }
         
-                Addressables.Release(handle);
-                Utility.Functions.Async.SetIsProcessing(false);
-                LogManager.Log(LogManager.LogType.DEFAULT, "VersionDataTable download completed!");
-            }
-            catch (Exception e)
-            {
-                LogManager.LogError(LogManager.LogType.EXCEPTION, e.ToString());
-            }
+                    Addressables.Release(handle);
+                    Utility.Functions.Async.SetIsProcessing(false);
+                    LogManager.Log(LogManager.LogType.DEFAULT, "VersionDataTable download completed!");
+                };
+            });
         }
 
         public void CheckDownloadAssets(AssetLoadFinishCallback assetDownloadFinishFinishCallback)

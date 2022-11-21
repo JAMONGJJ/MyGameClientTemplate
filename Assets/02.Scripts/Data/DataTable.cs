@@ -13,10 +13,10 @@ namespace ClientTemplate
 
     public class DataTable
     {
-        private Version Version;
+        private VersionsDataTable Version;
         private ICommonStringsInfoContainer CommonStringsInfoContainer;
 
-        public void SetVersion(Version version)
+        public void SetVersion(VersionsDataTable version)
         {
             Version = version;
         }
@@ -28,7 +28,7 @@ namespace ClientTemplate
 
         #region Current App Version
 
-        public Version GetVersionInfo()
+        public VersionsDataTable GetVersionInfo()
         {
             return Version;
         }

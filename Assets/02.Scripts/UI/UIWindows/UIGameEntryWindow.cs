@@ -61,11 +61,11 @@ namespace ClientTemplate
         {
             GoToStoreButton.OnClickAsObservable().Subscribe(_ =>
             {
-                VersionInfo.Version version = Data.Table.GetVersionInfo();
+                VersionsDataTable version = Data.Table.GetVersionInfo();
 #if UNITY_ANDROID
-                Application.OpenURL($"{versionInfo.playStoreLink}");
+                Application.OpenURL($"{version.playStoreLink}");
 #elif UNITY_IOS
-                Application.OpenURL($"{versionInfo.appStoreConnectLink}");
+                Application.OpenURL($"{version.appStoreLink}");
 #else
                 LogManager.LogError(LogManager.LogType.DEFAULT, "unexpected platform!");
 #endif

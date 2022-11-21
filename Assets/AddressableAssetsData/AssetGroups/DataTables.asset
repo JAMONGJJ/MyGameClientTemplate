@@ -25,6 +25,10 @@ MonoBehaviour:
     m_Address: DataTables
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: 87118ae42bcb5ce48ba0731c4268254e
+    m_Address: VersionDataTable
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 9c9c1549ba1db754fae56ceba9b0d96a, type: 2}
   m_SchemaSet:

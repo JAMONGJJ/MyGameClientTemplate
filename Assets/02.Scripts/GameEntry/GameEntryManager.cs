@@ -26,7 +26,7 @@ namespace ClientTemplate
 
         private void CheckAvailableAppVersion()
         {
-            Version versionInfo = Data.Table.GetVersionInfo();
+            VersionsDataTable versionInfo = Data.Table.GetVersionInfo();
             if(versionInfo.version != Application.version)
             {
                 GameEntryWindow.SetActiveGoToStore(true);

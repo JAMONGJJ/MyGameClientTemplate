@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: DataTables
-  m_EditorClassIdentifier: Assembly-CSharp:ClientTemplate:DataTables
-  CommonStrings:
-  - stringType: 1
-    description: It is test description!
+  m_Script: {fileID: 11500000, guid: fac3a43a4f7d41740a8e22590bcf7074, type: 3}
+  m_Name: VersionDataTable
+  m_EditorClassIdentifier: 
+  version: 0.1.0
+  playStoreLink: market://details?id=
+  appStoreLink: itms-apps://itunes.apple.com/app/

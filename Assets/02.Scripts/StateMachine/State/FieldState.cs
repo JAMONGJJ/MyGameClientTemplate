@@ -35,10 +35,6 @@ namespace ClientTemplate
 
         private void AfterFieldSceneLoad()
         {
-            // GamePlayManager.Instance.SetCharacterInitPosition();
-            // GamePlayManager.Instance.SetMyPlayer();
-            // GamePlayManager.Instance.SetMyCamera();
-            // UIManager.Instance.CreateMainHud();
             UIManager.Instance.SetOverlayCamera();
         }
 
