@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using ClientTemplate.UIInfo;
 using UnityEngine;
 using UnityEngine.UI;
-using UniRx;
 
 namespace ClientTemplate
 {
@@ -29,8 +28,7 @@ namespace ClientTemplate
 
         private void SetButtons()
         {
-            ExitButton.OnClickAsObservable()
-                .Subscribe(_ =>
+            ExitButton.onClick.AddListener(() =>
                 {
                     UIManager.Instance.CloseWindow(UIWindowType.TestModalessUIWindow2);
                 });

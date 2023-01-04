@@ -5,7 +5,6 @@ using ClientTemplate.StringInfo;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UniRx;
 
 namespace ClientTemplate
 {
@@ -47,8 +46,7 @@ namespace ClientTemplate
 
         public void SetDownloadButton(System.Action action)
         {
-            downloadButton.OnClickAsObservable()
-                .Subscribe(_ =>
+            downloadButton.onClick.AddListener(() =>
                 {
                     SetActiveDownloadButton(false);
                     SetActiveDownloadSlider(true);

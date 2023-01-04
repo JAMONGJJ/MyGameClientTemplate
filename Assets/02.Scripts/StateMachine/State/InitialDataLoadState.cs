@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using ClientTemplate.StateInfo;
 using UnityEngine;
-using UniRx;
 
 namespace ClientTemplate
 {

@@ -6,7 +6,6 @@ using ClientTemplate.StringInfo;
 using ClientTemplate.SceneInfo;
 using ClientTemplate.UIInfo;
 using ClientTemplate.UtilityFunctions;
-using UniRx;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -91,8 +90,7 @@ namespace ClientTemplate
                     firstDownload = true;
                     GameEntryManager.Instance.GameEntryWindow.SetActiveAssetDownload(true);
                     GameEntryManager.Instance.GameEntryWindow.SetAssetDownloadText(downloadSize);
-                    GameEntryManager.Instance.GameEntryWindow.AcceptAssetDownloadButton.OnClickAsObservable()
-                        .Subscribe(_ =>
+                    GameEntryManager.Instance.GameEntryWindow.AcceptAssetDownloadButton.onClick.AddListener(() =>
                         {
                             GameEntryManager.Instance.GameEntryWindow.SetActiveDownloadSlider(true);
                             GameEntryManager.Instance.GameEntryWindow.SetActiveAssetDownload(false);

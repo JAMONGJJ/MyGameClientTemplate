@@ -5,7 +5,6 @@ using ClientTemplate.SceneInfo;
 using ClientTemplate.UIInfo;
 using UnityEngine;
 using UnityEngine.UI;
-using UniRx;
 using TMPro;
 
 namespace ClientTemplate
@@ -59,7 +58,7 @@ namespace ClientTemplate
 
         private void SetButtons()
         {
-            GoToStoreButton.OnClickAsObservable().Subscribe(_ =>
+            GoToStoreButton.onClick.AddListener(() =>
             {
                 VersionsDataTable version = Data.Table.GetVersionInfo();
 #if UNITY_ANDROID
@@ -71,7 +70,7 @@ namespace ClientTemplate
 #endif
             });
 
-            DenyAssetDownloadButton.OnClickAsObservable().Subscribe(_ =>
+            DenyAssetDownloadButton.onClick.AddListener(() =>
             {
 #if UNITY_EDITOR
                 UnityEditor.EditorApplication.isPlaying = false;

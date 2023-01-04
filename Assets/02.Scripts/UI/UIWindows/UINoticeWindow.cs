@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using ClientTemplate.UIInfo;
-using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -49,8 +48,7 @@ namespace ClientTemplate
 
         private void SetButtons()
         {
-            ExitButton.OnClickAsObservable()
-                .Subscribe(_ =>
+            ExitButton.onClick.AddListener(() =>
                 {
                     UIManager.Instance.CloseWindow(UIWindowType.NoticeWindow);
                 });

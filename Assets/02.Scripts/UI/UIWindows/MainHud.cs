@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using ClientTemplate.UIInfo;
 using UnityEngine;
-using UniRx;
 using TMPro;
 using UnityEngine.UI;
 using Button = UnityEngine.UI.Button;
