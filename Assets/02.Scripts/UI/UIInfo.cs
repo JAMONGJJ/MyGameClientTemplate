@@ -327,6 +327,7 @@ namespace ClientTemplate
                 {
                     if (_uiDataModifiedMap[type] == true)
                     {
+                        _uiDataModifiedMap[type] = false;
                         return _uiDataMap[type];
                     }
                 }
