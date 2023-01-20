@@ -8,27 +8,12 @@ namespace ClientTemplate
     public class InitialDataLoadState : IState
     {
         public string name { get; set; }
-        public StateType id { get; set; }
+        public StateType type { get; set; }
 
         public InitialDataLoadState()
         {
             name = "Initial Data Load State";
-            id = StateType.InitialDataLoad;
-        }
-
-        public bool CanTransitState(StateType nextStateType)
-        {
-            switch (nextStateType)
-            {
-                case StateType.DataSetting:
-                {
-                    return true;
-                }
-                default:
-                {
-                    return false;
-                }
-            }
+            type = StateType.InitialDataLoad;
         }
 
         public void OnBegin()
@@ -41,9 +26,19 @@ namespace ClientTemplate
             StateMachine.NextState(new DataSettingState());
         }
 
-        public void OnEnd()
+        public bool OnEnd(StateType nextStateType)
         {
-            
+            switch (nextStateType)
+            {
+                case StateType.DataSetting:
+                {
+                    return true;
+                }
+                default:
+                {
+                    return false;
+                }
+            }
         }
     }
 }

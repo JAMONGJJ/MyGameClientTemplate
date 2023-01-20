@@ -10,15 +10,21 @@ namespace ClientTemplate
     public class ServerConnectState : IState
     {
         public string name { get; set; }
-        public StateType id { get; set; }
+        public StateType type { get; set; }
 
         public ServerConnectState()
         {
             name = "Server Connect State";
-            id = StateType.ServerConnect;
+            type = StateType.ServerConnect;
         }
 
-        public bool CanTransitState(StateType nextStateType)
+        public void OnBegin()
+        {
+            SetNetworkManager();
+            StateMachine.NextState(new LoginState());
+        }
+
+        public bool OnEnd(StateType nextStateType)
         {
             switch (nextStateType)
             {
@@ -31,17 +37,6 @@ namespace ClientTemplate
                     return false;
                 }
             }
-        }
-
-        public void OnBegin()
-        {
-            SetNetworkManager();
-            StateMachine.NextState(new LoginState());
-        }
-
-        public void OnEnd()
-        {
-            
         }
 
         private void SetNetworkManager()

@@ -10,15 +10,21 @@ namespace ClientTemplate
     public class LoginState : IState
     {
         public string name { get; set; }
-        public StateType id { get; set; }
+        public StateType type { get; set; }
 
         public LoginState()
         {
             name = "Login State";
-            id = StateType.Login;
+            type = StateType.Login;
         }
 
-        public bool CanTransitState(StateType nextStateType)
+        public void OnBegin()
+        {
+            Login();
+            
+        }
+
+        public bool OnEnd(StateType nextStateType)
         {
             switch (nextStateType)
             {
@@ -31,17 +37,6 @@ namespace ClientTemplate
                     return false;
                 }
             }
-        }
-
-        public void OnBegin()
-        {
-            Login();
-            
-        }
-
-        public void OnEnd()
-        {
-            
         }
 
         private void Login()

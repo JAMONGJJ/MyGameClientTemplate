@@ -10,27 +10,12 @@ namespace ClientTemplate
     public class DataSettingState : IState
     {
         public string name { get; set; }
-        public StateType id { get; set; }
+        public StateType type { get; set; }
 
         public DataSettingState()
         {
             name = "Data Setting State";
-            id = StateType.DataSetting;
-        }
-
-        public bool CanTransitState(StateType nextStateType)
-        {
-            switch (nextStateType)
-            {
-                case StateType.ServerConnect:
-                    {
-                        return true;
-                    }
-                default:
-                    {
-                        return false;
-                    }
-            }
+            type = StateType.DataSetting;
         }
 
         public void OnBegin()
@@ -46,9 +31,19 @@ namespace ClientTemplate
             );
         }
 
-        public void OnEnd()
+        public bool OnEnd(StateType nextStateType)
         {
-            
+            switch (nextStateType)
+            {
+                case StateType.ServerConnect:
+                {
+                    return true;
+                }
+                default:
+                {
+                    return false;
+                }
+            }
         }
 
         private void InitUIManager()

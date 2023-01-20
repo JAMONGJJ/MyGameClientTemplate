@@ -9,7 +9,7 @@ namespace ClientTemplate
         public enum StateType
         {
             None,
-            Intro,
+            Entry,
             InitialDataLoad,
             DataSetting,
             ServerConnect,
@@ -21,10 +21,9 @@ namespace ClientTemplate
         public interface IState
         {
             string name { get; set; }
-            StateType id { get; set; }
-            bool CanTransitState(StateType nextStateType);
+            StateType type { get; set; }
             void OnBegin();
-            void OnEnd();
+            bool OnEnd(StateType nextStateType);
         }
     }
 }

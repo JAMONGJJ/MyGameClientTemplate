@@ -9,23 +9,12 @@ namespace ClientTemplate
     public class FieldState : IState
     {
         public string name { get; set; }
-        public StateType id { get; set; }
+        public StateType type { get; set; }
 
         public FieldState()
         {
             name = "Field State";
-            id = StateType.Field;
-        }
-
-        public bool CanTransitState(StateType nextStateType)
-        {
-            switch (nextStateType)
-            {
-                default:
-                {
-                    return true;
-                }
-            }
+            type = StateType.Field;
         }
 
         public void OnBegin()
@@ -38,9 +27,15 @@ namespace ClientTemplate
             UIManager.Instance.SetOverlayCamera();
         }
 
-        public void OnEnd()
+        public bool OnEnd(StateType nextStateType)
         {
-            
+            switch (nextStateType)
+            {
+                default:
+                {
+                    return true;
+                }
+            }
         }
     }
 }

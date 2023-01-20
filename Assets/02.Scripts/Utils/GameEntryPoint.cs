@@ -13,7 +13,7 @@ namespace ClientTemplate
         /// </summary>
         private void Start()
         {
-            StateMachine.NextState(new IntroState());
+            StateMachine.NextState(new EntryState());
         }
     }
 }

@@ -11,18 +11,27 @@ namespace ClientTemplate
     using StateInfo;
     using SceneInfo;
     
-    public class IntroState : IState
+    public class EntryState : IState
     {
         public string name { get; set; }
-        public StateType id { get; set; }
+        public StateType type { get; set; }
 
-        public IntroState()
+        public EntryState()
         {
-            name = "Intro State";
-            id = StateType.Intro;
+            name = "Entry State";
+            type = StateType.Entry;
         }
 
-        public bool CanTransitState(StateType nextStateType)
+        public void OnBegin()
+        {
+            SetCoreSystem();
+            SetContentsManager();
+            SetUtilityFunctions();
+            Core.System.Settings.SetFrameRate(60);
+            GameEntryManager.Instance.GameEntry();
+        }
+
+        public bool OnEnd(StateType nextStateType)
         {
             switch (nextStateType)
             {
@@ -35,20 +44,6 @@ namespace ClientTemplate
                     return false;
                 }
             }
-        }
-
-        public void OnBegin()
-        {
-            SetCoreSystem();
-            SetContentsManager();
-            SetUtilityFunctions();
-            Core.System.Settings.SetFrameRate(60);
-            GameEntryManager.Instance.GameEntry();
-        }
-
-        public void OnEnd()
-        {
-            
         }
         
         #region CoreSystem

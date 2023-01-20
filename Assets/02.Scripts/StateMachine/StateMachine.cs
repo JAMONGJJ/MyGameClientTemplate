@@ -19,12 +19,8 @@ namespace ClientTemplate
         {
             if (CurrentState != null)
             {
-                if (CurrentState.CanTransitState(nextState.id) == true)
-                {
-                    LogManager.Log(LogManager.LogType.STATE_ON_END, CurrentState.name);
-                    CurrentState.OnEnd();
-                }
-                else
+                LogManager.Log(LogManager.LogType.STATE_ON_END, CurrentState.name);
+                if (CurrentState.OnEnd(nextState.type) == false)
                 {
                     LogManager.LogError(LogManager.LogType.DEFAULT, "Cannot transit state!");
                     return;
