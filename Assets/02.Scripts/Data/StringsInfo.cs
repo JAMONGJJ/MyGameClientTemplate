@@ -36,7 +36,7 @@ namespace ClientTemplate
                 }
             }
 
-            public string GetString(StringType type)
+            public string GetString(StringType type) 
             {
                 return _commonStringInfoContainer[type];
             }

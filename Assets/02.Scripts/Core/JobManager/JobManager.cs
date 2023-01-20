@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using ClientTemplate.JobStructs;
 using Unity.Burst;
 using Unity.Collections;
-using Unity.Entities;
 using Unity.Jobs;
 using UnityEngine;
 

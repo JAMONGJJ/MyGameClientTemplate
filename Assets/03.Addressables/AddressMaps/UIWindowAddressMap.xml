@@ -1,9 +1,0 @@
-<AssetAddressMap>
-	<Assets>
-		<UIWindow><Type>TestModalessUIWindow</Type><Address>Preload/Prefabs/TestModalessUIWindow.prefab</Address></UIWindow>
-		<UIWindow><Type>TestModalessUIWindow2</Type><Address>Preload/Prefabs/TestModalessUIWindow2.prefab</Address></UIWindow>
-		<UIWindow><Type>UISystem</Type><Address>Preload/UIWindows/UISystem.prefab</Address></UIWindow>
-		<UIWindow><Type>MainHud</Type><Address>Preload/UIWindows/MainHud.prefab</Address></UIWindow>
-		<UIWindow><Type>NoticeWindow</Type><Address>Preload/UIWindows/UINoticeWindow.prefab</Address></UIWindow>
-	</Assets>
-</AssetAddressMap>
