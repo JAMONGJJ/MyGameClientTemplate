@@ -6,15 +6,15 @@ using UnityEngine;
 
 namespace ClientTemplate
 {
-    public class FieldState : IState
+    public class LobbyState : IState
     {
         public string name { get; set; }
         public StateType type { get; set; }
 
-        public FieldState()
+        public LobbyState()
         {
-            name = "Field State";
-            type = StateType.Field;
+            name = "Lobby State";
+            type = StateType.Lobby;
         }
 
         public void OnBegin()

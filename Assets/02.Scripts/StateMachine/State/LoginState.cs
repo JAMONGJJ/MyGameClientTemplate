@@ -28,7 +28,7 @@ namespace ClientTemplate
         {
             switch (nextStateType)
             {
-                case StateType.Field:
+                case StateType.Lobby:
                 {
                     return true;
                 }
@@ -52,7 +52,7 @@ namespace ClientTemplate
             Core.System.Authentication.Authenticate();
             
             GameEntryManager.Instance.DestroySelf();
-            StateMachine.NextState(new FieldState());
+            StateMachine.NextState(new LobbyState());
         }
     }
 }

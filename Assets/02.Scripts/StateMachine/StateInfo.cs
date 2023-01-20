@@ -14,7 +14,7 @@ namespace ClientTemplate
             DataSetting,
             ServerConnect,
             Login,
-            Field,
+            Lobby,
         
         }
 
