@@ -11,16 +11,18 @@ namespace ClientTemplate
         public enum SceneType
         {
             None,
-            EntryScene,
-            TestScene,
+            Entry,
+            PreLobby,
+            Lobby,
             
         }
 
         public enum SceneAssetType
         {
             None,
-            EntryScene,
-            TestScene,
+            Entry,
+            PreLobby,
+            Lobby,
             
         }
 
@@ -39,7 +41,7 @@ namespace ClientTemplate
         public interface ISceneContainer
         {
             void Add(SceneType sceneType, string name, SceneAssetType assetType);
-            Scene GetValue(SceneType sceneType);
+            Scene GetScene(SceneType sceneType);
         }
 
         public class SceneContainer : ISceneContainer
@@ -60,7 +62,7 @@ namespace ClientTemplate
                 }
             }
 
-            public Scene GetValue(SceneType sceneType)
+            public Scene GetScene(SceneType sceneType)
             {
                 if (SceneMap.ContainsKey(sceneType) == true)
                 {

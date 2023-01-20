@@ -17,6 +17,7 @@ namespace ClientTemplate
         AfterSceneLoadCallback SceneLoadCallback { get; set; }
         void SetSceneContainer(ISceneContainer container);
         void LoadScene(SceneType type, AfterSceneLoadCallback callback);
+        void LoadScene(SceneType type);
     }
 
     public class SceneManager : ISceneManager
@@ -28,10 +29,11 @@ namespace ClientTemplate
         public void Init()
         {
             LogManager.Log(LogManager.LogType.CONTROLLER_INIT, "Scene Manager");
-            CurrentScene = new Scene("EntryScene", SceneAssetType.EntryScene);
+            CurrentScene = new Scene("EntryScene", SceneAssetType.Entry);
             SceneLoadCallback = null;
-            SceneContainer.Add(SceneType.EntryScene, "EntryScene", SceneAssetType.EntryScene);
-            SceneContainer.Add(SceneType.TestScene, "TestScene", SceneAssetType.TestScene);
+            SceneContainer.Add(SceneType.Entry, "EntryScene", SceneAssetType.Entry);
+            SceneContainer.Add(SceneType.PreLobby, "PreLobbyScene", SceneAssetType.PreLobby);
+            SceneContainer.Add(SceneType.Lobby, "LobbyScene", SceneAssetType.Lobby);
         }
 
         public void Release()
@@ -57,7 +59,7 @@ namespace ClientTemplate
 
         public void LoadScene(SceneType type, AfterSceneLoadCallback callback)
         {
-            Scene scene = SceneContainer.GetValue(type);
+            Scene scene = SceneContainer.GetScene(type);
             if (scene != null)
             {
                 _LoadScene(scene);
@@ -65,15 +67,23 @@ namespace ClientTemplate
             }
         }
 
-        private async void _LoadScene(Scene newScene)
+        public void LoadScene(SceneType type)
+        {
+            Scene scene = SceneContainer.GetScene(type);
+            if (scene != null)
+            {
+                _LoadScene(scene);
+                SceneLoadCallback = null;
+            }
+        }
+
+        private void _LoadScene(Scene newScene)
         {
             LogManager.Log(LogManager.LogType.SCENE_LOADING_START, newScene.sceneName);
             string sceneAddress = Core.System.Resource.GetAddressByType(newScene.assetType);
             var asyncLoad = Core.System.Resource.LoadScene(sceneAddress);
-            while (asyncLoad.IsDone == false)
-            {
-                await (Task.Delay(10));
-            }
+            asyncLoad.WaitForCompletion();
+            
             Addressables.Release(asyncLoad);
             CurrentScene = newScene;
             if (SceneLoadCallback != null)
@@ -83,16 +93,6 @@ namespace ClientTemplate
             }
 
             LogManager.Log(LogManager.LogType.SCENE_LOADING_FINISH, newScene.sceneName);
-        }
-
-        private void OpenLoadingScreen()
-        {
-
-        }
-
-        private void CloseLoadingScreen()
-        {
-
         }
     }
 }

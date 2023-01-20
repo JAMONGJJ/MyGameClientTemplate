@@ -21,14 +21,14 @@ namespace ClientTemplate
         public void OnBegin()
         {
             SetNetworkManager();
-            StateMachine.NextState(new LoginState());
+            StateMachine.NextState(new DataSettingState());
         }
 
         public bool OnEnd(StateType nextStateType)
         {
             switch (nextStateType)
             {
-                case StateType.Login:
+                case StateType.DataSetting:
                 {
                     return true;
                 }

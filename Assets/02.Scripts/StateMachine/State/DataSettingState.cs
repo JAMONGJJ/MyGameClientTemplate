@@ -23,19 +23,14 @@ namespace ClientTemplate
             // synchronized setting
             InitUIManager();
             
-            // asynchronized setting
-            Utility.Functions.Async.Process(DataSetAllFinishCallback,
-                UIManager.Instance.LoadUISystem,
-                UIManager.Instance.CreateMainHud,
-                UIManager.Instance.SetInActiveMainHud
-            );
+            DataSetAllFinishCallback();
         }
 
         public bool OnEnd(StateType nextStateType)
         {
             switch (nextStateType)
             {
-                case StateType.ServerConnect:
+                case StateType.PreLobby:
                 {
                     return true;
                 }
@@ -52,11 +47,15 @@ namespace ClientTemplate
             UIManager.Instance.SetUIWindowAssetTypeContainer(new UIWindowAssetTypeContainer());
             UIManager.Instance.SetUIDataInfoContainer(new UIDataInfoContainer());
             UIManager.Instance.Init();
+            
+            UIManager.Instance.LoadUISystem();
+            UIManager.Instance.CreateMainHud();
+            UIManager.Instance.SetInActiveMainHud();
         }
 
         private void DataSetAllFinishCallback()
         {
-            StateMachine.NextState(new ServerConnectState());
+            StateMachine.NextState(new PreLobbyState());
         }
     }
 }

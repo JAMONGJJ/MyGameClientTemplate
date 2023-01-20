@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using ClientTemplate.SceneInfo;
 using UnityEngine;
 
 namespace ClientTemplate
@@ -20,15 +21,16 @@ namespace ClientTemplate
 
         public void OnBegin()
         {
+            Core.System.Scene.LoadScene(SceneType.PreLobby);
+            UIManager.Instance.SetOverlayCamera();
             Login();
-            
         }
 
         public bool OnEnd(StateType nextStateType)
         {
             switch (nextStateType)
             {
-                case StateType.Lobby:
+                case StateType.ServerConnect:
                 {
                     return true;
                 }
@@ -52,7 +54,7 @@ namespace ClientTemplate
             Core.System.Authentication.Authenticate();
             
             GameEntryManager.Instance.DestroySelf();
-            StateMachine.NextState(new LobbyState());
+            StateMachine.NextState(new ServerConnectState());
         }
     }
 }

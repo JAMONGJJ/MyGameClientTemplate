@@ -11,9 +11,10 @@ namespace ClientTemplate
             None,
             Entry,
             InitialDataLoad,
-            DataSetting,
             ServerConnect,
             Login,
+            DataSetting,
+            PreLobby,
             Lobby,
         
         }

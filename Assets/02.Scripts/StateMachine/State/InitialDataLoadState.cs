@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using ClientTemplate.StateInfo;
+using ClientTemplate.UIInfo;
 using UnityEngine;
 
 namespace ClientTemplate
@@ -23,14 +24,25 @@ namespace ClientTemplate
 
         private void LoadFinishCallback()
         {
-            StateMachine.NextState(new DataSettingState());
+            InitUIManager();
+            StateMachine.NextState(new LoginState());
+        }
+
+        private void InitUIManager()
+        {
+            UIManager.Instance.SetUIWindowContainer(new UIWindowContainerWithStack());
+            UIManager.Instance.SetUIWindowAssetTypeContainer(new UIWindowAssetTypeContainer());
+            UIManager.Instance.SetUIDataInfoContainer(new UIDataInfoContainer());
+            UIManager.Instance.Init();
+            
+            UIManager.Instance.LoadUISystem();
         }
 
         public bool OnEnd(StateType nextStateType)
         {
             switch (nextStateType)
             {
-                case StateType.DataSetting:
+                case StateType.Login:
                 {
                     return true;
                 }

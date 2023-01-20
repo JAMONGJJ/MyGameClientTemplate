@@ -19,7 +19,6 @@ namespace ClientTemplate
     }
     public class UIGameEntryWindow : MonoBehaviour
     {
-        public GameObject[] LoadingImagesGroup;
         public Slider LoadingProcessSlider;
         public GameObject GoToStoreBackground;
         public GameObject DownloadNoticeBackground;
@@ -30,30 +29,10 @@ namespace ClientTemplate
         
         private void Start()
         {
-            for (int i = 0; i < LoadingImagesGroup.Length; i++)
-            {
-                LoadingImagesGroup[i].SetActive(false);
-            }
             LoadingProcessSlider.gameObject.SetActive(false);
             GoToStoreBackground.gameObject.SetActive(false);
             DownloadNoticeBackground.gameObject.SetActive(false);
             SetButtons();
-            StartCoroutine(Sequencing());
-        }
-
-        IEnumerator Sequencing()
-        {
-            int index = 0;
-            while (true)
-            {
-                SetActiveLoadingImage(index);
-                yield return new WaitForSeconds(0.3f);
-                index++;
-                if (index >= LoadingImagesGroup.Length)
-                {
-                    index = 0;
-                }
-            }
         }
 
         private void SetButtons()
@@ -78,21 +57,6 @@ namespace ClientTemplate
                 Application.Quit();
 #endif
             });
-        }
-
-        private void SetActiveLoadingImage(int index)
-        {
-            for (int i = 0; i < LoadingImagesGroup.Length; i++)
-            {
-                if (i == index)
-                {
-                    LoadingImagesGroup[i].SetActive(true);
-                }
-                else
-                {
-                    LoadingImagesGroup[i].SetActive(false);
-                }
-            }
         }
 
         public void SetActiveDownloadSlider(bool active)
@@ -124,15 +88,15 @@ namespace ClientTemplate
         private string ConvertSize(long size)
         {
             string result = "";
-            float mySize = size;
+            float tmpSize = size;
             SizeType type = SizeType.bytes;
-            while (mySize > 1024.0f)
+            while (tmpSize > 1024.0f)
             {
-                mySize = mySize / 1024.0f;
+                tmpSize = tmpSize / 1024.0f;
                 type++;
             }
 
-            result = $"{mySize.ToString("F2")}{type}";
+            result = $"{tmpSize.ToString("F2")}{type}";
             return result;
         }
     }

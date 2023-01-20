@@ -1,30 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
-using ClientTemplate.StateInfo;
-using ClientTemplate.SceneInfo;
 using UnityEngine;
 
 namespace ClientTemplate
 {
-    public class LobbyState : IState
+    using UIInfo;
+    using StateInfo;
+
+    public class PreLobbyState : IState
     {
         public string name { get; set; }
         public StateType type { get; set; }
 
-        public LobbyState()
+        public PreLobbyState()
         {
-            name = "Lobby State";
-            type = StateType.Lobby;
+            name = "Pre Lobby State";
+            type = StateType.PreLobby;
         }
 
         public void OnBegin()
         {
-            // Core.System.Scene.LoadScene(SceneType.Lobby, AfterFieldSceneLoad);
-        }
-
-        private void AfterFieldSceneLoad()
-        {
-            UIManager.Instance.SetOverlayCamera();
+            StateMachine.NextState(new LobbyState());
         }
 
         public bool OnEnd(StateType nextStateType)
