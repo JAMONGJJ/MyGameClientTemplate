@@ -24,4 +24,6 @@ MonoBehaviour:
     address: Preload/Prefabs/TestCube.prefab
   SceneAddressList:
   - assetType: 2
-    address: Preload/Scenes/TestScene.unity
+    address: Preload/Scenes/PreLobbyScene.unity
+  - assetType: 3
+    address: Preload/Scenes/LobbyScene.unity
