@@ -19,7 +19,21 @@ namespace ClientTemplate
 
         public void OnBegin()
         {
-            Core.System.Resource.CheckDownloadAssets(LoadFinishCallback);
+            CheckAssetBundleSize();
+        }
+
+        private void CheckAssetBundleSize()
+        {
+            long bundleSize = Core.System.Resource.GetAssetBundleSize(LoadFinishCallback);
+            if (bundleSize > 0)
+            {
+                GameEntryManager.Instance.GameEntryWindow.SetActiveAssetDownload(true);
+                GameEntryManager.Instance.GameEntryWindow.SetAssetDownloadText(bundleSize);
+            }
+            else
+            {
+                Core.System.Resource.LoadAddressablesAssets();
+            }
         }
 
         private void LoadFinishCallback()
@@ -36,6 +50,7 @@ namespace ClientTemplate
             UIManager.Instance.Init();
             
             UIManager.Instance.LoadUISystem();
+            UIManager.Instance.PushToMainCameraStack();
         }
 
         public bool OnEnd(StateType nextStateType)

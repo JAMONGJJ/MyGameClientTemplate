@@ -21,8 +21,6 @@ namespace ClientTemplate
 
         public void OnBegin()
         {
-            Core.System.Scene.LoadScene(SceneType.PreLobby);
-            UIManager.Instance.SetOverlayCamera();
             Login();
         }
 
@@ -53,7 +51,6 @@ namespace ClientTemplate
             Core.System.Authentication.Init();
             Core.System.Authentication.Authenticate();
             
-            GameEntryManager.Instance.DestroySelf();
             StateMachine.NextState(new ServerConnectState());
         }
     }

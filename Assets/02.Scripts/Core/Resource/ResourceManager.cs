@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using ClientTemplate.StringInfo;
 using ClientTemplate.SceneInfo;
 using ClientTemplate.UIInfo;
 using ClientTemplate.UtilityFunctions;
@@ -10,7 +8,6 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceProviders;
-using Task = System.Threading.Tasks.Task;
 
 namespace ClientTemplate
 {
@@ -21,13 +18,18 @@ namespace ClientTemplate
     public interface IResourceManager : IManager
     {
         void LoadVersionDataTable();
-        void CheckDownloadAssets(AssetLoadFinishCallback assetDownloadFinishFinishCallback);
+        long GetAssetBundleSize(AssetLoadFinishCallback assetDownloadFinishFinishCallback);
+        void LoadAddressablesAssets();
+        float GetAssetBundleDownloadProgress();
         string GetAddressByType(UIWindowAssetType type);
         string GetAddressByType(SceneAssetType type);
         string GetAddressByType(PrefabAssetType type);
         AsyncOperationHandle<GameObject> LoadGameObject(string key);
         AsyncOperationHandle<SceneInstance> LoadScene(string key);
         AsyncOperationHandle<object> LoadObject(string key);
+        GameObject LoadAssets(UIWindowAssetType type);
+        bool LoadAssets(SceneAssetType type);
+        GameObject LoadAssets(PrefabAssetType type);
     }
 
     public class ResourceManager : IResourceManager
@@ -35,6 +37,8 @@ namespace ClientTemplate
         private IList<string> LabelNames;
         private IAssetAddressContainer AssetAddressContainer;
         private AssetLoadFinishCallback AssetLoadFinishFinishCallback;
+        private AsyncOperationHandle AssetBundleDownloadHandle;
+        private event EventHandler<float> OnDownloadProgressChange;
         private bool firstDownload;
         
         public void Init()
@@ -77,34 +81,40 @@ namespace ClientTemplate
             });
         }
 
-        public void CheckDownloadAssets(AssetLoadFinishCallback assetDownloadFinishFinishCallback)
+        public long GetAssetBundleSize(AssetLoadFinishCallback assetDownloadFinishFinishCallback)
         {
             LogManager.Log(LogManager.LogType.DEFAULT, "Checking assets to download!");
             AssetLoadFinishFinishCallback = assetDownloadFinishFinishCallback;
             var handle = Addressables.GetDownloadSizeAsync(LabelNames);
-            handle.Completed += _ =>
+            handle.WaitForCompletion();
+            
+            long downloadSize = handle.Result;
+            Addressables.Release(handle);
+            return downloadSize;
+        }
+        
+        public void LoadAddressablesAssets()
+        {
+            LoadAssetAddressMaps();
+            LoadDataTables();
+            DownloadAssetBundles();
+            
+            LogManager.Log(LogManager.LogType.DEFAULT, "All data download completed!");
+            if (AssetLoadFinishFinishCallback != null)
             {
-                long downloadSize = handle.Result;
-                if (downloadSize > 0)
-                {
-                    firstDownload = true;
-                    GameEntryManager.Instance.GameEntryWindow.SetActiveAssetDownload(true);
-                    GameEntryManager.Instance.GameEntryWindow.SetAssetDownloadText(downloadSize);
-                    GameEntryManager.Instance.GameEntryWindow.AcceptAssetDownloadButton.onClick.AddListener(() =>
-                        {
-                            GameEntryManager.Instance.GameEntryWindow.SetActiveDownloadSlider(true);
-                            GameEntryManager.Instance.GameEntryWindow.SetActiveAssetDownload(false);
-                            LoadAddressablesAssets();
-                        });
-                }
-                else
-                {
-                    firstDownload = false;
-                    LoadAddressablesAssets();
-                }
+                AssetLoadFinishFinishCallback.Invoke();
+                AssetLoadFinishFinishCallback = null;
+            }
+        }
 
-                Addressables.Release(handle);
-            };
+        public float GetAssetBundleDownloadProgress()
+        {
+            if (AssetBundleDownloadHandle.IsValid() == false)
+            {
+                return 0f;
+            }
+
+            return AssetBundleDownloadHandle.PercentComplete;
         }
 
         public string GetAddressByType(UIWindowAssetType type)
@@ -136,99 +146,93 @@ namespace ClientTemplate
         {
             return Addressables.LoadAssetAsync<object>(key);
         }
-        
-        #region Load Addressables Assets
-        private List<bool> _loadStateList;
 
-        private bool CheckLoadStateList()
+        public GameObject LoadAssets(UIWindowAssetType type)
         {
-            foreach (bool state in _loadStateList)
+            string address = AssetAddressContainer.GetAddress(type);
+            if (string.IsNullOrEmpty(address) == true)
             {
-                if (state == false)
-                {
-                    return false;
-                }
+                throw new Exception("The asset address that matches entered type is null!");
+            }
+            
+            return LoadAssets<GameObject>(address);
+        }
+
+        public bool LoadAssets(SceneAssetType type)
+        {
+            string address = AssetAddressContainer.GetAddress(type);
+            if (string.IsNullOrEmpty(address) == true)
+            {
+                throw new Exception("The asset address that matches entered type is null!");
             }
 
+            LoadAssets(address);
             return true;
         }
-        
-        private void LoadAddressablesAssets()
+
+        public GameObject LoadAssets(PrefabAssetType type)
         {
-            _loadStateList = new List<bool>();
-            LoadAssetAddressMaps();
-            LoadDataTables();
-            DownloadAssetBundles();
+            string address = AssetAddressContainer.GetAddress(type);
+            if (string.IsNullOrEmpty(address) == true)
+            {
+                throw new Exception("The asset address that matches entered type is null!");
+            }
             
-            CheckAllLoadIsCompleted();
+            return LoadAssets<GameObject>(address);
         }
 
-        private async void DownloadAssetBundles()
+        private T LoadAssets<T>(string key)
         {
-            _loadStateList.Add(false);
-            int index = _loadStateList.Count - 1;
-            AsyncOperationHandle downloadHandle = Addressables.DownloadDependenciesAsync(LabelNames, Addressables.MergeMode.Union);
-            while (downloadHandle.IsDone == false)
+            var handle = Addressables.LoadAssetAsync<T>(key);
+            handle.WaitForCompletion();
+            if (handle.Status != AsyncOperationStatus.Succeeded)
             {
-                await Task.Delay(10);
-                if (firstDownload == true)
-                {
-                    GameEntryManager.Instance.GameEntryWindow.SetLoadingSliderValue(downloadHandle.PercentComplete);
-                }
+                throw new Exception("Asset loading process has failed!");
             }
+            
+            T result = handle.Result;
+            Addressables.Release(handle);
+            return result;
+        }
+
+        private void LoadAssets(string key)
+        {
+            var handle = Addressables.LoadSceneAsync(key);
+            handle.WaitForCompletion();
+            Addressables.Release(handle);
+        }
+        
+        #region Load Addressables Assets
+
+        private void DownloadAssetBundles()
+        {
+            AssetBundleDownloadHandle = Addressables.DownloadDependenciesAsync(LabelNames, Addressables.MergeMode.Union);
+            AssetBundleDownloadHandle.WaitForCompletion();
             LogManager.Log(LogManager.LogType.DEFAULT, "Asset Bundles download completed!");
-            _loadStateList[index] = true;
         }
 
-        private async void LoadAssetAddressMaps()
+        private void LoadAssetAddressMaps()
         {
-            _loadStateList.Add(false);
-            int index = _loadStateList.Count - 1;
             var handle = Addressables.LoadAssetAsync<ScriptableObject>("AssetAddressMaps");
-            while (handle.IsDone == false)
-            {
-                await Task.Delay(10);
-            }
+            handle.WaitForCompletion();
 
             AssetAddressMaps addressMaps = handle.Result as AssetAddressMaps;
             AssetAddressContainer.SetAddressMaps(addressMaps);
 
-            LogManager.Log(LogManager.LogType.DEFAULT, "UIWindowAddressMap download completed!");
+            LogManager.Log(LogManager.LogType.DEFAULT, "AssetAddressMaps download completed!");
             Addressables.Release(handle);
-            _loadStateList[index] = true;
         }
 
-        private async void LoadDataTables()
+        private void LoadDataTables()
         {
-            _loadStateList.Add(false);
-            int index = _loadStateList.Count - 1;
             var handle = Addressables.LoadAssetAsync<ScriptableObject>("DataTables");
-            while (handle.IsDone == false)
-            {
-                await Task.Delay(10);
-            }
+            handle.WaitForCompletion();
 
             DataTables dataTables = handle.Result as DataTables;
             Data.Table.SetDataTables(dataTables);
 
-            LogManager.Log(LogManager.LogType.DEFAULT, "UIWindowAddressMap download completed!");
+            LogManager.Log(LogManager.LogType.DEFAULT, "DataTables download completed!");
             Addressables.Release(handle);
-            _loadStateList[index] = true;
-        }
-
-        private async void CheckAllLoadIsCompleted()
-        {
-            while (CheckLoadStateList() == false)
-            {
-                await Task.Delay(10);
-            }
-
-            LogManager.Log(LogManager.LogType.DEFAULT, "All data download completed!");
-            if (AssetLoadFinishFinishCallback != null)
-            {
-                AssetLoadFinishFinishCallback.Invoke();
-                AssetLoadFinishFinishCallback = null;
-            }
         }
         #endregion
     }

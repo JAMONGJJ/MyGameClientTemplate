@@ -80,11 +80,13 @@ namespace ClientTemplate
         private void _LoadScene(Scene newScene)
         {
             LogManager.Log(LogManager.LogType.SCENE_LOADING_START, newScene.sceneName);
-            string sceneAddress = Core.System.Resource.GetAddressByType(newScene.assetType);
-            var asyncLoad = Core.System.Resource.LoadScene(sceneAddress);
-            asyncLoad.WaitForCompletion();
-            
-            Addressables.Release(asyncLoad);
+            bool result = Core.System.Resource.LoadAssets(newScene.assetType);
+            if (result == false)
+            {
+                LogManager.Log(LogManager.LogType.SCENE_LOADING_FAIL, newScene.sceneName);
+                return;
+            }
+
             CurrentScene = newScene;
             if (SceneLoadCallback != null)
             {

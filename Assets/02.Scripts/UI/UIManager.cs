@@ -66,7 +66,7 @@ namespace ClientTemplate
             Init();
         }
 
-        public void SetOverlayCamera()
+        public void PushToMainCameraStack()
         {
             Camera.main.GetUniversalAdditionalCameraData().cameraStack.Add(UICamera);
         }
@@ -76,24 +76,11 @@ namespace ClientTemplate
             Utility.Functions.Exception.Process(() =>
             {
                 LogManager.Log(LogManager.LogType.DEFAULT, "UISystem load start!");
-                string assetAddress = Core.System.Resource.GetAddressByType(UIWindowAssetType.UISystem);
-                if (string.IsNullOrEmpty(assetAddress) == true)
-                {
-                    throw new Exception("UISystem asset address is null!");
-                }
+                GameObject tmpObject = Core.System.Resource.LoadAssets(UIWindowAssetType.UISystem);
 
-                var handle = Core.System.Resource.LoadGameObject(assetAddress);
-                handle.WaitForCompletion();
-                
-                if (handle.Status != AsyncOperationStatus.Succeeded)
-                {
-                    throw new Exception($"UISystem{assetAddress} asset load has failed!");
-                }
-
-                Instantiate(handle.Result);
+                Instantiate(tmpObject);
                 FindUIObjects();
 
-                Addressables.Release(handle);
                 LogManager.Log(LogManager.LogType.DEFAULT, "UISystem load completed!");
             });
         }
@@ -150,22 +137,9 @@ namespace ClientTemplate
                 }
                 
                 UICanvasType canvasType = UIWindowAssetTypeContainer.GetCanvasType(windowType);
-                string assetAddress = Core.System.Resource.GetAddressByType(assetType);
+                GameObject tmpObject = Core.System.Resource.LoadAssets(assetType);
                 
-                if (string.IsNullOrEmpty(assetAddress) == true)
-                {
-                    throw new Exception($"{windowType} address does not exist!");
-                }
-                
-                var handle = Core.System.Resource.LoadGameObject(assetAddress);
-                handle.WaitForCompletion();
-                
-                if (handle.Status != AsyncOperationStatus.Succeeded)
-                {
-                    throw new Exception($"{windowType}({assetAddress}) asset load has failed!");
-                }
-                
-                GameObject windowGameObject = Instantiate(handle.Result, GetUICanvas(canvasType));
+                GameObject windowGameObject = Instantiate(tmpObject, GetUICanvas(canvasType));
                 if (windowGameObject == null)
                 {
                     throw new Exception($"{windowType} object does not exist in the path!");
@@ -179,7 +153,6 @@ namespace ClientTemplate
                 UIDataInfoContainer.Add(windowType, data);
                 LogManager.Log(LogManager.LogType.DEFAULT, $"{windowType} init!");
                 windowScript.Init(data);
-                Addressables.Release(handle);
             });
         }
         
@@ -313,21 +286,8 @@ namespace ClientTemplate
                     throw new Exception($"{UIWindowType.MainHud} window type does not exist!");
                 }
                 
-                string assetAddress = Core.System.Resource.GetAddressByType(assetType);
-                if (string.IsNullOrEmpty(assetAddress) == true)
-                {
-                    throw new Exception($"{UIWindowType.MainHud} asset address does not exist!");
-                }
-                
-                var handle = Core.System.Resource.LoadGameObject(assetAddress);
-                handle.WaitForCompletion();
-                
-                if (handle.Status != AsyncOperationStatus.Succeeded)
-                {
-                    throw new Exception($"{UIWindowType.MainHud}{assetAddress} asset load has failed!");
-                }
-                
-                GameObject windowGameObject = Instantiate(handle.Result, GetUICanvas(UICanvasType.Normal));
+                GameObject tmpObject = Core.System.Resource.LoadAssets(assetType);
+                GameObject windowGameObject = Instantiate(tmpObject, GetUICanvas(UICanvasType.Normal));
                 if (windowGameObject == null)
                 {
                     throw new Exception($"{UIWindowType.MainHud} window does not exist in the path!");
@@ -338,8 +298,6 @@ namespace ClientTemplate
                 windowScript.Init();
                 MyMainHud = windowScript;
                 LogManager.Log(LogManager.LogType.DEFAULT, $"{UIWindowType.MainHud} init!");
-
-                Addressables.Release(handle);
             });
         }
         

@@ -20,7 +20,6 @@ namespace ClientTemplate
 
         public void OnBegin()
         {
-            StateMachine.NextState(new LobbyState());
         }
 
         public bool OnEnd(StateType nextStateType)

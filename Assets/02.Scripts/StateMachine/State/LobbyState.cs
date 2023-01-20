@@ -19,12 +19,12 @@ namespace ClientTemplate
 
         public void OnBegin()
         {
-            // Core.System.Scene.LoadScene(SceneType.Lobby, AfterFieldSceneLoad);
+            Core.System.Scene.LoadScene(SceneType.Lobby, AfterFieldSceneLoad);
         }
 
         private void AfterFieldSceneLoad()
         {
-            UIManager.Instance.SetOverlayCamera();
+            UIManager.Instance.PushToMainCameraStack();
         }
 
         public bool OnEnd(StateType nextStateType)
