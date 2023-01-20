@@ -176,6 +176,18 @@ namespace ClientTemplate
                 return null;
             }
 
+            public UIWindow RemoveAll()
+            {
+                foreach (UIWindow window in ModalessWindowsList)
+                {
+                    UIWindow result = window;
+                    ModalessWindowsList.Remove(window);
+                    return result;
+                }
+
+                return null;
+            }
+
             public bool IsModalessContainer()
             {
                 return true;
@@ -184,42 +196,44 @@ namespace ClientTemplate
 
         public interface IUIWindowContainer
         {
+            public int Count { get; }
             void Add(UIWindow window);
             IUIWindows AtLast();
             UIWindow RemoveAtLast(UIWindowType type);
+            UIWindow RemoveAtLast();
         }
 
         public class UIWindowContainerWithStack : IUIWindowContainer
         {
             public int Count
             {
-                get { return _windowsList.Count; }
+                get { return WindowsList.Count; }
             }
             
-            private Stack<IUIWindows> _windowsList;
+            private Stack<IUIWindows> WindowsList;
 
             public UIWindowContainerWithStack()
             {
-                _windowsList = new Stack<IUIWindows>();
+                WindowsList = new Stack<IUIWindows>();
             }
 
             public void Add(UIWindow window)
             {
                 if (window.IsModal == true)
                 {
-                    _windowsList.Push(window);
+                    WindowsList.Push(window);
                 }
                 else
                 {
-                    if (_windowsList.Count == 0)
+                    if (WindowsList.Count == 0)
                     {
                         ModalessUIWindowContainer container = new ModalessUIWindowContainer();
                         container.Add(window);
-                        _windowsList.Push(container);
+                        WindowsList.Push(container);
                     }
                     else
                     {
-                        IUIWindows atLast = _windowsList.Peek();
+                        IUIWindows atLast = WindowsList.Peek();
                         if (atLast.IsModalessContainer() == true)
                         {
                             ModalessUIWindowContainer container = atLast as ModalessUIWindowContainer;
@@ -229,7 +243,7 @@ namespace ClientTemplate
                         {
                             ModalessUIWindowContainer container = new ModalessUIWindowContainer();
                             container.Add(window);
-                            _windowsList.Push(container);
+                            WindowsList.Push(container);
                         }
                     }
                 }
@@ -237,9 +251,9 @@ namespace ClientTemplate
 
             public IUIWindows AtLast()
             {
-                if (_windowsList.Count != 0)
+                if (WindowsList.Count != 0)
                 {
-                    return _windowsList.Peek();
+                    return WindowsList.Peek();
                 }
 
                 return null;
@@ -247,9 +261,9 @@ namespace ClientTemplate
 
             public UIWindow RemoveAtLast(UIWindowType type)
             {
-                if (_windowsList.Count != 0)
+                if (WindowsList.Count != 0)
                 {
-                    IUIWindows windowsAtLast = _windowsList.Peek();
+                    IUIWindows windowsAtLast = WindowsList.Peek();
                     if (windowsAtLast.IsModalessContainer() == true)
                     {
                         ModalessUIWindowContainer container = windowsAtLast as ModalessUIWindowContainer;
@@ -260,9 +274,30 @@ namespace ClientTemplate
                         UIWindow window = windowsAtLast as UIWindow;
                         if (window.WindowType == type)
                         {
-                            UIWindow result =  _windowsList.Pop() as UIWindow;
+                            UIWindow result =  WindowsList.Pop() as UIWindow;
                             return result;
                         }
+                    }
+                }
+
+                return null;
+            }
+
+            public UIWindow RemoveAtLast()
+            {
+                if (WindowsList.Count != 0)
+                {
+                    IUIWindows windowsAtLast = WindowsList.Peek();
+                    if (windowsAtLast.IsModalessContainer() == true)
+                    {
+                        ModalessUIWindowContainer container = windowsAtLast as ModalessUIWindowContainer;
+                        return container.RemoveAll();
+                    }
+                    else
+                    {
+                        UIWindow window = windowsAtLast as UIWindow;
+                        UIWindow result =  WindowsList.Pop() as UIWindow;
+                        return result;
                     }
                 }
 
@@ -281,27 +316,27 @@ namespace ClientTemplate
 
         public class UIDataInfoContainer : IUIDataInfoContainer
         {
-            private Dictionary<UIWindowType, UIData> _uiDataMap;
-            private Dictionary<UIWindowType, bool> _uiDataModifiedMap;
+            private Dictionary<UIWindowType, UIData> UIDataMap;
+            private Dictionary<UIWindowType, bool> UIDataModifiedMap;
 
             public UIDataInfoContainer()
             {
-                _uiDataMap = new Dictionary<UIWindowType, UIData>();
-                _uiDataModifiedMap = new Dictionary<UIWindowType, bool>();
+                UIDataMap = new Dictionary<UIWindowType, UIData>();
+                UIDataModifiedMap = new Dictionary<UIWindowType, bool>();
             }
 
             public void Add(UIWindowType type, UIData data)
             {
-                if (_uiDataMap.ContainsKey(type) == false)
+                if (UIDataMap.ContainsKey(type) == false)
                 {
-                    _uiDataMap.Add(type, data);
-                    _uiDataModifiedMap.Add(type, false);
+                    UIDataMap.Add(type, data);
+                    UIDataModifiedMap.Add(type, false);
                 }
             }
 
             public bool Contains(UIWindowType type)
             {
-                if (_uiDataMap.ContainsKey(type) == true)
+                if (UIDataMap.ContainsKey(type) == true)
                 {
                     return true;
                 }
@@ -311,10 +346,10 @@ namespace ClientTemplate
 
             public bool Refresh(UIWindowType type, UIData data)
             {
-                if (_uiDataMap.ContainsKey(type) == true)
+                if (UIDataMap.ContainsKey(type) == true)
                 {
-                    _uiDataMap[type] = data;
-                    _uiDataModifiedMap[type] = true;
+                    UIDataMap[type] = data;
+                    UIDataModifiedMap[type] = true;
                     return true;
                 }
 
@@ -323,12 +358,12 @@ namespace ClientTemplate
 
             public UIData GetUIData(UIWindowType type)
             {
-                if (_uiDataModifiedMap.ContainsKey(type) == true)
+                if (UIDataModifiedMap.ContainsKey(type) == true)
                 {
-                    if (_uiDataModifiedMap[type] == true)
+                    if (UIDataModifiedMap[type] == true)
                     {
-                        _uiDataModifiedMap[type] = false;
-                        return _uiDataMap[type];
+                        UIDataModifiedMap[type] = false;
+                        return UIDataMap[type];
                     }
                 }
                 
@@ -337,8 +372,8 @@ namespace ClientTemplate
 
             public void Remove(UIWindowType type)
             {
-                _uiDataMap.Remove(type);
-                _uiDataModifiedMap.Remove(type);
+                UIDataMap.Remove(type);
+                UIDataModifiedMap.Remove(type);
             }
         }
     }

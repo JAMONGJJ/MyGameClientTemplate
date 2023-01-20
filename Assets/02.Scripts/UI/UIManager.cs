@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.UI;
 
 namespace ClientTemplate
 {
@@ -25,6 +26,8 @@ namespace ClientTemplate
         private GameObject UIWaitingWindow;
         private GameObject UILoadingWindow;
 
+        public Vector2 ScreenResolution { get; private set; }
+        
         public MainHud MyMainHud { get; private set; }
 
         public void SetUIWindowContainer(IUIWindowContainer container)
@@ -70,7 +73,6 @@ namespace ClientTemplate
 
         public void LoadUISystem()
         {
-            Utility.Functions.Async.SetIsProcessing(true);
             Utility.Functions.Exception.Process(() =>
             {
                 LogManager.Log(LogManager.LogType.DEFAULT, "UISystem load start!");
@@ -81,20 +83,18 @@ namespace ClientTemplate
                 }
 
                 var handle = Core.System.Resource.LoadGameObject(assetAddress);
-                handle.Completed += _ =>
+                handle.WaitForCompletion();
+                
+                if (handle.Status != AsyncOperationStatus.Succeeded)
                 {
-                    if (handle.Status != AsyncOperationStatus.Succeeded)
-                    {
-                        throw new Exception($"UISystem{assetAddress} asset load has failed!");
-                    }
+                    throw new Exception($"UISystem{assetAddress} asset load has failed!");
+                }
 
-                    Instantiate(handle.Result);
-                    FindUIObjects();
+                Instantiate(handle.Result);
+                FindUIObjects();
 
-                    Addressables.Release(handle);
-                    Utility.Functions.Async.SetIsProcessing(false);
-                    LogManager.Log(LogManager.LogType.DEFAULT, "UISystem load completed!");
-                };
+                Addressables.Release(handle);
+                LogManager.Log(LogManager.LogType.DEFAULT, "UISystem load completed!");
             });
         }
 
@@ -108,6 +108,23 @@ namespace ClientTemplate
             UIWaitingWindow.SetActive(false);
             UILoadingWindow = GameObject.FindWithTag("LoadingWindow");
             UILoadingWindow.gameObject.SetActive(false);
+                
+            var NormalUICanvasScaler = NormalUICanvas.GetComponent<CanvasScaler>();
+            var LoadingUICanvasScaler = LoadingUICanvas.GetComponent<CanvasScaler>();
+            var AlertUICanvasScaler = AlertUICanvas.GetComponent<CanvasScaler>();
+            ScreenResolution = new Vector2(Screen.width, Screen.height);
+                
+            NormalUICanvasScaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            NormalUICanvasScaler.referenceResolution = ScreenResolution;
+            NormalUICanvasScaler.matchWidthOrHeight = 0;
+                
+            LoadingUICanvasScaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            LoadingUICanvasScaler.referenceResolution = ScreenResolution;
+            LoadingUICanvasScaler.matchWidthOrHeight = 0;
+                
+            AlertUICanvasScaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            AlertUICanvasScaler.referenceResolution = ScreenResolution;
+            AlertUICanvasScaler.matchWidthOrHeight = 0;
         }
         
         /// <summary>
@@ -117,13 +134,13 @@ namespace ClientTemplate
         /// <param name="windowType"></param>
         /// <param name="data"></param>
         /// <typeparam name="T"></typeparam>
-        public async void OpenWindow<T>(UIWindowType windowType, UIData data = null) where T : UIWindow
+        public void OpenWindow<T>(UIWindowType windowType, UIData data = null) where T : UIWindow
         {
-            try
+            Utility.Functions.Exception.Process(() =>
             {
                 if (UIDataInfoContainer.Contains(windowType) == true)
                 {
-                    throw new Exception("Entered ui window is already instantiated!");
+                    throw new Exception($"{windowType} is already instantiated!");
                 }
                 
                 UIWindowAssetType assetType = UIWindowAssetTypeContainer.GetAssetType(windowType);
@@ -137,21 +154,21 @@ namespace ClientTemplate
                 
                 if (string.IsNullOrEmpty(assetAddress) == true)
                 {
-                    throw new Exception("Entered asset address does not exist!");
+                    throw new Exception($"{windowType} address does not exist!");
                 }
                 
-                AsyncOperationHandle<GameObject> handle = Core.System.Resource.LoadGameObject(assetAddress);
-                OpenWaitingWindow();
-                while (handle.IsDone == false)
+                var handle = Core.System.Resource.LoadGameObject(assetAddress);
+                handle.WaitForCompletion();
+                
+                if (handle.Status != AsyncOperationStatus.Succeeded)
                 {
-                    await Task.Delay(10);
+                    throw new Exception($"{windowType}({assetAddress}) asset load has failed!");
                 }
-                CloseWaitingWindow();
                 
                 GameObject windowGameObject = Instantiate(handle.Result, GetUICanvas(canvasType));
                 if (windowGameObject == null)
                 {
-                    throw new Exception("Entered ui window does not exist in the path!");
+                    throw new Exception($"{windowType} object does not exist in the path!");
                 }
                 
                 T windowScript = windowGameObject.GetComponent<T>();
@@ -163,11 +180,7 @@ namespace ClientTemplate
                 LogManager.Log(LogManager.LogType.DEFAULT, $"{windowType} init!");
                 windowScript.Init(data);
                 Addressables.Release(handle);
-            }
-            catch (Exception e)
-            {
-                LogManager.LogError(LogManager.LogType.EXCEPTION, e.ToString());
-            }
+            });
         }
         
         private Transform GetUICanvas(UICanvasType canvasType)
@@ -196,7 +209,7 @@ namespace ClientTemplate
         /// </summary>
         public void CloseWindow(UIWindowType type)
         {
-            try
+            Utility.Functions.Exception.Process(() =>
             {
                 UIWindow lastWindow = UIWindowContainer.RemoveAtLast(type);
                 UIDataInfoContainer.Remove(type);
@@ -209,26 +222,38 @@ namespace ClientTemplate
                 lastWindow.Release();
                 Destroy(lastWindow.gameObject);
                 ExecuteOnTop();
-            }
-            catch (Exception e)
+            });
+        }
+
+        public void CloseAllWindows()
+        {
+            Utility.Functions.Exception.Process(() =>
             {
-                LogManager.LogError(LogManager.LogType.EXCEPTION, e.ToString());
-            }
+                while (UIWindowContainer.Count > 0)
+                {
+                    UIWindow lastWindow = UIWindowContainer.RemoveAtLast();
+                    UIDataInfoContainer.Remove(lastWindow.WindowType);
+                    UIDataInfoContainer = new UIDataInfoContainer();
+                    LogManager.Log(LogManager.LogType.DEFAULT, $"{lastWindow.WindowType} release!");
+                    lastWindow.Release();
+                    Destroy(lastWindow.gameObject);
+                }
+            });
         }
 
         public void RefreshUIData(UIWindowType type, UIData data)
         {
-            try
+            Utility.Functions.Exception.Process(() =>
             {
                 if (UIDataInfoContainer.Refresh(type, data) == false)
                 {
                     throw new Exception( "Entered ui window type does not exist in the container!");
                 }
-            }
-            catch (Exception e)
-            {
-                LogManager.LogError(LogManager.LogType.EXCEPTION, e.ToString());
-            }
+                else
+                {
+                    ExecuteOnTop();
+                }
+            });
         }
 
         /// <summary>
@@ -237,7 +262,7 @@ namespace ClientTemplate
         /// </summary>
         private void ExecuteOnTop()
         {
-            try
+            Utility.Functions.Exception.Process(() =>
             {
                 IUIWindows windowsOnTop = UIWindowContainer.AtLast();
                 if (windowsOnTop == null)
@@ -272,11 +297,7 @@ namespace ClientTemplate
                     LogManager.Log(LogManager.LogType.DEFAULT, $"{windowOnTop.WindowType} on top!");
                     windowOnTop.OnTop(data);
                 }
-            }
-            catch (Exception e)
-            {
-                LogManager.LogError(LogManager.LogType.EXCEPTION, e.ToString());
-            }
+            });
         }
         
         /// <summary>
@@ -284,39 +305,41 @@ namespace ClientTemplate
         /// </summary>
         public void CreateMainHud()
         {
-            Utility.Functions.Async.SetIsProcessing(true);
             Utility.Functions.Exception.Process(() =>
             {
                 UIWindowAssetType assetType = UIWindowAssetTypeContainer.GetAssetType(UIWindowType.MainHud);
                 if(assetType == UIWindowAssetType.None)
                 {
-                    throw new Exception("MainHud window type does not exist!");
+                    throw new Exception($"{UIWindowType.MainHud} window type does not exist!");
                 }
                 
                 string assetAddress = Core.System.Resource.GetAddressByType(assetType);
                 if (string.IsNullOrEmpty(assetAddress) == true)
                 {
-                    throw new Exception("MainHud asset address does not exist!");
+                    throw new Exception($"{UIWindowType.MainHud} asset address does not exist!");
                 }
                 
-                AsyncOperationHandle<GameObject> handle = Core.System.Resource.LoadGameObject(assetAddress);
-                handle.Completed += _ =>
-                {
-                    GameObject windowGameObject = Instantiate(handle.Result, GetUICanvas(UICanvasType.Normal));
-                    if (windowGameObject == null)
-                    {
-                        throw new Exception("MainHud window does not exist in the path!");
-                    }
+                var handle = Core.System.Resource.LoadGameObject(assetAddress);
+                handle.WaitForCompletion();
                 
-                    MainHud windowScript = windowGameObject.GetComponent<MainHud>();
-                    windowScript.SetWindowType(UIWindowType.MainHud);
-                    windowScript.Init();
-                    MyMainHud = windowScript;
-                    LogManager.Log(LogManager.LogType.DEFAULT, $"{UIWindowType.MainHud} init!");
+                if (handle.Status != AsyncOperationStatus.Succeeded)
+                {
+                    throw new Exception($"{UIWindowType.MainHud}{assetAddress} asset load has failed!");
+                }
+                
+                GameObject windowGameObject = Instantiate(handle.Result, GetUICanvas(UICanvasType.Normal));
+                if (windowGameObject == null)
+                {
+                    throw new Exception($"{UIWindowType.MainHud} window does not exist in the path!");
+                }
+                
+                MainHud windowScript = windowGameObject.GetComponent<MainHud>();
+                windowScript.SetWindowType(UIWindowType.MainHud);
+                windowScript.Init();
+                MyMainHud = windowScript;
+                LogManager.Log(LogManager.LogType.DEFAULT, $"{UIWindowType.MainHud} init!");
 
-                    Addressables.Release(handle);
-                    Utility.Functions.Async.SetIsProcessing(false);
-                };
+                Addressables.Release(handle);
             });
         }
         
@@ -325,7 +348,7 @@ namespace ClientTemplate
         /// </summary>
         public void DestroyMainHud()
         {
-            try
+            Utility.Functions.Exception.Process(() =>
             {
                 if (MyMainHud == null)
                 {
@@ -335,11 +358,7 @@ namespace ClientTemplate
                 MyMainHud.Release();
                 Destroy(MyMainHud.gameObject);
                 MyMainHud = null;
-            }
-            catch (Exception e)
-            {
-                LogManager.LogError(LogManager.LogType.EXCEPTION, e.ToString());
-            }
+            });
         }
 
         public void SetActiveMainHud()
