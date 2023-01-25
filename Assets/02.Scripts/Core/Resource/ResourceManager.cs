@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using ClientTemplate.SceneInfo;
 using ClientTemplate.UIInfo;
+using ClientTemplate.ResourceInfo;
 using ClientTemplate.UtilityFunctions;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -11,16 +13,14 @@ using UnityEngine.ResourceManagement.ResourceProviders;
 
 namespace ClientTemplate
 {
-    using ResourceInfo;
-
-    public delegate void AssetLoadFinishCallback();
-    
     public interface IResourceManager : IManager
     {
+        float DownloadProgress { get; }
+        event EventHandler<float> OnDownloadProgressChange;
         void LoadVersionDataTable();
-        long GetAssetBundleSize(AssetLoadFinishCallback assetDownloadFinishFinishCallback);
+        void SetAssetBundleLoadFinishCallback(System.Action assetBundleLoadFinishCallback);
+        long GetAssetBundleSize();
         void LoadAddressablesAssets();
-        float GetAssetBundleDownloadProgress();
         string GetAddressByType(UIWindowAssetType type);
         string GetAddressByType(SceneAssetType type);
         string GetAddressByType(PrefabAssetType type);
@@ -34,12 +34,25 @@ namespace ClientTemplate
 
     public class ResourceManager : IResourceManager
     {
+        private float downloadProgress;
+        public float DownloadProgress
+        {
+            get { return downloadProgress; }
+            private set
+            {
+                downloadProgress = value;
+                if (OnDownloadProgressChange != null)
+                {
+                    OnDownloadProgressChange(this, downloadProgress);
+                }
+            }
+        }
+        
+        public event EventHandler<float> OnDownloadProgressChange;
+        
         private IList<string> LabelNames;
         private IAssetAddressContainer AssetAddressContainer;
-        private AssetLoadFinishCallback AssetLoadFinishFinishCallback;
-        private AsyncOperationHandle AssetBundleDownloadHandle;
-        private event EventHandler<float> OnDownloadProgressChange;
-        private bool firstDownload;
+        private System.Action AssetLoadFinishFinishCallback;
         
         public void Init()
         {
@@ -81,10 +94,14 @@ namespace ClientTemplate
             });
         }
 
-        public long GetAssetBundleSize(AssetLoadFinishCallback assetDownloadFinishFinishCallback)
+        public void SetAssetBundleLoadFinishCallback(System.Action assetBundleLoadFinishCallback)
+        {
+            AssetLoadFinishFinishCallback = assetBundleLoadFinishCallback;
+        }
+
+        public long GetAssetBundleSize()
         {
             LogManager.Log(LogManager.LogType.DEFAULT, "Checking assets to download!");
-            AssetLoadFinishFinishCallback = assetDownloadFinishFinishCallback;
             var handle = Addressables.GetDownloadSizeAsync(LabelNames);
             handle.WaitForCompletion();
             
@@ -105,16 +122,6 @@ namespace ClientTemplate
                 AssetLoadFinishFinishCallback.Invoke();
                 AssetLoadFinishFinishCallback = null;
             }
-        }
-
-        public float GetAssetBundleDownloadProgress()
-        {
-            if (AssetBundleDownloadHandle.IsValid() == false)
-            {
-                return 0f;
-            }
-
-            return AssetBundleDownloadHandle.PercentComplete;
         }
 
         public string GetAddressByType(UIWindowAssetType type)
@@ -180,35 +187,24 @@ namespace ClientTemplate
             
             return LoadAssets<GameObject>(address);
         }
-
-        private T LoadAssets<T>(string key)
-        {
-            var handle = Addressables.LoadAssetAsync<T>(key);
-            handle.WaitForCompletion();
-            if (handle.Status != AsyncOperationStatus.Succeeded)
-            {
-                throw new Exception("Asset loading process has failed!");
-            }
-            
-            T result = handle.Result;
-            Addressables.Release(handle);
-            return result;
-        }
-
-        private void LoadAssets(string key)
-        {
-            var handle = Addressables.LoadSceneAsync(key);
-            handle.WaitForCompletion();
-            Addressables.Release(handle);
-        }
         
         #region Load Addressables Assets
 
         private void DownloadAssetBundles()
         {
-            AssetBundleDownloadHandle = Addressables.DownloadDependenciesAsync(LabelNames, Addressables.MergeMode.Union);
-            AssetBundleDownloadHandle.WaitForCompletion();
+            var handle = Addressables.DownloadDependenciesAsync(LabelNames, Addressables.MergeMode.Union);
+            // AssetBundlePercentage(handle);
+            handle.WaitForCompletion();
             LogManager.Log(LogManager.LogType.DEFAULT, "Asset Bundles download completed!");
+        }
+
+        private async void AssetBundlePercentage(AsyncOperationHandle handle)
+        {
+            while (handle.PercentComplete < 1.0f)
+            {
+                DownloadProgress = handle.PercentComplete;
+                await Task.Delay(10);
+            }
         }
 
         private void LoadAssetAddressMaps()
@@ -234,6 +230,28 @@ namespace ClientTemplate
             LogManager.Log(LogManager.LogType.DEFAULT, "DataTables download completed!");
             Addressables.Release(handle);
         }
+
+        private T LoadAssets<T>(string key)
+        {
+            var handle = Addressables.LoadAssetAsync<T>(key);
+            handle.WaitForCompletion();
+            if (handle.Status != AsyncOperationStatus.Succeeded)
+            {
+                throw new Exception("Asset loading process has failed!");
+            }
+            
+            T result = handle.Result;
+            Addressables.Release(handle);
+            return result;
+        }
+
+        private void LoadAssets(string key)
+        {
+            var handle = Addressables.LoadSceneAsync(key);
+            handle.WaitForCompletion();
+            Addressables.Release(handle);
+        }
+        
         #endregion
     }
 }

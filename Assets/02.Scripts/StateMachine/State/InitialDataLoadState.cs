@@ -24,7 +24,8 @@ namespace ClientTemplate
 
         private void CheckAssetBundleSize()
         {
-            long bundleSize = Core.System.Resource.GetAssetBundleSize(LoadFinishCallback);
+            Core.System.Resource.SetAssetBundleLoadFinishCallback(LoadFinishCallback);
+            long bundleSize = Core.System.Resource.GetAssetBundleSize();
             if (bundleSize > 0)
             {
                 GameEntryManager.Instance.GameEntryWindow.SetActiveAssetDownload(true);

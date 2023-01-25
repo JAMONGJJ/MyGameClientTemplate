@@ -32,7 +32,6 @@ namespace ClientTemplate
         public TMP_Text DownloadAssetDescriptionText;
 
         private string bundleSize;
-        private EventHandler downloadProgressEventHandler;
         
         private void Start()
         {
@@ -48,6 +47,7 @@ namespace ClientTemplate
         {
             PlayButton.onClick.AddListener(() =>
             {
+                Core.System.Resource.OnDownloadProgressChange -= SetLoadingSliderValue;
                 GameEntryManager.Instance.DestroySelf();
                 StateMachine.NextState(new LobbyState());
             });
@@ -66,6 +66,7 @@ namespace ClientTemplate
 
             AcceptAssetDownloadButton.onClick.AddListener(() =>
             {
+                Core.System.Resource.OnDownloadProgressChange += SetLoadingSliderValue;
                 GameEntryManager.Instance.GameEntryWindow.SetActiveDownloadSlider(true);
                 GameEntryManager.Instance.GameEntryWindow.SetActiveAssetDownload(false);
                 Core.System.Resource.LoadAddressablesAssets();
@@ -108,7 +109,7 @@ namespace ClientTemplate
             DownloadAssetDescriptionText.text = string.Format(format, bundleSize);
         }
 
-        public void SetLoadingSliderValue(float percentage)
+        public void SetLoadingSliderValue(object args, float percentage)
         {
             LoadingProgressSlider.value = percentage;
         }
