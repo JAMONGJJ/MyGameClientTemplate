@@ -14,6 +14,7 @@ namespace ClientTemplate
     {
         private VersionsDataTable Version;
         private ICommonStringsInfoContainer CommonStringsInfoContainer;
+        private UserDataManager UserData { get; } = new UserDataManager();
 
         public void SetVersion(VersionsDataTable version)
         {
