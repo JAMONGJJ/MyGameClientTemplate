@@ -7,15 +7,47 @@ namespace ClientTemplate
 {
     namespace UIInfo
     {
-        public enum UIWindowType
+        public enum LayoutGroupType
         {
             None,
-            TestModalessUIWindow,
-            TestModalessUIWindow2,
-            MainHud,
-            NoticeWindow,
+            Horizontal,
+            Vertical,
+            Grid,
             
+        }
 
+        public enum RectTransformAlignment
+        {
+            UpperLeft,
+            UpperCenter,
+            UpperRight,
+            MiddleLeft,
+            MiddleCenter,
+            MiddleRight,
+            LowerLeft,
+            LowerCenter,
+            LowerRight,
+            Custom,
+            
+        }
+        
+        public enum UIWindowType
+        {
+            None = 0,
+            TestModalessUIWindow = 1,
+            TestModalessUIWindow2 = 2,
+            MainHud = 3,
+            NoticeWindow = 4,
+            CharacterCustomizingWindow = 5,
+            LobbyWindow = 6,
+            RoomCustomizingWindow = 7,
+            FourCutsWindow = 8,
+            CharacterCustomizingPresetOptionWindow = 9,
+            EditLobbyWindow = 10,
+            MyStatusWindow = 11,
+            IndividualRoomWindow = 12,
+            AvatarCheckWindow = 13,
+            RythmCatWindow = 14
         }
 
         public enum UICanvasType
@@ -29,13 +61,33 @@ namespace ClientTemplate
         
         public enum UIWindowAssetType
         {
-            None,
-            UISystem,
-            TestModalessUIWindow,
-            TestModalessUIWindow2,
-            MainHud,
-            NoticeWindow,
-            
+            None = 0,
+            UISystem = 1,
+            TestModalessUIWindow = 2,
+            TestModalessUIWindow2 = 3,
+            MainHud = 4,
+            NoticeWindow = 5,
+            CharacterCustomizingWindow = 6,
+            CharacterCustomizingContent = 7,
+            LobbyWindow = 8,
+            CharacterCustomizingCategoryButton = 9,
+            RoomCustomizingWindow = 11,
+            RoomCustomizingContent = 12,
+            RoomCustomizingCategoryButton = 13,
+            RoomCustomizingCategoryScrollRect = 14,
+            CharacterCustomizingPresetContent = 15,
+            FourCutsWindow = 16,
+            CharacterCustomizingPresetOptionWindow = 17,
+            EditLobbyWindow = 18,
+            MyStatusWindow = 19,
+            MyStatusContent = 20,
+            MyStatusCategoryButton = 21,
+            MyStatusCategoryScrollRect = 22,
+            AssignFriendButton = 23,
+            CharacterCustomizingSubCategoryButton = 25,
+            IndividualRoomWindow = 26,
+            AvatarCheckWindow = 27,
+            RythmCatWindow = 28
         }
 
         public class UIData
@@ -198,6 +250,7 @@ namespace ClientTemplate
         {
             public int Count { get; }
             void Add(UIWindow window);
+            T GetWindow<T>() where T : UIWindow;
             IUIWindows AtLast();
             UIWindow RemoveAtLast(UIWindowType type);
             UIWindow RemoveAtLast();
@@ -247,6 +300,22 @@ namespace ClientTemplate
                         }
                     }
                 }
+            }
+
+            public T GetWindow<T>() where T : UIWindow
+            {
+                foreach (IUIWindows window in WindowsList)
+                {
+                    T convertedWindow = window as T;
+                    if (convertedWindow == null)
+                    {
+                        continue;
+                    }
+
+                    return convertedWindow;
+                }
+
+                return null;
             }
 
             public IUIWindows AtLast()
@@ -311,6 +380,7 @@ namespace ClientTemplate
             bool Contains(UIWindowType type);
             bool Refresh(UIWindowType type, UIData data);
             UIData GetUIData(UIWindowType type);
+            UIData GetModifiedUIData(UIWindowType type);
             void Remove(UIWindowType type);
         }
 
@@ -357,6 +427,12 @@ namespace ClientTemplate
             }
 
             public UIData GetUIData(UIWindowType type)
+            {
+                UIDataMap.TryGetValue(type, out UIData result);
+                return result;
+            }
+
+            public UIData GetModifiedUIData(UIWindowType type)
             {
                 if (UIDataModifiedMap.ContainsKey(type) == true)
                 {

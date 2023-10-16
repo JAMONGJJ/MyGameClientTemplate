@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace ClientTemplate
 {
-    public static class Data
+    public static class Info
     {
         public static DataTable Table { get; } = new DataTable();
     }
@@ -21,7 +21,7 @@ namespace ClientTemplate
             Version = version;
         }
 
-        public void SetDataTables(DataTables dataTables)
+        public void SetInfoTable(DataTables dataTables)
         {
             CommonStringsInfoContainer = new CommonStringsInfoContainer(dataTables.CommonStrings);
             

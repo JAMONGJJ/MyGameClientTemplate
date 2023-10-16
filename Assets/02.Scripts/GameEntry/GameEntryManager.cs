@@ -18,14 +18,11 @@ namespace ClientTemplate
         public void GameEntry()
         {
             GameEntryWindow = GameObject.FindWithTag("GameEntryWindow").GetComponent<UIGameEntryWindow>();
-            
-            Utility.Functions.Async.Process(CheckAvailableAppVersion,
-                Core.System.Resource.LoadVersionDataTable);
         }
 
         private void CheckAvailableAppVersion()
         {
-            VersionsDataTable versionInfo = Data.Table.GetVersionInfo();
+            VersionsDataTable versionInfo = Info.Table.GetVersionInfo();
             if(versionInfo.version != Application.version)
             {
                 GameEntryWindow.SetActiveGoToStore(true);

@@ -28,6 +28,13 @@ namespace ClientTemplate
         public SceneAssetType assetType;
         public string address;
     }
+
+    [Serializable]
+    public class ImageAddress
+    {
+        public ImageAssetType assetType;
+        public string address;
+    }
     
     [CreateAssetMenu(fileName = "AssetAddressMaps", menuName = "ScriptableObject/AssetAddressMaps")]
     public class AssetAddressMaps : ScriptableObject
@@ -35,5 +42,6 @@ namespace ClientTemplate
         public List<UIWindowAddress> UIWindowAddressList;
         public List<PrefabAddress> PrefabAddressList;
         public List<SceneAddress> SceneAddressList;
+        public List<ImageAddress> ImageAddressList;
     }
 }

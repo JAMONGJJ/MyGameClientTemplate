@@ -47,14 +47,13 @@ namespace ClientTemplate
         {
             PlayButton.onClick.AddListener(() =>
             {
-                Core.System.Resource.OnDownloadProgressChange -= SetLoadingSliderValue;
                 GameEntryManager.Instance.DestroySelf();
                 StateMachine.NextState(new LobbyState());
             });
             
             GoToStoreButton.onClick.AddListener(() =>
             {
-                VersionsDataTable version = Data.Table.GetVersionInfo();
+                VersionsDataTable version = Info.Table.GetVersionInfo();
 #if UNITY_ANDROID
                 Application.OpenURL($"{version.playStoreLink}");
 #elif UNITY_IOS
@@ -66,7 +65,6 @@ namespace ClientTemplate
 
             AcceptAssetDownloadButton.onClick.AddListener(() =>
             {
-                Core.System.Resource.OnDownloadProgressChange += SetLoadingSliderValue;
                 GameEntryManager.Instance.GameEntryWindow.SetActiveDownloadSlider(true);
                 GameEntryManager.Instance.GameEntryWindow.SetActiveAssetDownload(false);
                 Core.System.Resource.LoadAddressablesAssets();

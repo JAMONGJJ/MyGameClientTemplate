@@ -59,8 +59,6 @@ namespace ClientTemplate
         private void SetSceneManager()
         {
             // Core.System.SetSceneManager(new SceneManagerForTest());
-            Core.System.SetSceneManager(new SceneManager());
-            Core.System.Scene.SetSceneContainer(new SceneContainer());
             Core.System.Scene.Init();
         }
 
@@ -79,7 +77,6 @@ namespace ClientTemplate
 
         private void SetResourceManager()
         {
-            Core.System.SetResourceManager(new ResourceManager());
             Core.System.Resource.Init();
         }
 
