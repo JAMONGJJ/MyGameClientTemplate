@@ -13,23 +13,46 @@ namespace ClientTemplate
         
         public override void Init()
         {
+            
+        }
+
+        public override void Release()
+        {
+            
         }
 
         public void GameEntry()
         {
             GameEntryWindow = GameObject.FindWithTag("GameEntryWindow").GetComponent<UIGameEntryWindow>();
+            GameEntryWindow.Init();
+            CheckAvailableAppVersion();
         }
 
         private void CheckAvailableAppVersion()
         {
-            VersionsDataTable versionInfo = Info.Table.GetVersionInfo();
-            if(versionInfo.version != Application.version)
+            VersionType versionType = Core.System.Version.GetVersionType();
+            switch (versionType)
             {
-                GameEntryWindow.SetActiveGoToStore(true);
-            }
-            else
-            {
-                StateMachine.NextState(new InitialDataLoadState());
+                case VersionType.Play:
+                {
+                    StateMachine.NextState(new InitialDataLoadState());
+                }
+                    break;
+                case VersionType.Update:
+                {
+                    GameEntryWindow.SetActiveGoToStore(true);
+                }
+                    break;
+                case VersionType.Inspect:
+                {
+
+                }
+                    break;
+                default:
+                {
+
+                }
+                    break;
             }
         }
     }

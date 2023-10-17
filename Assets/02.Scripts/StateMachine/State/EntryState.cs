@@ -24,8 +24,8 @@ namespace ClientTemplate
 
         public void OnBegin()
         {
-            SetCoreSystem();
-            SetContentsManager();
+            InitCoreManagers();
+            InitContentsManager();
             Core.System.Settings.SetFrameRate(30);
             GameEntryManager.Instance.GameEntry();
         }
@@ -46,9 +46,11 @@ namespace ClientTemplate
         }
         
         #region CoreSystem
-        private void SetCoreSystem()
+        
+        private void InitCoreManagers()
         {
             SceneManager.Instance.Init();
+            GameObjectManager.Instance.Init();
             
             Core.System.SetDataManufactureManager(new DataManufactureManager());
             Core.System.DataManufacture.SetDelegateContainer(new ParseDelegateContainer());
@@ -62,13 +64,16 @@ namespace ClientTemplate
             
             Core.System.SetSettingsManager(new SettingsManager());
             Core.System.Settings.Init();
+            
+            Core.System.SetVersionManager(new VersionControlManager());
+            Core.System.Version.Init();
         }
         
         #endregion
         
         #region Contents Manager
         
-        private void SetContentsManager()
+        private void InitContentsManager()
         {
             
         }

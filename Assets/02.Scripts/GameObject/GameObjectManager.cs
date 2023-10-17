@@ -28,7 +28,7 @@ namespace ClientTemplate
         private Coroutine TextureLoadCoroutine;
         private int TextureMapMaxCount;
         
-        public void Init()
+        public override void Init()
         {
             TextureMapMaxCount = 50;
             TextureMap = new Dictionary<string, Texture2D>();
@@ -36,7 +36,7 @@ namespace ClientTemplate
             WaitingLoadQueue = new Queue<LoadTextureInfo>();
         }
         
-        public void Release()
+        public override void Release()
         {
             WaitingLoadQueue = null;
             LoadFinishActionMap = null;

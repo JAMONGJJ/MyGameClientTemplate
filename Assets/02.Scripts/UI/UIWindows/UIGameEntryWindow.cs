@@ -18,6 +18,7 @@ namespace ClientTemplate
         Gbs,
         
     }
+
     public class UIGameEntryWindow : MonoBehaviour
     {
         public GameObject LoadingBackground;
@@ -32,8 +33,8 @@ namespace ClientTemplate
         public TMP_Text DownloadAssetDescriptionText;
 
         private string bundleSize;
-        
-        private void Start()
+
+        public void Init()
         {
             LoadingBackground.SetActive(true);
             LoadingProgressSlider.gameObject.SetActive(false);
@@ -41,6 +42,11 @@ namespace ClientTemplate
             GoToStoreBackground.SetActive(false);
             DownloadNoticeBackground.SetActive(false);
             SetButtons();
+        }
+
+        public void Release()
+        {
+            
         }
 
         private void SetButtons()

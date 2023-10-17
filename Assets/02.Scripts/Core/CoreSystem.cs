@@ -20,6 +20,7 @@ namespace ClientTemplate
         public ISettingsManager Settings { get; private set; }  // 게임 설정값(프레임레이트, 언어 등) 관리
         public INetworkManager Network { get; private set; }    // 서버 통신 관리
         public IAuthenticationManager Authentication { get; private set; }    // 사용자 인증 관리
+        public IVersionControlManager Version { get; private set; }     // 
 
         public void SetResourceManager(IResourceManager manager)
         {
@@ -49,6 +50,11 @@ namespace ClientTemplate
         public void SetAuthenticationManager(IAuthenticationManager manager)
         {
             Authentication = manager;
+        }
+
+        public void SetVersionManager(IVersionControlManager manager)
+        {
+            Version = manager;
         }
     }
 }

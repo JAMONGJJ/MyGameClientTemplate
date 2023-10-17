@@ -23,6 +23,7 @@ namespace ClientTemplate
             SceneContainer = new SceneContainer();
             SceneContainer.Add(SceneType.Entry, "EntryScene", SceneAssetType.Entry);
             SceneContainer.Add(SceneType.Lobby, "LobbyScene", SceneAssetType.Lobby);
+            SceneContainer.Add(SceneType.EmptyScene, "EmptyScene", SceneAssetType.EmptyScene);
         }
 
         public override void Release()

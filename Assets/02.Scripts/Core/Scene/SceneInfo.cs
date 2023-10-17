@@ -12,7 +12,7 @@ namespace ClientTemplate
         {
             None,
             Entry,
-            PreLobby,
+            EmptyScene,
             Lobby,
             
         }
@@ -21,7 +21,7 @@ namespace ClientTemplate
         {
             None,
             Entry,
-            PreLobby,
+            EmptyScene,
             Lobby,
             
         }
