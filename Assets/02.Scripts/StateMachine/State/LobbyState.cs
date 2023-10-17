@@ -19,7 +19,7 @@ namespace ClientTemplate
 
         public void OnBegin()
         {
-            Core.System.Scene.LoadScene(SceneType.Lobby, AfterFieldSceneLoad);
+            SceneManager.Instance.LoadScene(SceneType.Lobby, AfterFieldSceneLoad);
         }
 
         private void AfterFieldSceneLoad()

@@ -1,13 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ClientTemplate;
 using ClientTemplate.ResourceInfo;
 using ClientTemplate.SceneInfo;
 using ClientTemplate.UIInfo;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.Animations;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceLocations;
@@ -19,7 +16,6 @@ namespace ClientTemplate
 {
     /// <summary>
     /// Dependency Injection을 위해 만들었던 interface 함수.
-    /// 현재는 사용하지 않음.
     /// </summary>
     public interface IResourceManager : IManager
     {
@@ -31,17 +27,15 @@ namespace ClientTemplate
         SceneInstance LoadAssets(SceneAssetType type);
         GameObject LoadAssets(PrefabAssetType type);
         Texture2D LoadAssets(ImageAssetType type);
-        void LoadAssets<T>(string address, ref T result);
+        void LoadAssets<T>(string address, out T result) where T : class;
     }
 
-    public class ResourceManager
+    public class ResourceManager : IResourceManager
     {
         private IAssetAddressContainer AssetAddressContainer;
         private Action AssetLoadFinishFinishCallback;
-        private AsyncOperationHandle AssetBundleHandle;
         private AssetLabelReference assetLabelReference;
         private float downloadProgress;
-        private bool loadAssetBundlesCompleted;
         
         public void Init()
         {
@@ -49,7 +43,6 @@ namespace ClientTemplate
             AssetAddressContainer = new AssetAddressContainer();
             assetLabelReference = new AssetLabelReference();
             assetLabelReference.labelString = "Dependencies";
-            //PropAnimator_ = AssetDatabase.LoadAssetAtPath<AnimatorController>(CreateRoomAnimatorPath);
         }
 
         public void Release()
@@ -211,7 +204,7 @@ namespace ClientTemplate
         /// <param name="result">정상적으로 애셋이 로드됐다면 입력 받는 타입 T로 반환. 오류가 있다면 null 반환.</param>
         /// <typeparam name="T"></typeparam>
         /// <exception cref="Exception">입력받은 타입에 맞는 애셋의 어드레스가 없다면 exception.</exception>
-        public void LoadAssets<T>(string address, ref T result) where T : class
+        public void LoadAssets<T>(string address, out T result) where T : class
         {
             if (string.IsNullOrEmpty(address) == true)
             {

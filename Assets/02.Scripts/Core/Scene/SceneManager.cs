@@ -8,7 +8,6 @@ using UnityEngine.ResourceManagement.ResourceProviders;
 
 namespace ClientTemplate
 {
-
     public class SceneManager : MonoManager<SceneManager>
     {
         public Scene CurrentScene { get; private set; }
@@ -16,7 +15,7 @@ namespace ClientTemplate
         private SceneContainer SceneContainer;
         private UnityAction SceneLoadCallback;
         
-        public void Init()
+        public override void Init()
         {
             LogManager.Log(LogManager.LogType.CONTROLLER_INIT, "Scene Manager");
             CurrentScene = new Scene("EntryScene", SceneAssetType.Entry);
@@ -26,7 +25,7 @@ namespace ClientTemplate
             SceneContainer.Add(SceneType.Lobby, "LobbyScene", SceneAssetType.Lobby);
         }
 
-        public void Release()
+        public override void Release()
         {
             LogManager.Log(LogManager.LogType.CONTROLLER_RELEASE, "Scene Manager");
             CurrentScene = null;
