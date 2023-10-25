@@ -40,7 +40,7 @@ namespace ClientTemplate
             /// 보핀에서 사용되는 유니티 UI들의 WindowType, CanvasType, WindowAssetType, isModal 변수 값을 미리 지정하는 함수.
             /// 설정된 값들은 UIWindowAssetTypeContainer에 저장됨.
             /// </summary>
-            public void Init()
+            public override void Init()
             {
                 UIWindowAssetTypeContainer.Add(UIWindowType.TestModalessUIWindow, UICanvasType.Normal, UIWindowAssetType.TestModalessUIWindow, false);
                 UIWindowAssetTypeContainer.Add(UIWindowType.TestModalessUIWindow2, UICanvasType.Normal, UIWindowAssetType.TestModalessUIWindow2, false);
@@ -62,14 +62,14 @@ namespace ClientTemplate
             /// <summary>
             /// 데이터 컨테이너들 초기화
             /// </summary>
-            public void Release()
+            public override void Release()
             {
                 UIWindowContainer = null;
                 UIWindowAssetTypeContainer = null;
                 UIDataInfoContainer = null;
             }
             
-            public void ReSet()
+            public override void ReSet()
             {
                 Release();
                 Init();

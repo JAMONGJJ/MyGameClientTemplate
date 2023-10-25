@@ -14,6 +14,7 @@ namespace ClientTemplate
         public GameObject LoadingBackground;
         public GameObject GoToStoreBackground;
         public GameObject DownloadNoticeBackground;
+        public GameObject InspectingNoticeBackground;
         public TMP_Text LoadingProgressText;
         public Slider LoadingProgressSlider;
         public Button PlayButton;
@@ -21,6 +22,7 @@ namespace ClientTemplate
         public Button AcceptAssetDownloadButton;
         public Button DenyAssetDownloadButton;
         public TMP_Text DownloadAssetDescriptionText;
+        public Button InspectConfirmButton;
 
         private long bundleSize;
         private string bundleSizeTextFormat;
@@ -32,6 +34,7 @@ namespace ClientTemplate
             PlayButton.gameObject.SetActive(false);
             GoToStoreBackground.SetActive(false);
             DownloadNoticeBackground.SetActive(false);
+            InspectingNoticeBackground.SetActive(false);
             SetTextFormats();
             SetButtons();
         }
@@ -48,29 +51,35 @@ namespace ClientTemplate
 
         private void SetButtons()
         {
+            PlayButton.onClick.RemoveAllListeners();
             PlayButton.onClick.AddListener(() =>
             {
                 GameEntryManager.Instance.DestroySelf();
                 StateMachine.NextState(new LobbyState());
             });
             
+            GoToStoreButton.onClick.RemoveAllListeners();
             GoToStoreButton.onClick.AddListener(() =>
             {
                 GameEntryManager.Instance.OpenStoreLink();
             });
 
+            AcceptAssetDownloadButton.onClick.RemoveAllListeners();
             AcceptAssetDownloadButton.onClick.AddListener(() =>
             {
                 GameEntryManager.Instance.LoadAssetBundles();
             });
 
+            DenyAssetDownloadButton.onClick.RemoveAllListeners();
             DenyAssetDownloadButton.onClick.AddListener(() =>
             {
-#if UNITY_EDITOR
-                UnityEditor.EditorApplication.isPlaying = false;
-#else
-                Application.Quit();
-#endif
+                GameEntryManager.Instance.QuitApplication();
+            });
+
+            InspectConfirmButton.onClick.RemoveAllListeners();
+            InspectConfirmButton.onClick.AddListener(() =>
+            {
+                GameEntryManager.Instance.QuitApplication();
             });
         }
 
@@ -104,6 +113,11 @@ namespace ClientTemplate
         public void SetLoadingProgress(float percentage)
         {
             LoadingProgressSlider.value = percentage;
+        }
+
+        public void SetActiveInspect(bool active)
+        {
+            InspectingNoticeBackground.SetActive(active);
         }
     }
 }                                                                                                                  

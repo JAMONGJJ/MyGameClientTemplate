@@ -50,9 +50,19 @@ namespace ClientTemplate
             if (string.IsNullOrEmpty(link) == true)
             {
                 LogManager.LogError(LogManager.LogType.EXCEPTION, $"Store link is null!");
+                return;
             }
 
             Application.OpenURL(link);
+        }
+
+        public void QuitApplication()
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+                Application.Quit();
+#endif
         }
 
         private void CheckAvailableAppVersion()
@@ -72,12 +82,12 @@ namespace ClientTemplate
                     break;
                 case VersionType.Inspect:   // 앱 점검 중(진입 불가)
                 {
-
+                    GameEntryWindow.SetActiveInspect(true);
                 }
                     break;
                 default:
                 {
-
+                    LogManager.LogError(LogManager.LogType.EXCEPTION, $"Unexpected version type! -> {versionType}");
                 }
                     break;
             }

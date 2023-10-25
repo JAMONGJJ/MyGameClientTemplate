@@ -8,39 +8,70 @@ namespace ClientTemplate
     namespace UIRegion
     {
         using UIRegion.UIInfo;
+        
         public class UISystem : MonoBehaviour
         {
-            public Canvas NormalUICanvas;
-            public Canvas LoadingUICanvas;
-            public Canvas AlertUICanvas;
+            public CanvasScaler LetterBoxCanvas;
+            public CanvasScaler NormalUICanvas;
+            public CanvasScaler LoadingUICanvas;
+            public CanvasScaler AlertUICanvas;
             public Camera UICamera;
             public GameObject UILoadingWindow;
             public GameObject UIWaitingWindow;
+            public AspectRatioFitter Mask;
+
+            private Transform NormalUIParentTransform;
+            private Transform LoadingUIParentTransform;
+            private Transform AlertUIParentTransform;
             
             public void Init()
             {
+                LetterBoxCanvas.gameObject.SetActive(false);
                 UILoadingWindow.gameObject.SetActive(false);
                 UIWaitingWindow.gameObject.SetActive(false);
+
+                float aspectRatio = 1920f / 1080f;
+                Vector2 ScreenResolution = new Vector2(1920, 1080);
                     
-                var NormalUICanvasScaler = NormalUICanvas.GetComponent<CanvasScaler>();
-                var LoadingUICanvasScaler = LoadingUICanvas.GetComponent<CanvasScaler>();
-                var AlertUICanvasScaler = AlertUICanvas.GetComponent<CanvasScaler>();
-                Vector2 ScreenResolution = new Vector2(Screen.width, Screen.height);
+                NormalUICanvas.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+                NormalUICanvas.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
+                NormalUICanvas.referenceResolution = ScreenResolution;
+                NormalUICanvas.matchWidthOrHeight = 0;
+                NormalUIParentTransform = NormalUICanvas.transform;
                     
-                NormalUICanvasScaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-                NormalUICanvasScaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
-                NormalUICanvasScaler.referenceResolution = ScreenResolution;
-                NormalUICanvasScaler.matchWidthOrHeight = 0;
-                    
-                LoadingUICanvasScaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-                LoadingUICanvasScaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
-                LoadingUICanvasScaler.referenceResolution = ScreenResolution;
-                LoadingUICanvasScaler.matchWidthOrHeight = 0;
+                LoadingUICanvas.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+                LoadingUICanvas.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
+                LoadingUICanvas.referenceResolution = ScreenResolution;
+                LoadingUICanvas.matchWidthOrHeight = 0;
+                LoadingUIParentTransform = LoadingUICanvas.transform;
                 
-                AlertUICanvasScaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-                AlertUICanvasScaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
-                AlertUICanvasScaler.referenceResolution = ScreenResolution;
-                AlertUICanvasScaler.matchWidthOrHeight = 0;
+                AlertUICanvas.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+                AlertUICanvas.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
+                AlertUICanvas.referenceResolution = ScreenResolution;
+                AlertUICanvas.matchWidthOrHeight = 0;
+                AlertUIParentTransform = AlertUICanvas.transform;
+
+                if (Core.System.Settings.ResolutionType == ResolutionType.Fixed)
+                {
+                    GameObject fitterGameObject = new GameObject("AspectRatioFitter");
+                    var fitter = fitterGameObject.AddComponent<AspectRatioFitter>();
+                    fitter.aspectMode = AspectRatioFitter.AspectMode.FitInParent;
+                    fitter.aspectRatio = aspectRatio;
+
+                    LetterBoxCanvas.gameObject.SetActive(true);
+                    Mask.aspectRatio = aspectRatio;
+                    
+                    GameObject normalUIChild = Instantiate(fitterGameObject, NormalUICanvas.transform);
+                    NormalUIParentTransform = normalUIChild.transform;
+                        
+                    GameObject loadingUIChild = Instantiate(fitterGameObject, LoadingUICanvas.transform);
+                    LoadingUIParentTransform = loadingUIChild.transform;
+                    UILoadingWindow.transform.SetParent(LoadingUIParentTransform);
+                    UIWaitingWindow.transform.SetParent(LoadingUIParentTransform);
+                        
+                    GameObject alertUIChild = Instantiate(fitterGameObject, AlertUICanvas.transform);
+                    AlertUIParentTransform = alertUIChild.transform;
+                }
             }
 
             public void Release()
@@ -54,19 +85,19 @@ namespace ClientTemplate
                 {
                     case UICanvasType.Normal:
                     {
-                        return NormalUICanvas.transform;
-                    }
-                    case UICanvasType.Alert:
-                    {
-                        return AlertUICanvas.transform;
+                        return NormalUIParentTransform;
                     }
                     case UICanvasType.Loading:
                     {
-                        return LoadingUICanvas.transform;
+                        return LoadingUIParentTransform;
+                    }
+                    case UICanvasType.Alert:
+                    {
+                        return AlertUIParentTransform;
                     }
                 }
 
-                return NormalUICanvas.transform;
+                return NormalUIParentTransform;
             }
 
             public void SetActiveLoadingWindow(bool active)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using ClientTemplate.DataManufactureInfo;
 using ClientTemplate.SceneRegion;
 using ClientTemplate.StateInfo;
+using ClientTemplate.UIRegion.UIInfo;
 using UnityEngine;
 
 namespace ClientTemplate
@@ -30,6 +31,7 @@ namespace ClientTemplate
 #endif
             
             Core.System.Settings.SetLanguageType(SystemLanguage.English);
+            Core.System.Settings.SetResolutionType(ResolutionType.Flexible);
             GameEntryManager.Instance.GameEntry();
         }
 
