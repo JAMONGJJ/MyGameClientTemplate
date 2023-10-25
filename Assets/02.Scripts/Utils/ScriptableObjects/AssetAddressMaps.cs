@@ -2,8 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using ClientTemplate.ResourceInfo;
-using ClientTemplate.SceneInfo;
-using ClientTemplate.UIInfo;
+using ClientTemplate.SceneRegion.SceneInfo;
+using ClientTemplate.UIRegion.UIInfo;
 using UnityEngine;
 
 namespace ClientTemplate

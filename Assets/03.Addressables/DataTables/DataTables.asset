@@ -15,3 +15,8 @@ MonoBehaviour:
   CommonStrings:
   - stringType: 1
     description: It is test description!
+  LanguagePacks:
+  - type: 10
+    DataList: []
+  - type: 23
+    DataList: []

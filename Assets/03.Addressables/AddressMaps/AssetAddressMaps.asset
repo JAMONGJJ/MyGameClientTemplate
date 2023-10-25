@@ -14,17 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp:ClientTemplate:AssetAddressMaps
   UIWindowAddressList:
   - assetType: 1
-    address: Preload/UIWindows/UISystem.prefab
+    address: UIWindows/UISystem.prefab
   - assetType: 4
-    address: Preload/UIWindows/MainHud.prefab
+    address: UIWindows/MainHud.prefab
   - assetType: 5
-    address: Preload/UIWindows/UINoticeWindow.prefab
+    address: UIWindows/UINoticeWindow.prefab
   PrefabAddressList:
   - assetType: 1
-    address: Preload/Prefabs/TestCube.prefab
+    address: Prefabs/TestCube.prefab
   SceneAddressList:
   - assetType: 2
-    address: Preload/Scenes/EmptyScene.unity
+    address: Scenes/EmptyScene.unity
   - assetType: 3
-    address: Preload/Scenes/LobbyScene.unity
+    address: Scenes/LobbyScene.unity
   ImageAddressList: []

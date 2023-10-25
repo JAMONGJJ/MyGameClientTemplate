@@ -1,11 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
-using ClientTemplate.SceneInfo;
 using UnityEngine;
 
 namespace ClientTemplate
 {
-    using UIInfo;
     using StateInfo;
 
     public class LoginState : IState

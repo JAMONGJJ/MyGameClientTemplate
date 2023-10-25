@@ -2,8 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using ClientTemplate.StateInfo;
-using ClientTemplate.UIInfo;
-using ClientTemplate.UtilityFunctions;
 
 namespace ClientTemplate
 {
@@ -41,7 +39,7 @@ namespace ClientTemplate
 
         private void DataSetAllFinishCallback()
         {
-            GameEntryManager.Instance.GameEntryWindow.SetActivePlayButton(true);
+            GameEntryManager.Instance.SetActivePlayButton(true);
         }
     }
 }

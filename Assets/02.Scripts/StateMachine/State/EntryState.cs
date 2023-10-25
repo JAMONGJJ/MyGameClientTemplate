@@ -1,16 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using ClientTemplate.DataManufactureInfo;
-using ClientTemplate.UtilityFunctions;
-using Unity.VisualScripting;
+using ClientTemplate.SceneRegion;
+using ClientTemplate.StateInfo;
 using UnityEngine;
 
 namespace ClientTemplate
 {
-    using UIInfo;
-    using StateInfo;
-    using SceneInfo;
-    
     public class EntryState : IState
     {
         public string name { get; set; }
@@ -24,9 +20,16 @@ namespace ClientTemplate
 
         public void OnBegin()
         {
+            InitMonoManagers();
             InitCoreManagers();
-            InitContentsManager();
+            InitContentsManagers();
+            
+#if !UNITY_EDITOR && !TEST_BUILD
+            Debug.unityLogger.logEnabled = false;
             Core.System.Settings.SetFrameRate(30);
+#endif
+            
+            Core.System.Settings.SetLanguageType(SystemLanguage.English);
             GameEntryManager.Instance.GameEntry();
         }
 
@@ -45,13 +48,15 @@ namespace ClientTemplate
             }
         }
         
-        #region CoreSystem
+        private void InitMonoManagers()
+        {
+            GameEntryManager.Instance.Init();
+            SceneManager.Instance.Init();
+            GameObjectManager.Instance.Init();
+        }
         
         private void InitCoreManagers()
         {
-            SceneManager.Instance.Init();
-            GameObjectManager.Instance.Init();
-            
             Core.System.SetDataManufactureManager(new DataManufactureManager());
             Core.System.DataManufacture.SetDelegateContainer(new ParseDelegateContainer());
             Core.System.DataManufacture.Init();
@@ -69,15 +74,9 @@ namespace ClientTemplate
             Core.System.Version.Init();
         }
         
-        #endregion
-        
-        #region Contents Manager
-        
-        private void InitContentsManager()
+        private void InitContentsManagers()
         {
             
         }
-        
-        #endregion
     }
 }

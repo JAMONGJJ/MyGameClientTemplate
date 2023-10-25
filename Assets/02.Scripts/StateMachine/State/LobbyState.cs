@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using ClientTemplate.StateInfo;
-using ClientTemplate.SceneInfo;
+using ClientTemplate.SceneRegion;
+using ClientTemplate.SceneRegion.SceneInfo;
+using ClientTemplate.UIRegion;
 using UnityEngine;
 
 namespace ClientTemplate
@@ -25,10 +27,12 @@ namespace ClientTemplate
         private void AfterFieldSceneLoad()
         {
             UIManager.Instance.PushToMainCameraStack();
+            Contents.Manager.Lobby.Init();
         }
 
         public bool OnEnd(StateType nextStateType)
         {
+            Contents.Manager.Lobby.Release();
             switch (nextStateType)
             {
                 default:

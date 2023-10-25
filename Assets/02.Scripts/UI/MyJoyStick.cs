@@ -26,7 +26,7 @@ namespace ClientTemplate
 
         public void OnPointerDown(PointerEventData eventData)
         {
-            GamePlayManager.Instance.MyPlayerController.SetAnimatorTrigger("Run");
+            
             CurrentEventData = eventData;
         }
 
@@ -34,7 +34,7 @@ namespace ClientTemplate
         {
             myHandle.anchoredPosition = Vector3.zero;
             CurrentEventData = null;
-            GamePlayManager.Instance.MyPlayerController.SetAnimatorTrigger("Idle");
+            
         }
         
         public void OnDrag(PointerEventData eventData)

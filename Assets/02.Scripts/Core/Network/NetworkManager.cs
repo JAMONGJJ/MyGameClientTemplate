@@ -6,7 +6,7 @@ namespace ClientTemplate
 {
     public interface INetworkManager : IManager
     {
-
+        void Connect();
     }
 
     public class NetworkManager : INetworkManager
@@ -29,7 +29,10 @@ namespace ClientTemplate
             Release();
             Init();
         }
-        
-        
+
+        public void Connect()
+        {
+            // TODO : 서버 연결
+        }
     }
 }

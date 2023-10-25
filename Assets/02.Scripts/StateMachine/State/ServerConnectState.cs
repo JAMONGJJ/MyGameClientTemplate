@@ -43,6 +43,7 @@ namespace ClientTemplate
         {
             Core.System.SetNetworkManager(new NetworkManager());
             Core.System.Network.Init();
+            Core.System.Network.Connect();
         }
     }
 }

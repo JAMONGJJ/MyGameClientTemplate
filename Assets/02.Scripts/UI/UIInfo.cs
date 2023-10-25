@@ -5,6 +5,8 @@ using UnityEngine;
 
 namespace ClientTemplate
 {
+    namespace UIRegion
+    {
     namespace UIInfo
     {
         public enum LayoutGroupType
@@ -452,5 +454,6 @@ namespace ClientTemplate
                 UIDataModifiedMap.Remove(type);
             }
         }
+    }
     }
 }

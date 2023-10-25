@@ -6,11 +6,15 @@ namespace ClientTemplate
 {
     public interface ISettingsManager : IManager
     {
+        SystemLanguage LanguageType { get; }
         void SetFrameRate(int fps);
+        void SetLanguageType(SystemLanguage type);
     }
 
     public class SettingsManager : ISettingsManager
     {
+        public SystemLanguage LanguageType { get; private set; }
+
         public void Init()
         {
             
@@ -30,6 +34,11 @@ namespace ClientTemplate
         public void SetFrameRate(int fps)
         {
             Application.targetFrameRate = fps;
+        }
+
+        public void SetLanguageType(SystemLanguage type)
+        {
+            LanguageType = type;
         }
     }
 }

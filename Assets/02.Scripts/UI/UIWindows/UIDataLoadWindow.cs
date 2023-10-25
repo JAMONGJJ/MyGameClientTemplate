@@ -1,7 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using ClientTemplate.UIInfo;
-using ClientTemplate.StringInfo;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;

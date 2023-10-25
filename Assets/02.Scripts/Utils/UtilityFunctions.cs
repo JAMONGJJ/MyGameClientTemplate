@@ -13,17 +13,26 @@ namespace ClientTemplate
 
         public class UtilityFunctions
         {
-            public IAsyncOperationHandler Async { get; private set; }
-            public IExceptionHandler Exception { get; private set; }
-
-            public void SetAsyncOperationHandler(IAsyncOperationHandler handler)
+            private enum SizeType
             {
-                Async = handler;
+                bytes,
+                Kbs,
+                Mbs,
+                Gbs,
+        
             }
-
-            public void SetExceptionHandler(IExceptionHandler handler)
+            
+            public string ConvertByteLongToString(long size)
             {
-                Exception = handler;
+                float tmpSize = size;
+                SizeType type = SizeType.bytes;
+                while (tmpSize > 1024.0f)
+                {
+                    tmpSize /= 1024.0f;
+                    type++;
+                }
+
+                return $"{tmpSize:F2}{type}";
             }
         }
     }

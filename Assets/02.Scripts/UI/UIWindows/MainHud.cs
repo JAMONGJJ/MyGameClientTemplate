@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using ClientTemplate.UIInfo;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
@@ -9,21 +8,26 @@ using Slider = UnityEngine.UI.Slider;
 
 namespace ClientTemplate
 {
-    public class MainHud : UIWindow
+    namespace UIRegion
     {
-        public override void Init(UIData data = null)
+        using UIRegion.UIInfo;
+
+        public class MainHud : UIWindow
         {
-            
-        }
+            public override void Init(UIData data = null)
+            {
 
-        public override void Release()
-        {
+            }
 
-        }
+            public override void Release()
+            {
 
-        public override void OnTop(UIData data = null)
-        {
+            }
 
+            public override void OnTop(UIData data = null)
+            {
+
+            }
         }
     }
 }

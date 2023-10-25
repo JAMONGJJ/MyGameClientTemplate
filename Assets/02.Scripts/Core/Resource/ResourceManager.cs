@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ClientTemplate.ResourceInfo;
-using ClientTemplate.SceneInfo;
-using ClientTemplate.UIInfo;
+using ClientTemplate.SceneRegion.SceneInfo;
+using ClientTemplate.UIRegion.UIInfo;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -14,15 +14,13 @@ using PrefabAssetType = ClientTemplate.ResourceInfo.PrefabAssetType;
 
 namespace ClientTemplate
 {
-    /// <summary>
-    /// Dependency Injection을 위해 만들었던 interface 함수.
-    /// </summary>
     public interface IResourceManager : IManager
     {
         void SetAssetBundleLoadFinishCallback(Action assetBundleLoadFinishCallback);
         long GetAssetBundleSize();
         float GetAssetBundleDownloadProgress();
         void LoadAddressablesAssets();
+        bool IsDownloadingAssetBundles();
         GameObject LoadAssets(UIWindowAssetType type);
         SceneInstance LoadAssets(SceneAssetType type);
         GameObject LoadAssets(PrefabAssetType type);
@@ -36,6 +34,7 @@ namespace ClientTemplate
         private Action AssetLoadFinishFinishCallback;
         private AssetLabelReference assetLabelReference;
         private float downloadProgress;
+        private bool downloadingAssetBundles;
         
         public void Init()
         {
@@ -43,6 +42,7 @@ namespace ClientTemplate
             AssetAddressContainer = new AssetAddressContainer();
             assetLabelReference = new AssetLabelReference();
             assetLabelReference.labelString = "Dependencies";
+            downloadingAssetBundles = false;
         }
 
         public void Release()
@@ -107,6 +107,8 @@ namespace ClientTemplate
         /// </summary>
         public void LoadAddressablesAssets()
         {
+            downloadingAssetBundles = true;
+            
             try
             {
                 LoadAssetAddressMaps();
@@ -116,8 +118,12 @@ namespace ClientTemplate
             catch (Exception e)
             {
                 LogManager.LogError(LogManager.LogType.EXCEPTION, e.ToString());
-                return;
             }
+        }
+
+        public bool IsDownloadingAssetBundles()
+        {
+            return downloadingAssetBundles;
         }
 
         /// <summary>
@@ -245,7 +251,8 @@ namespace ClientTemplate
                 {
                     throw handle.OperationException;
                 }
-                
+
+                downloadingAssetBundles = false;
                 LogManager.Log(LogManager.LogType.DEFAULT, "Asset Bundles download completed!");
             };
 

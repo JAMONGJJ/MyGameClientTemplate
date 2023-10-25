@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using ClientTemplate.GameObjectManagerInfo;
 using ClientTemplate.ResourceInfo;
-using ClientTemplate.UIInfo;
+using ClientTemplate.UIRegion.UIInfo;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Networking;

@@ -1,7 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using ClientTemplate.StateInfo;
-using ClientTemplate.UIInfo;
+using ClientTemplate.UIRegion;
+using ClientTemplate.UIRegion.UIInfo;
 using UnityEngine;
 
 namespace ClientTemplate
@@ -28,8 +29,7 @@ namespace ClientTemplate
             long bundleSize = Core.System.Resource.GetAssetBundleSize();
             if (bundleSize > 0)
             {
-                GameEntryManager.Instance.GameEntryWindow.SetActiveAssetDownload(true);
-                GameEntryManager.Instance.GameEntryWindow.SetAssetDownloadText(bundleSize);
+                GameEntryManager.Instance.NoticeBundleSize(bundleSize);
             }
             else
             {

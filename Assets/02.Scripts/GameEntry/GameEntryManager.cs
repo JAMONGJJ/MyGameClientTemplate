@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using ClientTemplate.UIInfo;
 using ClientTemplate.UtilityFunctions;
 using UnityEngine;
 
@@ -8,12 +7,11 @@ namespace ClientTemplate
 {
     public class GameEntryManager : MonoManager<GameEntryManager>
     {
-        [HideInInspector]
-        public UIGameEntryWindow GameEntryWindow;
+        private UIGameEntryWindow GameEntryWindow;
         
         public override void Init()
         {
-            
+            GameEntryWindow = GameObject.FindWithTag("GameEntryWindow").GetComponent<UIGameEntryWindow>();
         }
 
         public override void Release()
@@ -23,9 +21,38 @@ namespace ClientTemplate
 
         public void GameEntry()
         {
-            GameEntryWindow = GameObject.FindWithTag("GameEntryWindow").GetComponent<UIGameEntryWindow>();
             GameEntryWindow.Init();
             CheckAvailableAppVersion();
+        }
+
+        public void SetActivePlayButton(bool active)
+        {
+            GameEntryWindow.SetActivePlayButton(active);
+        }
+
+        public void NoticeBundleSize(long bundleSize)
+        {
+            GameEntryWindow.SetActiveAssetDownload(true);
+            GameEntryWindow.SetAssetDownloadText(bundleSize);
+        }
+
+        public void LoadAssetBundles()
+        {
+            GameEntryWindow.SetActiveDownloadSlider(true);
+            GameEntryWindow.SetActiveAssetDownload(false);
+            Core.System.Resource.LoadAddressablesAssets();
+            StartCoroutine(AssetDownloadProgress());
+        }
+
+        public void OpenStoreLink()
+        {
+            string link = Core.System.Version.GetStoreLink();
+            if (string.IsNullOrEmpty(link) == true)
+            {
+                LogManager.LogError(LogManager.LogType.EXCEPTION, $"Store link is null!");
+            }
+
+            Application.OpenURL(link);
         }
 
         private void CheckAvailableAppVersion()
@@ -33,17 +60,17 @@ namespace ClientTemplate
             VersionType versionType = Core.System.Version.GetVersionType();
             switch (versionType)
             {
-                case VersionType.Play:
+                case VersionType.Play:  // 앱 플레이 가능
                 {
                     StateMachine.NextState(new InitialDataLoadState());
                 }
                     break;
-                case VersionType.Update:
+                case VersionType.Update:    // 앱 업데이트 필요(스토어로 이동)
                 {
                     GameEntryWindow.SetActiveGoToStore(true);
                 }
                     break;
-                case VersionType.Inspect:
+                case VersionType.Inspect:   // 앱 점검 중(진입 불가)
                 {
 
                 }
@@ -53,6 +80,16 @@ namespace ClientTemplate
 
                 }
                     break;
+            }
+        }
+
+        private IEnumerator AssetDownloadProgress()
+        {
+            yield return null;
+            while (Core.System.Resource.IsDownloadingAssetBundles() == true)
+            {
+                float progress = Core.System.Resource.GetAssetBundleDownloadProgress();
+                GameEntryWindow.SetLoadingProgress(progress);
             }
         }
     }

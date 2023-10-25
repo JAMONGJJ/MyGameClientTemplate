@@ -4,7 +4,6 @@ using UnityEngine;
 
 namespace ClientTemplate
 {
-    using UIInfo;
     using StateInfo;
 
     public class PreLobbyState : IState

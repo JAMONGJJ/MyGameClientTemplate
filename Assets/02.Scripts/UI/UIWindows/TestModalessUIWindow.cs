@@ -1,54 +1,58 @@
 using System.Collections;
 using System.Collections.Generic;
-using ClientTemplate.UIInfo;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
 namespace ClientTemplate
 {
-    public class TestModalessUIWindow : UIWindow
+    namespace UIRegion
     {
-        public class WindowData : UIData
-        {
-            public string testText;
-        }
-
-        public Button ExitButton;
-        public TMP_Text TestText;
+        using UIRegion.UIInfo;
         
-        public override void Init(UIData data = null)
+        public class TestModalessUIWindow : UIWindow
         {
-            SetButtons();
-            WindowData windowData = data as WindowData;
-            if (windowData != null)
+            public class WindowData : UIData
             {
-                TestText.text = windowData.testText;
-                
+                public string testText;
             }
-        }
 
-        public override void Release()
-        {
-
-        }
-
-        public override void OnTop(UIData data = null)
-        {
-            WindowData windowData = data as WindowData;
-            if (windowData != null)
+            public Button ExitButton;
+            public TMP_Text TestText;
+        
+            public override void Init(UIData data = null)
             {
-                TestText.text = windowData.testText;
+                SetButtons();
+                WindowData windowData = data as WindowData;
+                if (windowData != null)
+                {
+                    TestText.text = windowData.testText;
                 
+                }
             }
-        }
 
-        private void SetButtons()
-        {
-            ExitButton.onClick.AddListener(() =>
+            public override void Release()
+            {
+
+            }
+
+            public override void OnTop(UIData data = null)
+            {
+                WindowData windowData = data as WindowData;
+                if (windowData != null)
+                {
+                    TestText.text = windowData.testText;
+                
+                }
+            }
+
+            private void SetButtons()
+            {
+                ExitButton.onClick.AddListener(() =>
                 {
                     UIManager.Instance.CloseWindow(UIWindowType.TestModalessUIWindow);
                 });
+            }
         }
     }
 }

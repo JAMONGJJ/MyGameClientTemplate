@@ -1,57 +1,58 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using ClientTemplate.UIInfo;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace ClientTemplate
 {
-    public class UINoticeWindow : UIWindow
+    namespace UIRegion
     {
-        public class WindowData : UIData
-        {
-            public string message;
-            public bool enableCancelButton;
-            public System.Action okButtonCallback;
+        using UIRegion.UIInfo;
 
-            public WindowData()
+        public class UINoticeWindow : UIWindow
+        {
+            public class WindowData : UIData
             {
-                message = string.Empty;
-                enableCancelButton = false;
-                okButtonCallback = null;
-            }
-        }
+                public string message;
+                public bool enableCancelButton;
+                public System.Action okButtonCallback;
 
-        private WindowData _myWindowData;
-        public Button ExitButton;
-        
-        public override void Init(UIData data = null)
-        {
-            SetButtons();
-        }
-
-        public override void Release()
-        {
-
-        }
-
-        public override void OnTop(UIData data = null)
-        {
-            
-        }
-
-        private void SetOnTopSubject()
-        {
-            
-        }
-
-        private void SetButtons()
-        {
-            ExitButton.onClick.AddListener(() =>
+                public WindowData()
                 {
-                    UIManager.Instance.CloseWindow(UIWindowType.NoticeWindow);
-                });
+                    message = string.Empty;
+                    enableCancelButton = false;
+                    okButtonCallback = null;
+                }
+            }
+
+            private WindowData _myWindowData;
+            public Button ExitButton;
+
+            public override void Init(UIData data = null)
+            {
+                SetButtons();
+            }
+
+            public override void Release()
+            {
+
+            }
+
+            public override void OnTop(UIData data = null)
+            {
+
+            }
+
+            private void SetOnTopSubject()
+            {
+
+            }
+
+            private void SetButtons()
+            {
+                ExitButton.onClick.AddListener(() => { UIManager.Instance.CloseWindow(UIWindowType.NoticeWindow); });
+            }
         }
     }
 }

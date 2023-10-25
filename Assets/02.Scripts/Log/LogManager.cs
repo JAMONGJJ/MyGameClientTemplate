@@ -7,12 +7,12 @@ using System.IO;
 
 namespace ClientTemplate
 {
-    using System.Diagnostics;
     public static class LogManager
     {
         public enum LogType
         {
             DEFAULT = 0,
+            ERROR,
             EXCEPTION,
             UI_OPEN,
             UI_CLOSE,
@@ -26,6 +26,7 @@ namespace ClientTemplate
             CONTROLLER_INIT,
             CONTROLLER_RELEASE,
             CONTROLLER_RESET,
+            UPLOAD_TO_S3,
             TEST,
 
         }
@@ -48,6 +49,7 @@ namespace ClientTemplate
                 { LogType.CONTROLLER_INIT, "{0} INIT!" },
                 { LogType.CONTROLLER_RELEASE, "{0} RELEASE!"},
                 { LogType.CONTROLLER_RESET, "{0} RESET!"},
+                { LogType.UPLOAD_TO_S3, "UPLOADING FILES TO S3! {0}"},
                 { LogType.TEST, "*************************** TEST LOGS! *************************** {0}"},
 
             };

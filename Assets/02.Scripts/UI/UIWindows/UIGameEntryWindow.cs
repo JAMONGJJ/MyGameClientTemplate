@@ -1,8 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using ClientTemplate.SceneInfo;
-using ClientTemplate.UIInfo;
+using ClientTemplate.UtilityFunctions;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -10,15 +9,6 @@ using UnityEngine.Serialization;
 
 namespace ClientTemplate
 {
-    public enum SizeType
-    {
-        bytes,
-        Kbs,
-        Mbs,
-        Gbs,
-        
-    }
-
     public class UIGameEntryWindow : MonoBehaviour
     {
         public GameObject LoadingBackground;
@@ -32,8 +22,9 @@ namespace ClientTemplate
         public Button DenyAssetDownloadButton;
         public TMP_Text DownloadAssetDescriptionText;
 
-        private string bundleSize;
-
+        private long bundleSize;
+        private string bundleSizeTextFormat;
+        
         public void Init()
         {
             LoadingBackground.SetActive(true);
@@ -41,12 +32,18 @@ namespace ClientTemplate
             PlayButton.gameObject.SetActive(false);
             GoToStoreBackground.SetActive(false);
             DownloadNoticeBackground.SetActive(false);
+            SetTextFormats();
             SetButtons();
         }
 
         public void Release()
         {
             
+        }
+
+        private void SetTextFormats()
+        {
+            bundleSizeTextFormat = "You need to download {0} of additional data!";
         }
 
         private void SetButtons()
@@ -59,21 +56,12 @@ namespace ClientTemplate
             
             GoToStoreButton.onClick.AddListener(() =>
             {
-                VersionsDataTable version = Info.Table.GetVersionInfo();
-#if UNITY_ANDROID
-                Application.OpenURL($"{version.playStoreLink}");
-#elif UNITY_IOS
-                Application.OpenURL($"{version.appStoreLink}");
-#else
-                LogManager.LogError(LogManager.LogType.DEFAULT, "unexpected platform!");
-#endif
+                GameEntryManager.Instance.OpenStoreLink();
             });
 
             AcceptAssetDownloadButton.onClick.AddListener(() =>
             {
-                GameEntryManager.Instance.GameEntryWindow.SetActiveDownloadSlider(true);
-                GameEntryManager.Instance.GameEntryWindow.SetActiveAssetDownload(false);
-                Core.System.Resource.LoadAddressablesAssets();
+                GameEntryManager.Instance.LoadAssetBundles();
             });
 
             DenyAssetDownloadButton.onClick.AddListener(() =>
@@ -108,35 +96,14 @@ namespace ClientTemplate
 
         public void SetAssetDownloadText(long size)
         {
-            string format = "You need to download {0} of additional data!";
-            bundleSize = ConvertSize(size);
-            DownloadAssetDescriptionText.text = string.Format(format, bundleSize);
+            bundleSize = size;
+            string convertedSize = Utility.Functions.ConvertByteLongToString(size);
+            DownloadAssetDescriptionText.text = string.Format(bundleSizeTextFormat, convertedSize);
         }
 
-        public void SetLoadingSliderValue(object args, float percentage)
+        public void SetLoadingProgress(float percentage)
         {
             LoadingProgressSlider.value = percentage;
-        }
-
-        private void SetLoadingProgressText()
-        {
-            string format = "Download progress : {0} / {1}";
-            LoadingProgressText.text = string.Format(format, "", bundleSize);
-        }
-
-        private string ConvertSize(long size)
-        {
-            string result = "";
-            float tmpSize = size;
-            SizeType type = SizeType.bytes;
-            while (tmpSize > 1024.0f)
-            {
-                tmpSize = tmpSize / 1024.0f;
-                type++;
-            }
-
-            result = $"{tmpSize.ToString("F2")}{type}";
-            return result;
         }
     }
 }                                                                                                                  
