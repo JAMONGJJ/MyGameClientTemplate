@@ -6,6 +6,15 @@ namespace ClientTemplate
 {
     namespace UtilityFunctions
     {
+        public enum SizeType
+        {
+            bytes,
+            Kbs,
+            Mbs,
+            Gbs,
+        
+        }
+        
         public static class Utility
         {
             public static UtilityFunctions Functions { get; } = new UtilityFunctions();
@@ -13,15 +22,6 @@ namespace ClientTemplate
 
         public class UtilityFunctions
         {
-            private enum SizeType
-            {
-                bytes,
-                Kbs,
-                Mbs,
-                Gbs,
-        
-            }
-            
             public string ConvertByteLongToString(long size)
             {
                 float tmpSize = size;

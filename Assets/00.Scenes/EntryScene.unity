@@ -2813,6 +2813,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25dc7bb2e5990914c96545cbc4d6f397, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MyCanvasScaler: {fileID: 129013315}
   LoadingBackground: {fileID: 181520850}
   GoToStoreBackground: {fileID: 6609958070294628718}
   DownloadNoticeBackground: {fileID: 653734244}

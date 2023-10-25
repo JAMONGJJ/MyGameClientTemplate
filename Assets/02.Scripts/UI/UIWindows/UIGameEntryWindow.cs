@@ -11,6 +11,7 @@ namespace ClientTemplate
 {
     public class UIGameEntryWindow : MonoBehaviour
     {
+        public CanvasScaler MyCanvasScaler;
         public GameObject LoadingBackground;
         public GameObject GoToStoreBackground;
         public GameObject DownloadNoticeBackground;
@@ -35,6 +36,7 @@ namespace ClientTemplate
             GoToStoreBackground.SetActive(false);
             DownloadNoticeBackground.SetActive(false);
             InspectingNoticeBackground.SetActive(false);
+            SetResolution();
             SetTextFormats();
             SetButtons();
         }
@@ -42,6 +44,19 @@ namespace ClientTemplate
         public void Release()
         {
             
+        }
+
+        private void SetResolution()
+        {
+            Vector2 pivotResolution = new Vector2(1920, 1080);
+            Vector2 deviceResolution = new Vector2(Screen.width, Screen.height);
+            float matchWidthOrHeight =
+                (pivotResolution.x / deviceResolution.x) < (pivotResolution.y / deviceResolution.y) ? 1f : 0f; 
+            
+            MyCanvasScaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            MyCanvasScaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
+            MyCanvasScaler.referenceResolution = pivotResolution;
+            MyCanvasScaler.matchWidthOrHeight = matchWidthOrHeight;
         }
 
         private void SetTextFormats()

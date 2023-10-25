@@ -31,24 +31,27 @@ namespace ClientTemplate
                 UIWaitingWindow.gameObject.SetActive(false);
 
                 float aspectRatio = 1920f / 1080f;
-                Vector2 ScreenResolution = new Vector2(1920, 1080);
+                Vector2 pivotResolution = new Vector2(1920, 1080);
+                Vector2 deviceResolution = new Vector2(Screen.width, Screen.height);
+                float matchWidthOrHeight =
+                    (pivotResolution.x / deviceResolution.x) < (pivotResolution.y / deviceResolution.y) ? 1f : 0f; 
                     
                 NormalUICanvas.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
                 NormalUICanvas.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
-                NormalUICanvas.referenceResolution = ScreenResolution;
-                NormalUICanvas.matchWidthOrHeight = 0;
+                NormalUICanvas.referenceResolution = pivotResolution;
+                NormalUICanvas.matchWidthOrHeight = matchWidthOrHeight;
                 NormalUIParentTransform = NormalUICanvas.transform;
                     
                 LoadingUICanvas.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
                 LoadingUICanvas.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
-                LoadingUICanvas.referenceResolution = ScreenResolution;
-                LoadingUICanvas.matchWidthOrHeight = 0;
+                LoadingUICanvas.referenceResolution = pivotResolution;
+                LoadingUICanvas.matchWidthOrHeight = matchWidthOrHeight;
                 LoadingUIParentTransform = LoadingUICanvas.transform;
                 
                 AlertUICanvas.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
                 AlertUICanvas.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
-                AlertUICanvas.referenceResolution = ScreenResolution;
-                AlertUICanvas.matchWidthOrHeight = 0;
+                AlertUICanvas.referenceResolution = pivotResolution;
+                AlertUICanvas.matchWidthOrHeight = matchWidthOrHeight;
                 AlertUIParentTransform = AlertUICanvas.transform;
 
                 if (Core.System.Settings.ResolutionType == ResolutionType.Fixed)

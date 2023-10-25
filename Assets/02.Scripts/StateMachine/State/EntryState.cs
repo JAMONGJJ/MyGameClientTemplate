@@ -4,6 +4,7 @@ using ClientTemplate.DataManufactureInfo;
 using ClientTemplate.SceneRegion;
 using ClientTemplate.StateInfo;
 using ClientTemplate.UIRegion.UIInfo;
+using ClientTemplate.UtilityFunctions;
 using UnityEngine;
 
 namespace ClientTemplate
@@ -21,22 +22,30 @@ namespace ClientTemplate
 
         public void OnBegin()
         {
-            InitMonoManagers();
-            InitCoreManagers();
-            InitContentsManagers();
+            Core.System.SetSettingsManager(new SettingsManager());
+            Core.System.Settings.Init();
+            
+            Core.System.SetVersionManager(new VersionControlManager());
+            Core.System.Version.Init();
+            
+            Core.System.Settings.SetResolutionType(ResolutionType.Fixed);
             
 #if !UNITY_EDITOR && !TEST_BUILD
             Debug.unityLogger.logEnabled = false;
             Core.System.Settings.SetFrameRate(30);
 #endif
             
-            Core.System.Settings.SetLanguageType(SystemLanguage.English);
-            Core.System.Settings.SetResolutionType(ResolutionType.Flexible);
+            GameEntryManager.Instance.Init();
             GameEntryManager.Instance.GameEntry();
         }
 
         public bool OnEnd(StateType nextStateType)
         {
+            InitMonoManagers();
+            InitCoreManagers();
+            InitContentsManagers();
+            Core.System.Settings.SetLanguageType(SystemLanguage.English);
+            
             switch (nextStateType)
             {
                 case StateType.InitialDataLoad:
@@ -52,7 +61,6 @@ namespace ClientTemplate
         
         private void InitMonoManagers()
         {
-            GameEntryManager.Instance.Init();
             SceneManager.Instance.Init();
             GameObjectManager.Instance.Init();
         }
@@ -68,12 +76,6 @@ namespace ClientTemplate
             
             Core.System.SetResourceManager(new ResourceManager());
             Core.System.Resource.Init();
-            
-            Core.System.SetSettingsManager(new SettingsManager());
-            Core.System.Settings.Init();
-            
-            Core.System.SetVersionManager(new VersionControlManager());
-            Core.System.Version.Init();
         }
         
         private void InitContentsManagers()
