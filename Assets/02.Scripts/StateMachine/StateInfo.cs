@@ -16,7 +16,7 @@ namespace ClientTemplate
             DataSetting,
             PreLobby,
             Lobby,
-        
+
         }
 
         public interface IState

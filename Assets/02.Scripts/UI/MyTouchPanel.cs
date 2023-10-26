@@ -37,7 +37,7 @@ namespace ClientTemplate
 
         private void RotateCamera(PointerEventData eventData)
         {
-            GamePlayManager.Instance.MyCameraController.RotateMainCamera(eventData.delta);
+
         }
 
         private void Zoom()
@@ -48,11 +48,11 @@ namespace ClientTemplate
                                              Math.Abs(_firstEventData.position.y - _secondEventData.position.y);
             if (distanceBetweenInputData > _lastDistance)
             {
-                GamePlayManager.Instance.MyCameraController.ZoomIn();
+
             }
             else
             {
-                GamePlayManager.Instance.MyCameraController.ZoomOut();
+
             }
 
             _lastDistance = distanceBetweenInputData;

@@ -28,14 +28,17 @@ namespace ClientTemplate
             Core.System.SetVersionManager(new VersionControlManager());
             Core.System.Version.Init();
             
-            Core.System.Settings.SetResolutionType(ResolutionType.Fixed);
-            
+            Core.System.Settings.SetResolutionType(ResolutionType.Flexible);
+
+            GameEntryManager.Instance.Init();
+
 #if !UNITY_EDITOR && !TEST_BUILD
             Debug.unityLogger.logEnabled = false;
             Core.System.Settings.SetFrameRate(30);
+#else
+            EnableLogReporter();
 #endif
-            
-            GameEntryManager.Instance.Init();
+
             GameEntryManager.Instance.GameEntry();
         }
 
@@ -57,6 +60,11 @@ namespace ClientTemplate
                     return false;
                 }
             }
+        }
+
+        private void EnableLogReporter()
+        {
+            GameEntryManager.Instance.InstantiateReporter();
         }
         
         private void InitMonoManagers()

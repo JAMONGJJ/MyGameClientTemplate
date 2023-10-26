@@ -13,7 +13,8 @@ namespace ClientTemplate
         {
             None = 0,
             MainCamera = 1,
-            
+            Reporter = 2,
+
         }
 
         public enum ImageAssetType

@@ -12,7 +12,7 @@ namespace ClientTemplate
             {
                 None,
                 Entry,
-                EmptyScene,
+                Empty,
                 Lobby,
                 
             }
@@ -21,9 +21,9 @@ namespace ClientTemplate
             {
                 None,
                 Entry,
-                EmptyScene,
+                Empty,
                 Lobby,
-                
+
             }
 
             public class Scene

@@ -12,8 +12,7 @@ namespace ClientTemplate
         {
             None,
             Test,
-            Gathering,
-            PlayerInfo,
+
             
         }
 

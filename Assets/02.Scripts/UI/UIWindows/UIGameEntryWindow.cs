@@ -24,8 +24,8 @@ namespace ClientTemplate
         public Button DenyAssetDownloadButton;
         public TMP_Text DownloadAssetDescriptionText;
         public Button InspectConfirmButton;
+        public GameObject Reporter;
 
-        private long bundleSize;
         private string bundleSizeTextFormat;
         
         public void Init()
@@ -120,7 +120,6 @@ namespace ClientTemplate
 
         public void SetAssetDownloadText(long size)
         {
-            bundleSize = size;
             string convertedSize = Utility.Functions.ConvertByteLongToString(size);
             DownloadAssetDescriptionText.text = string.Format(bundleSizeTextFormat, convertedSize);
         }

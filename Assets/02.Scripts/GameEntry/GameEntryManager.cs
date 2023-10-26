@@ -25,6 +25,11 @@ namespace ClientTemplate
             CheckAvailableAppVersion();
         }
 
+        public void InstantiateReporter()
+        {
+            Instantiate(GameEntryWindow.Reporter);
+        }
+
         public void SetActivePlayButton(bool active)
         {
             GameEntryWindow.SetActivePlayButton(active);
@@ -71,24 +76,24 @@ namespace ClientTemplate
             switch (versionType)
             {
                 case VersionType.Play:  // 앱 플레이 가능
-                {
-                    StateMachine.NextState(new InitialDataLoadState());
-                }
+                    {
+                        StateMachine.NextState(new InitialDataLoadState());
+                    }
                     break;
                 case VersionType.Update:    // 앱 업데이트 필요(스토어로 이동)
-                {
-                    GameEntryWindow.SetActiveGoToStore(true);
-                }
+                    {
+                        GameEntryWindow.SetActiveGoToStore(true);
+                    }
                     break;
                 case VersionType.Inspect:   // 앱 점검 중(진입 불가)
-                {
-                    GameEntryWindow.SetActiveInspect(true);
-                }
+                    {
+                        GameEntryWindow.SetActiveInspect(true);
+                    }
                     break;
                 default:
-                {
-                    LogManager.LogError(LogManager.LogType.EXCEPTION, $"Unexpected version type! -> {versionType}");
-                }
+                    {
+                        LogManager.LogError(LogManager.LogType.EXCEPTION, $"Unexpected version type! -> {versionType}");
+                    }
                     break;
             }
         }

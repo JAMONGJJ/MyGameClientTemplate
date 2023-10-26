@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using ClientTemplate.StateInfo;
 using ClientTemplate.DataManufactureInfo;
-using ClientTemplate.PlayerInfo;
 using UnityEngine;
 
 namespace ClientTemplate

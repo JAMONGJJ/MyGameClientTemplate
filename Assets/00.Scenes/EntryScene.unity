@@ -2826,6 +2826,8 @@ MonoBehaviour:
   DenyAssetDownloadButton: {fileID: 1301220531}
   DownloadAssetDescriptionText: {fileID: 2015747378}
   InspectConfirmButton: {fileID: 1403166202}
+  Reporter: {fileID: 5831386642954420232, guid: ceb00e337430203469af763b0b0c2c64,
+    type: 3}
 --- !u!1 &1802105404
 GameObject:
   m_ObjectHideFlags: 0

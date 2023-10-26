@@ -18,7 +18,7 @@ namespace ClientTemplate
         public void Init()
         {
             LogManager.Log(LogManager.LogType.CONTROLLER_INIT, "Data Manufacture Manager");
-            _myDelegateContainer.Add(ParseType.PlayerInfo, ParsePlayerInfo);
+
         }
 
         public void Release()

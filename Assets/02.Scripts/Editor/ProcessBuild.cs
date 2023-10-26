@@ -496,8 +496,15 @@ namespace ClientTemplate
         private static string GetAppBuildLocation()
         {
             BoppinBuildSettings settings = AssetDatabase.LoadAssetAtPath<BoppinBuildSettings>("Assets/Settings/BoppinBuildSettings.asset");
+            if(settings == null)
+            {
+                LogManager.Log(LogManager.LogType.DEFAULT, $"Build path is null! Build to default path.");
+                return null;
+            }
+
             if (string.IsNullOrEmpty(settings.BuildLocation) == true)
             {
+                LogManager.Log(LogManager.LogType.DEFAULT, $"Build path is null! Build to default path.");
                 return null;
             }
             
@@ -566,7 +573,7 @@ namespace ClientTemplate
             AwsCredential result = AssetDatabase.LoadAssetAtPath<AwsCredential>(path);
             if (result == null)
             {
-                LogManager.LogError(LogManager.LogType.EXCEPTION, $"AwsCredential is null! Check {path}");
+                LogManager.Log(LogManager.LogType.DEFAULT, $"AwsCredential is null! Check {path}");
                 return null;
             }
             
@@ -593,6 +600,12 @@ namespace ClientTemplate
 
         private static async void Transfer(AwsCredential credential, BuildTarget target, ProfileType profile)
         {
+            if (credential == null)
+            {
+                LogManager.Log(LogManager.LogType.DEFAULT, "You don't have aws credential. Abort uploading to s3.");
+                return;
+            }
+
             if (settings != null)
             {
                 if (settings.BuildRemoteCatalog == false)

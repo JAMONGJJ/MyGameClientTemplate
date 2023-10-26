@@ -25,7 +25,7 @@ namespace ClientTemplate
                 SceneContainer = new SceneContainer();
                 SceneContainer.Add(SceneType.Entry, "EntryScene", SceneAssetType.Entry);
                 SceneContainer.Add(SceneType.Lobby, "LobbyScene", SceneAssetType.Lobby);
-                SceneContainer.Add(SceneType.EmptyScene, "EmptyScene", SceneAssetType.EmptyScene);
+                SceneContainer.Add(SceneType.Empty, "EmptyScene", SceneAssetType.Empty);
             }
 
             public override void Release()
@@ -49,7 +49,7 @@ namespace ClientTemplate
             private IEnumerator _LoadScene(Scene newScene)
             {
                 LogManager.Log(LogManager.LogType.SCENE_LOADING_START, newScene.sceneName);
-                SceneInstance emptyScene = Core.System.Resource.LoadAssets(SceneAssetType.EmptyScene);
+                SceneInstance emptyScene = Core.System.Resource.LoadAssets(SceneAssetType.Empty);
                 yield return emptyScene.ActivateAsync();
 
                 yield return Resources.UnloadUnusedAssets();
